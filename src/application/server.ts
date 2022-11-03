@@ -2,13 +2,14 @@ import { ApolloServer } from 'apollo-server';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 
 import { typeDefs } from './schema';
-import { resolvers } from './resolvers';
+// import { resolvers } from './resolvers';
 
 const PORT = 4001;
 
 const createApp = async (): Promise<void> => {
   const server = new ApolloServer({
-    schema: makeExecutableSchema({ typeDefs, resolvers }),
+    // schema: makeExecutableSchema({ typeDefs, resolvers }),
+    schema: makeExecutableSchema({ typeDefs }),
     introspection: true,
   });
 

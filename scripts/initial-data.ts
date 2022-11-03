@@ -1,6 +1,7 @@
 import { ObjectId, ObjectID } from 'bson';
 import { createHash } from 'crypto';
 
+/*
 export interface SeedPizza {
   _id: ObjectID;
   name: string;
@@ -459,3 +460,4 @@ export const toppings: SeedTopping[] = [
     createdAt: new Date().toISOString(),
   },
 ];
+*/
