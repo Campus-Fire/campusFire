@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-import { Preferences, profiles, Profiles, preferences } from './initial-data';
+import { Preferences, preferences, profiles, Profiles } from './initial-data';
 
 require('dotenv').config();
 

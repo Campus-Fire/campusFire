@@ -23,18 +23,18 @@ export type Preferences = {
 
 export type Profile = {
   __typename?: 'Profile';
-  dateOfBirth: Scalars['String'];
-  email: Scalars['String'];
-  firstName: Scalars['String'];
-  gender: Scalars['String'];
-  id: Scalars['ObjectID'];
-  isActive: Scalars['Boolean'];
-  lastName: Scalars['String'];
-  password: Scalars['String'];
+  dateOfBirth?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  firstName?: Maybe<Scalars['String']>;
+  gender?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['ObjectID']>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  lastName?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
   __typename?: 'Query';
   preferences: Array<Preferences>;
-  profiles: Array<Profile>;
+  profiles?: Maybe<Array<Maybe<Profile>>>;
 };

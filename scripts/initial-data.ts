@@ -1,7 +1,7 @@
 import { ObjectId, ObjectID } from 'bson';
 import { createHash } from 'crypto';
 
-export interface Profiles {
+interface Profiles {
   _id: ObjectID;
   email: string;
   password: string;
@@ -12,7 +12,7 @@ export interface Profiles {
   isActive: boolean;
 }
 
-export interface Preferences {
+interface Preferences {
   userId: ObjectID;
   gender: string;
   likes?: ObjectID[];
@@ -32,7 +32,7 @@ const ID = {
   JackJones: deterministicId('Jack Jones'),
 };
 
-export const profiles: Profiles[] = [
+const profiles: Profiles[] = [
   {
     _id: ID.JohnSmith,
     email: 'john.smith@example.com',
@@ -86,7 +86,7 @@ export const profiles: Profiles[] = [
   },
 ];
 
-export const preferences: Preferences[] = [
+const preferences: Preferences[] = [
   {
     userId: ID.JohnSmith,
     gender: 'F',
@@ -111,3 +111,5 @@ export const preferences: Preferences[] = [
     gender: 'M',
   },
 ];
+
+export { Profiles, Preferences, profiles, preferences };

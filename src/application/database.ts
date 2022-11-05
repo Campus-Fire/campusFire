@@ -1,4 +1,5 @@
 import { Db, MongoClient, Document } from 'mongodb';
+
 require('dotenv').config();
 
 const setupDb = (): Db => {

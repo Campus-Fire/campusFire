@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server-core';
 
-import { typeDefs as profilesTypeDefs } from './profiles.schema';
-import { typeDefs as preferencesTypeDefs } from './preferences.schema';
+import { typeDefs as profileTypeDefs } from './profile.schema';
+import { typeDefs as preferenceTypeDefs } from './preference.schema';
 
 const scalarSchema = gql`
   scalar ObjectID
@@ -10,8 +10,8 @@ const scalarSchema = gql`
 
 const typeDefs = gql`
   ${scalarSchema}
-  ${profilesTypeDefs}
-  ${preferencesTypeDefs}
+  ${profileTypeDefs}
+  ${preferenceTypeDefs}
 `;
 
 export { typeDefs };
