@@ -1,5 +1,6 @@
 import { MongoClient } from 'mongodb';
-// import { SeedPizza, toppings, pizzas, SeedTopping } from './initial-data';
+
+import { Preferences, profiles, Profiles, preferences } from './initial-data';
 
 require('dotenv').config();
 
@@ -8,8 +9,7 @@ const dbName = process.env.DB_NAME;
 
 let client = new MongoClient(uri);
 
-/*
-const seedCollection = async (collectionName: string, data: SeedPizza[] | SeedTopping[]): Promise<void> => {
+const seedCollection = async (collectionName: string, data: Preferences[] | Profiles[]): Promise<void> => {
   try {
     console.log(`MongoDB is connecting to ${uri}`);
 
@@ -29,19 +29,18 @@ const seedCollection = async (collectionName: string, data: SeedPizza[] | SeedTo
     console.log(`Done seeding ${collectionName}.`);
 
     client.close();
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     process.exit(1);
   }
 };
 
 (async (): Promise<void> => {
   try {
-    await seedCollection('pizzas', pizzas);
+    await seedCollection('profiles', profiles);
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    await seedCollection('toppings', toppings);
-  } catch (error) {
-    console.log(error);
+    await seedCollection('preferences', preferences);
+  } catch (err) {
+    console.log(err);
   }
 })();
-*/
