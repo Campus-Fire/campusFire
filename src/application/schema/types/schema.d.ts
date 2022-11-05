@@ -13,3 +13,20 @@ export type Scalars = {
   Long: any;
   ObjectID: any;
 };
+
+export type Profile = {
+  __typename?: 'Profile';
+  dateOfBirth: Scalars['String'];
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+  gender: Scalars['String'];
+  id: Scalars['ObjectID'];
+  isActive: Scalars['Boolean'];
+  lastName: Scalars['String'];
+  password: Scalars['String'];
+};
+
+export type Query = {
+  __typename?: 'Query';
+  userProfiles: Array<Profile>;
+};
