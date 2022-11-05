@@ -11,3 +11,5 @@ const typeDefs = gql`
     preferences: [Preferences!]!
   }
 `;
+
+export { typeDefs };
