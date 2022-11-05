@@ -1,7 +1,7 @@
 import { ObjectId, ObjectID } from 'bson';
 import { createHash } from 'crypto';
 
-export interface UserDetails {
+export interface Profiles {
   _id: ObjectID;
   email: string;
   password: string;
@@ -32,7 +32,7 @@ const ID = {
   JackJones: deterministicId('Jack Jones'),
 };
 
-export const userDetails: UserDetails[] = [
+export const profiles: Profiles[] = [
   {
     _id: ID.JohnSmith,
     email: 'john.smith@example.com',

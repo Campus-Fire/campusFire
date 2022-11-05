@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server-core';
 
-import { typeDefs as userDetailsTypeDefs } from './userDetails.schema';
+import { typeDefs as userDetailsTypeDefs } from './profiles.schema';
 
 const scalarSchema = gql`
   scalar ObjectID

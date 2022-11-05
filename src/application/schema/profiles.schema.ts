@@ -13,7 +13,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    userProfiles: [Profile!]!
+    profiles: [Profile!]!
   }
 `;
 

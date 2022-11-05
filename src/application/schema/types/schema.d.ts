@@ -14,6 +14,13 @@ export type Scalars = {
   ObjectID: any;
 };
 
+export type Preferences = {
+  __typename?: 'Preferences';
+  gender: Scalars['String'];
+  likes?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
+  userId: Scalars['ObjectID'];
+};
+
 export type Profile = {
   __typename?: 'Profile';
   dateOfBirth: Scalars['String'];
@@ -28,5 +35,6 @@ export type Profile = {
 
 export type Query = {
   __typename?: 'Query';
-  userProfiles: Array<Profile>;
+  preferences: Array<Preferences>;
+  profiles: Array<Profile>;
 };
