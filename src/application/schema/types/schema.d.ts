@@ -14,8 +14,35 @@ export type Scalars = {
   ObjectID: any;
 };
 
-export type Preferences = {
-  __typename?: 'Preferences';
+export type CreateProfileInput = {
+  dateOfBirth: Scalars['String'];
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+  gender: Scalars['String'];
+  lastName: Scalars['String'];
+  password: Scalars['String'];
+  preferredGender: Scalars['String'];
+};
+
+export type Institute = {
+  __typename?: 'Institute';
+  emailExt: Scalars['String'];
+  id: Scalars['ObjectID'];
+  name: Scalars['String'];
+  userIds?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  createProfile: Profile;
+};
+
+export type MutationCreateProfileArgs = {
+  input: CreateProfileInput;
+};
+
+export type Preference = {
+  __typename?: 'Preference';
   gender: Scalars['String'];
   likes?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
   userId: Scalars['ObjectID'];
@@ -35,6 +62,6 @@ export type Profile = {
 
 export type Query = {
   __typename?: 'Query';
-  preferences: Array<Preferences>;
+  preference: Array<Preference>;
   profiles: Array<Profile>;
 };

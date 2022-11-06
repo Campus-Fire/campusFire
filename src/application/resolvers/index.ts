@@ -1,10 +1,8 @@
 import { merge } from 'lodash';
 
-/*
-import { pizzaResolver } from './pizza.resolver';
-import { toppingResolver } from './topping.resolver';
+import { preferenceResolver } from './preference.resolver';
+import { profileResolver } from './profile.resolver';
 
-const resolvers = merge(toppingResolver, pizzaResolver);
-*/
+const resolvers = merge(profileResolver, preferenceResolver);
 
-// export { resolvers };
+export { resolvers };
