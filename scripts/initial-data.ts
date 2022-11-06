@@ -2,10 +2,14 @@ import { ObjectID } from 'bson';
 
 import deterministicId from '../src/lib/deterministic-id';
 
-interface Profiles {
-  _id: ObjectID;
+interface Accounts {
   email: string;
   password: string;
+  isVerified: boolean;
+}
+
+interface Profiles {
+  _id: ObjectID;
   firstName: string;
   lastName: string;
   dateOfBirth: string;
@@ -39,11 +43,37 @@ const UniID = {
   SAIT: deterministicId('@edu.sait.ca'),
 };
 
+const accounts: Accounts[] = [
+  {
+    email: 'john.smith@ucalgary.ca',
+    password: 'johnsmith',
+    isVerified: true,
+  },
+  {
+    email: 'mike.williams@edu.sait.ca',
+    password: 'mikewilliams',
+    isVerified: true,
+  },
+  {
+    email: 'kim.garcia@ucalgary.ca',
+    password: 'kimgarcia',
+    isVerified: true,
+  },
+  {
+    email: 'mary.martinez@edu.sait.ca',
+    password: 'marymartinez',
+    isVerified: true,
+  },
+  {
+    email: 'jack.jones@ucalgary.ca',
+    password: 'jackjones',
+    isVerified: false,
+  },
+];
+
 const profiles: Profiles[] = [
   {
     _id: UserID.JohnSmith,
-    email: 'john.smith@ucalgary.ca',
-    password: 'johnsmith',
     firstName: 'John',
     lastName: 'Smith',
     dateOfBirth: new Date().toISOString(),
@@ -52,8 +82,6 @@ const profiles: Profiles[] = [
   },
   {
     _id: UserID.MikeWilliams,
-    email: 'mike.williams@edu.sait.ca',
-    password: 'mikewilliams',
     firstName: 'Mike',
     lastName: 'Williams',
     dateOfBirth: new Date().toISOString(),
@@ -62,8 +90,6 @@ const profiles: Profiles[] = [
   },
   {
     _id: UserID.KimGarcia,
-    email: 'kim.garcia@ucalgary.ca',
-    password: 'kimgarcia',
     firstName: 'Kim',
     lastName: 'Garcia',
     dateOfBirth: new Date().toISOString(),
@@ -72,9 +98,6 @@ const profiles: Profiles[] = [
   },
   {
     _id: UserID.MaryMartinez,
-    email: 'mary.martinez@edu.sait.ca',
-    password: 'marymartinez',
-
     firstName: 'Mary',
     lastName: 'Martinez',
     dateOfBirth: new Date().toISOString(),
@@ -83,8 +106,6 @@ const profiles: Profiles[] = [
   },
   {
     _id: UserID.JackJones,
-    email: 'jack.jones@ucalgary.ca',
-    password: 'jackjones',
     firstName: 'Jack',
     lastName: 'Jones',
     dateOfBirth: new Date().toISOString(),
@@ -134,4 +155,4 @@ const institutes: Institutes[] = [
   },
 ];
 
-export { Profiles, profiles, Preferences, preferences, Institutes, institutes };
+export { Profiles, profiles, Preferences, preferences, Institutes, institutes, Accounts, accounts };
