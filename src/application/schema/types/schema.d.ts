@@ -24,6 +24,14 @@ export type CreateProfileInput = {
   preferredGender: Scalars['String'];
 };
 
+export type Institute = {
+  __typename?: 'Institute';
+  emailExt: Scalars['String'];
+  id: Scalars['ObjectID'];
+  name: Scalars['String'];
+  userIds?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createProfile: Profile;

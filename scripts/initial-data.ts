@@ -19,18 +19,30 @@ interface Preferences {
   likes?: ObjectID[];
 }
 
-const ID = {
-  JohnSmith: deterministicId('john.smith@example.com'),
-  MikeWilliams: deterministicId('mike.williams@example.com'),
-  KimGarcia: deterministicId('kim.garcia@example.com'),
-  MaryMartinez: deterministicId('mary.martinez@example.com'),
-  JackJones: deterministicId('jack.jones@example.com'),
+interface Institutes {
+  _id: ObjectID;
+  name: string;
+  emailExt: string;
+  userIds?: ObjectID[];
+}
+
+const UserID = {
+  JohnSmith: deterministicId('john.smith@ucalgary.ca'),
+  MikeWilliams: deterministicId('mike.williams@edu.sait.ca'),
+  KimGarcia: deterministicId('kim.garcia@ucalgary.ca'),
+  MaryMartinez: deterministicId('mary.martinez@edu.sait.ca'),
+  JackJones: deterministicId('jack.jones@ucalgary.ca'),
+};
+
+const UniID = {
+  UCalgary: deterministicId('@ucalgary.ca'),
+  SAIT: deterministicId('@edu.sait.ca'),
 };
 
 const profiles: Profiles[] = [
   {
-    _id: ID.JohnSmith,
-    email: 'john.smith@example.com',
+    _id: UserID.JohnSmith,
+    email: 'john.smith@ucalgary.ca',
     password: 'johnsmith',
     firstName: 'John',
     lastName: 'Smith',
@@ -39,8 +51,8 @@ const profiles: Profiles[] = [
     isActive: true,
   },
   {
-    _id: ID.MikeWilliams,
-    email: 'mike.williams@example.com',
+    _id: UserID.MikeWilliams,
+    email: 'mike.williams@edu.sait.ca',
     password: 'mikewilliams',
     firstName: 'Mike',
     lastName: 'Williams',
@@ -49,8 +61,8 @@ const profiles: Profiles[] = [
     isActive: true,
   },
   {
-    _id: ID.KimGarcia,
-    email: 'kim.garcia@example.com',
+    _id: UserID.KimGarcia,
+    email: 'kim.garcia@ucalgary.ca',
     password: 'kimgarcia',
     firstName: 'Kim',
     lastName: 'Garcia',
@@ -59,8 +71,8 @@ const profiles: Profiles[] = [
     isActive: true,
   },
   {
-    _id: ID.MaryMartinez,
-    email: 'mary.martinez@example.com',
+    _id: UserID.MaryMartinez,
+    email: 'mary.martinez@edu.sait.ca',
     password: 'marymartinez',
 
     firstName: 'Mary',
@@ -70,8 +82,8 @@ const profiles: Profiles[] = [
     isActive: true,
   },
   {
-    _id: ID.JackJones,
-    email: 'jack.jones@example.com',
+    _id: UserID.JackJones,
+    email: 'jack.jones@ucalgary.ca',
     password: 'jackjones',
     firstName: 'Jack',
     lastName: 'Jones',
@@ -83,28 +95,43 @@ const profiles: Profiles[] = [
 
 const preferences: Preferences[] = [
   {
-    userId: ID.JohnSmith,
+    userId: UserID.JohnSmith,
     gender: 'F',
-    likes: [ID.KimGarcia],
+    likes: [UserID.KimGarcia],
   },
   {
-    userId: ID.MikeWilliams,
+    userId: UserID.MikeWilliams,
+    gender: 'F',
+    likes: [UserID.MaryMartinez],
+  },
+  {
+    userId: UserID.KimGarcia,
+    gender: 'M',
+    likes: [UserID.JackJones, UserID.JohnSmith],
+  },
+  {
+    userId: UserID.MaryMartinez,
+    gender: 'M',
+  },
+  {
+    userId: UserID.JackJones,
     gender: 'B',
-    likes: [ID.JackJones, ID.KimGarcia],
-  },
-  {
-    userId: ID.KimGarcia,
-    gender: 'M',
-    likes: [ID.MikeWilliams],
-  },
-  {
-    userId: ID.MaryMartinez,
-    gender: 'M',
-  },
-  {
-    userId: ID.JackJones,
-    gender: 'M',
   },
 ];
 
-export { Profiles, Preferences, profiles, preferences };
+const institutes: Institutes[] = [
+  {
+    _id: UniID.UCalgary,
+    name: 'University of Calgary',
+    emailExt: 'ucalgary.ca',
+    userIds: [UserID.JackJones, UserID.KimGarcia, UserID.JohnSmith],
+  },
+  {
+    _id: UniID.SAIT,
+    name: 'SAIT',
+    emailExt: 'edu.sait.ca',
+    userIds: [UserID.MaryMartinez, UserID.MikeWilliams],
+  },
+];
+
+export { Profiles, profiles, Preferences, preferences, Institutes, institutes };

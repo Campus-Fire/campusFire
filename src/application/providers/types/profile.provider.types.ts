@@ -1,5 +1,7 @@
+import { ObjectId } from 'mongodb';
+
 interface Profile {
-  id: string;
+  id: ObjectId;
   email: string;
   password: string;
   firstName: string;

@@ -1,7 +1,9 @@
+import { ObjectId } from 'mongodb';
+
 interface Preference {
-  userId: string;
+  userId: ObjectId;
   gender: string;
-  likes?: string[];
+  likes?: ObjectId[];
 }
 
 export { Preference };

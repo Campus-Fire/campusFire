@@ -15,7 +15,7 @@ class PreferenceProvider {
   public async createUserPreference(userId: ObjectId, gender: string): Promise<void> {
     const data = await this.collection.insertOne({
       _id: new ObjectId(),
-      userId: userId.toHexString(),
+      userId: userId,
       gender: gender,
     });
 

@@ -4,10 +4,10 @@ import validateStringInputs from '../../../src/lib/string-validator';
 import { ProfileDocument, toProfileObject } from '../../../src/entities/profile.entity';
 import { CreateProfileInput, Profile } from './types/profile.provider.types';
 import deterministicId from '../../../src/lib/deterministic-id';
-import { preferenceProvider } from '.';
+import { instituteProvider, preferenceProvider } from '.';
 
 class ProfileProvider {
-  constructor(private collection: Collection<ProfileDocument>) {}
+  constructor(private collection: Collection<ProfileDocument>) { }
 
   public async getProfiles(): Promise<Profile[]> {
     const profiles = await this.collection.find().toArray();
@@ -27,6 +27,7 @@ class ProfileProvider {
     if (email) {
       validateStringInputs(email);
       await this.userWithEmailExists(email);
+      await instituteProvider.isValidEmailExtension(id, email);
     }
 
     if (password) validateStringInputs(password);
