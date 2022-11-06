@@ -2,8 +2,6 @@ import { ObjectId } from 'mongodb';
 
 interface Profile {
   id: ObjectId;
-  email: string;
-  password: string;
   firstName: string;
   lastName: string;
   dateOfBirth: string;
@@ -11,19 +9,8 @@ interface Profile {
   isActive: boolean;
 }
 
-interface CreateProfileInput {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  dateOfBirth: string;
-  gender: string;
-  preferredGender: string;
-}
-
 interface UpdateProfileInput {
   id: ObjectId;
-  password?: string | null;
   firstName?: string | null;
   lastName?: string | null;
   dateOfBirth?: string | null;
@@ -31,4 +18,4 @@ interface UpdateProfileInput {
   isActive?: boolean | null;
 }
 
-export { Profile, CreateProfileInput, UpdateProfileInput };
+export { Profile, UpdateProfileInput };

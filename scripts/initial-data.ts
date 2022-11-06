@@ -3,6 +3,7 @@ import { ObjectID } from 'bson';
 import deterministicId from '../src/lib/deterministic-id';
 
 interface Accounts {
+  _id: ObjectID;
   email: string;
   password: string;
   isVerified: boolean;
@@ -45,26 +46,31 @@ const UniID = {
 
 const accounts: Accounts[] = [
   {
+    _id: UserID.JohnSmith,
     email: 'john.smith@ucalgary.ca',
     password: 'johnsmith',
     isVerified: true,
   },
   {
+    _id: UserID.MikeWilliams,
     email: 'mike.williams@edu.sait.ca',
     password: 'mikewilliams',
     isVerified: true,
   },
   {
+    _id: UserID.KimGarcia,
     email: 'kim.garcia@ucalgary.ca',
     password: 'kimgarcia',
     isVerified: true,
   },
   {
+    _id: UserID.MaryMartinez,
     email: 'mary.martinez@edu.sait.ca',
     password: 'marymartinez',
     isVerified: true,
   },
   {
+    _id: UserID.JackJones,
     email: 'jack.jones@ucalgary.ca',
     password: 'jackjones',
     isVerified: false,
