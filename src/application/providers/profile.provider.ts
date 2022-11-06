@@ -1,7 +1,7 @@
 import { Collection } from 'mongodb';
 
 import { ProfileDocument, toProfileObject } from '../../../src/entities/profile.entity';
-import { Profile } from './types/profiles.provider.types';
+import { Profile } from './types/profile.provider.types';
 
 class ProfileProvider {
   constructor(private collection: Collection<ProfileDocument>) {}
