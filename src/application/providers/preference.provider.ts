@@ -1,4 +1,4 @@
-import { Collection } from 'mongodb';
+import { Collection, ObjectId } from 'mongodb';
 
 import { PreferenceDocument, toPreferenceObject } from '../../../src/entities/preference.entity';
 import { Preference } from './types/preference.provider.types';
@@ -10,6 +10,18 @@ class PreferenceProvider {
     const preference = await this.collection.find().toArray();
 
     return preference.map(toPreferenceObject);
+  }
+
+  public async createUserPreference(userId: ObjectId, gender: string): Promise<void> {
+    const data = await this.collection.insertOne({
+      _id: new ObjectId(),
+      userId: userId.toHexString(),
+      gender: gender,
+    });
+
+    if (!data) {
+      throw new Error(`Failed in setting the Preferences for ${userId}`);
+    }
   }
 }
 

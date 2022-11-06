@@ -9,4 +9,14 @@ interface Profile {
   isActive: boolean;
 }
 
-export { Profile };
+interface CreateProfileInput {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  gender: string;
+  preferredGender: string;
+}
+
+export { Profile, CreateProfileInput };

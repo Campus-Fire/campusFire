@@ -1,5 +1,6 @@
-import { ObjectId, ObjectID } from 'bson';
-import { createHash } from 'crypto';
+import { ObjectID } from 'bson';
+
+import deterministicId from '../src/lib/deterministic-id';
 
 interface Profiles {
   _id: ObjectID;
@@ -18,18 +19,12 @@ interface Preferences {
   likes?: ObjectID[];
 }
 
-const deterministicId = (data: string): ObjectId => {
-  const hash = createHash('sha1').update(data).digest('hex').slice(0, 24);
-
-  return new ObjectId(hash);
-};
-
 const ID = {
-  JohnSmith: deterministicId('John Smith'),
-  MikeWilliams: deterministicId('Mike Williams'),
-  KimGarcia: deterministicId('Kim Garcia'),
-  MaryMartinez: deterministicId('Mary Martinez'),
-  JackJones: deterministicId('Jack Jones'),
+  JohnSmith: deterministicId('john.smith@example.com'),
+  MikeWilliams: deterministicId('mike.williams@example.com'),
+  KimGarcia: deterministicId('kim.garcia@example.com'),
+  MaryMartinez: deterministicId('mary.martinez@example.com'),
+  JackJones: deterministicId('jack.jones@example.com'),
 };
 
 const profiles: Profiles[] = [

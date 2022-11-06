@@ -14,6 +14,25 @@ export type Scalars = {
   ObjectID: any;
 };
 
+export type CreateProfileInput = {
+  dateOfBirth: Scalars['String'];
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+  gender: Scalars['String'];
+  lastName: Scalars['String'];
+  password: Scalars['String'];
+  preferredGender: Scalars['String'];
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  createProfile: Profile;
+};
+
+export type MutationCreateProfileArgs = {
+  input: CreateProfileInput;
+};
+
 export type Preference = {
   __typename?: 'Preference';
   gender: Scalars['String'];
@@ -23,18 +42,18 @@ export type Preference = {
 
 export type Profile = {
   __typename?: 'Profile';
-  dateOfBirth?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
-  firstName?: Maybe<Scalars['String']>;
-  gender?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['ObjectID']>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  lastName?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  dateOfBirth: Scalars['String'];
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+  gender: Scalars['String'];
+  id: Scalars['ObjectID'];
+  isActive: Scalars['Boolean'];
+  lastName: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type Query = {
   __typename?: 'Query';
   preference: Array<Preference>;
-  profiles?: Maybe<Array<Maybe<Profile>>>;
+  profiles: Array<Profile>;
 };
