@@ -18,6 +18,7 @@ const typeDefs = gql`
 
   type Mutation {
     createProfile(input: CreateProfileInput!): Profile!
+    updateProfile(input: UpdateProfileInput!): Profile!
   }
 
   input CreateProfileInput {
@@ -28,6 +29,16 @@ const typeDefs = gql`
     dateOfBirth: String!
     gender: String!
     preferredGender: String!
+  }
+
+  input UpdateProfileInput {
+    id: ObjectID!
+    password: String
+    firstName: String
+    lastName: String
+    dateOfBirth: String
+    gender: String
+    isActive: Boolean
   }
 `;
 

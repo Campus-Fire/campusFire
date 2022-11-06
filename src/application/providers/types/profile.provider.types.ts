@@ -21,4 +21,14 @@ interface CreateProfileInput {
   preferredGender: string;
 }
 
-export { Profile, CreateProfileInput };
+interface UpdateProfileInput {
+  id: ObjectId;
+  password?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  dateOfBirth?: string | null;
+  gender?: string | null;
+  isActive?: boolean | null;
+}
+
+export { Profile, CreateProfileInput, UpdateProfileInput };

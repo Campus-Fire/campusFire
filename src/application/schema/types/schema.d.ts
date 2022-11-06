@@ -35,10 +35,15 @@ export type Institute = {
 export type Mutation = {
   __typename?: 'Mutation';
   createProfile: Profile;
+  updateProfile: Profile;
 };
 
 export type MutationCreateProfileArgs = {
   input: CreateProfileInput;
+};
+
+export type MutationUpdateProfileArgs = {
+  input: UpdateProfileInput;
 };
 
 export type Preference = {
@@ -62,6 +67,17 @@ export type Profile = {
 
 export type Query = {
   __typename?: 'Query';
+  institutes: Array<Institute>;
   preference: Array<Preference>;
   profiles: Array<Profile>;
+};
+
+export type UpdateProfileInput = {
+  dateOfBirth?: InputMaybe<Scalars['String']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  gender?: InputMaybe<Scalars['String']>;
+  id: Scalars['ObjectID'];
+  isActive?: InputMaybe<Scalars['Boolean']>;
+  lastName?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
 };

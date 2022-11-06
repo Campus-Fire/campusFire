@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb';
 interface Institute {
   id: ObjectId;
   name: string;
-  emailExt: String;
+  emailExt: string;
   userIds?: ObjectId[];
 }
 
