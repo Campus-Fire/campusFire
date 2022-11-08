@@ -7,4 +7,9 @@ interface Account {
   isVerified: boolean;
 }
 
-export { Account };
+interface CreateAccountInput {
+  email: string;
+  password: string;
+}
+
+export { Account, CreateAccountInput };

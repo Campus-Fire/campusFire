@@ -9,6 +9,15 @@ interface Profile {
   isActive: boolean;
 }
 
+interface CreateProfileInput {
+  id: ObjectId;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  gender: string;
+  preferredGender: string;
+}
+
 interface UpdateProfileInput {
   id: ObjectId;
   firstName?: string | null;
@@ -18,4 +27,4 @@ interface UpdateProfileInput {
   isActive?: boolean | null;
 }
 
-export { Profile, UpdateProfileInput };
+export { Profile, CreateProfileInput, UpdateProfileInput };

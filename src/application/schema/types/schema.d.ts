@@ -22,6 +22,20 @@ export type Account = {
   password: Scalars['String'];
 };
 
+export type CreateAccountInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
+export type CreateProfileInput = {
+  dateOfBirth: Scalars['String'];
+  firstName: Scalars['String'];
+  gender: Scalars['String'];
+  id: Scalars['ObjectID'];
+  lastName: Scalars['String'];
+  preferredGender: Scalars['String'];
+};
+
 export type Institute = {
   __typename?: 'Institute';
   emailExt: Scalars['String'];
@@ -32,7 +46,17 @@ export type Institute = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createAccount: Account;
+  createProfile: Profile;
   updateProfile: Profile;
+};
+
+export type MutationCreateAccountArgs = {
+  input: CreateAccountInput;
+};
+
+export type MutationCreateProfileArgs = {
+  input: CreateProfileInput;
 };
 
 export type MutationUpdateProfileArgs = {

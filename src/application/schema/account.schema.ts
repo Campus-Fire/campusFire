@@ -11,6 +11,15 @@ const typeDefs = gql`
   type Query {
     accounts: [Account!]!
   }
+
+  type Mutation {
+    createAccount(input: CreateAccountInput!): Account!
+  }
+
+  input CreateAccountInput {
+    email: String!
+    password: String!
+  }
 `;
 
 export { typeDefs };
