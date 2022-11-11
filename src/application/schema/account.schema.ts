@@ -6,6 +6,8 @@ const typeDefs = gql`
     email: String!
     password: String!
     isVerified: Boolean!
+    createdAt: String!
+    token: String!
   }
 
   type Query {
@@ -13,12 +15,13 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    createAccount(input: CreateAccountInput!): Account!
+    registerAccount(input: RegisterAccountInput!): Account!
   }
 
-  input CreateAccountInput {
+  input RegisterAccountInput {
     email: String!
     password: String!
+    confirmPassword: String!
   }
 `;
 

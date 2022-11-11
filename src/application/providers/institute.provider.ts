@@ -1,4 +1,4 @@
-import { Collection, ObjectId } from 'mongodb';
+import { Collection } from 'mongodb';
 
 import { InstituteDocument, toInstituteObject } from '../../../src/entities/institute.entity';
 import { Institute } from './types/institute.provider.types';
@@ -12,7 +12,7 @@ class InstituteProvider {
     return institutes.map(toInstituteObject);
   }
 
-  public async isValidEmailExtension(userId: ObjectId, email: string): Promise<void> {
+  public async isValidEmailExtension(email: string): Promise<void> {
     const emailParts = email.split('@');
 
     const data = await this.collection.findOne({ emailExt: emailParts[1] });
@@ -20,17 +20,18 @@ class InstituteProvider {
     if (!data) {
       throw new Error('Not a valid email. Please use University/College email');
     }
-
-    const instituteData = await this.collection.updateOne(
-      { _id: data._id },
-      {
-        $push: { userIds: userId },
-      }
-    );
-
-    if (!instituteData) {
-      throw new Error('Could not update Institute while creating user');
-    }
+    /*
+        const instituteData = await this.collection.updateOne(
+          { _id: data._id },
+          {
+            $push: { userIds: userId },
+          }
+        );
+    
+        if (!instituteData) {
+          throw new Error('Could not update Institute while creating user');
+        }
+        */
   }
 }
 

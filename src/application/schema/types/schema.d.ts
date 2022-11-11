@@ -16,15 +16,12 @@ export type Scalars = {
 
 export type Account = {
   __typename?: 'Account';
+  createdAt: Scalars['String'];
   email: Scalars['String'];
   id: Scalars['ObjectID'];
   isVerified: Scalars['Boolean'];
   password: Scalars['String'];
-};
-
-export type CreateAccountInput = {
-  email: Scalars['String'];
-  password: Scalars['String'];
+  token: Scalars['String'];
 };
 
 export type CreateProfileInput = {
@@ -46,17 +43,17 @@ export type Institute = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createAccount: Account;
   createProfile: Profile;
+  registerAccount: Account;
   updateProfile: Profile;
-};
-
-export type MutationCreateAccountArgs = {
-  input: CreateAccountInput;
 };
 
 export type MutationCreateProfileArgs = {
   input: CreateProfileInput;
+};
+
+export type MutationRegisterAccountArgs = {
+  input: RegisterAccountInput;
 };
 
 export type MutationUpdateProfileArgs = {
@@ -86,6 +83,12 @@ export type Query = {
   institutes: Array<Institute>;
   preference: Array<Preference>;
   profiles: Array<Profile>;
+};
+
+export type RegisterAccountInput = {
+  confirmPassword: Scalars['String'];
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type UpdateProfileInput = {

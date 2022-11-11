@@ -10,6 +10,7 @@ const toAccountObject = (account: AccountDocument): Account => {
     email: account.email,
     password: account.password,
     isVerified: account.isVerified,
+    createdAt: account.createdAt,
   };
 };
 

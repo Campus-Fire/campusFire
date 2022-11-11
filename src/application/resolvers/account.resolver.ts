@@ -1,17 +1,19 @@
 import { accountProvider } from '../providers';
-import { Account, CreateAccountInput } from '../schema/types/schema';
+import { Account, RegisterAccountInput } from '../schema/types/schema';
 import { Root } from '../schema/types/types';
+
+interface UntokenizedAccount extends Omit<Account, 'token'> { }
 
 const accountResolver = {
   Query: {
-    accounts: async (): Promise<Account[]> => {
+    accounts: async (): Promise<UntokenizedAccount[]> => {
       return accountProvider.getAccounts();
     },
   },
 
   Mutation: {
-    createAccount: async (_: Root, args: { input: CreateAccountInput }): Promise<Account> => {
-      return accountProvider.createAccount(args.input);
+    registerAccount: async (_: Root, args: { input: RegisterAccountInput }): Promise<Account> => {
+      return accountProvider.registerAccount(args.input);
     },
   },
 };
