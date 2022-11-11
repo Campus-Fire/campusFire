@@ -28,7 +28,6 @@ export type CreateProfileInput = {
   dateOfBirth: Scalars['String'];
   firstName: Scalars['String'];
   gender: Scalars['String'];
-  id: Scalars['ObjectID'];
   lastName: Scalars['String'];
   preferredGender: Scalars['String'];
 };
@@ -105,7 +104,6 @@ export type UpdateProfileInput = {
   dateOfBirth?: InputMaybe<Scalars['String']>;
   firstName?: InputMaybe<Scalars['String']>;
   gender?: InputMaybe<Scalars['String']>;
-  id: Scalars['ObjectID'];
   isActive?: InputMaybe<Scalars['Boolean']>;
   lastName?: InputMaybe<Scalars['String']>;
 };

@@ -11,6 +11,7 @@ interface Profile {
 
 interface CreateProfileInput {
   id: ObjectId;
+  email: string;
   firstName: string;
   lastName: string;
   dateOfBirth: string;
@@ -20,6 +21,7 @@ interface CreateProfileInput {
 
 interface UpdateProfileInput {
   id: ObjectId;
+  email: string;
   firstName?: string | null;
   lastName?: string | null;
   dateOfBirth?: string | null;

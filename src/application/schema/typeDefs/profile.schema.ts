@@ -20,7 +20,6 @@ const typeDefs = gql`
   }
 
   input CreateProfileInput {
-    id: ObjectID!
     firstName: String!
     lastName: String!
     dateOfBirth: String!
@@ -29,7 +28,6 @@ const typeDefs = gql`
   }
 
   input UpdateProfileInput {
-    id: ObjectID!
     firstName: String
     lastName: String
     dateOfBirth: String
