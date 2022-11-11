@@ -1,9 +1,9 @@
 import { Collection, ObjectId } from 'mongodb';
 
-import { preferenceProvider } from '.';
-import { ProfileDocument, toProfileObject } from '../../../src/entities/profile.entity';
-import validateStringInputs from '../../../src/lib/string-validator';
-import { CreateProfileInput, Profile, UpdateProfileInput } from './types/profile.provider.types';
+import { preferenceProvider } from '../index';
+import { ProfileDocument, toProfileObject } from '../../../../src/entities/profile.entity';
+import validateStringInputs from '../../../../src/lib/string-validator';
+import { CreateProfileInput, Profile, UpdateProfileInput } from '../types/profile.provider.types';
 
 class ProfileProvider {
   constructor(private collection: Collection<ProfileDocument>) {}

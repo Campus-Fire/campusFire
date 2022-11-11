@@ -1,7 +1,7 @@
 import { Collection } from 'mongodb';
 
-import { InstituteDocument, toInstituteObject } from '../../../src/entities/institute.entity';
-import { Institute } from './types/institute.provider.types';
+import { InstituteDocument, toInstituteObject } from '../../../../src/entities/institute.entity';
+import { Institute } from '../types/institute.provider.types';
 
 class InstituteProvider {
   constructor(private collection: Collection<InstituteDocument>) {}

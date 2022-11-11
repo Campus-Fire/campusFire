@@ -2,12 +2,12 @@ import { UserInputError } from 'apollo-server';
 import bcrypt from 'bcryptjs';
 import { Collection } from 'mongodb';
 
-import { instituteProvider } from '.';
-import { AccountDocument, toAccountObject } from '../../../src/entities/account.entity';
-import deterministicId from '../../../src/lib/deterministic-id';
-import generateToken from '../helpers/token-generator.helper';
-import { validateEmailInput, validatePasswordInput } from '../helpers/validator.helper';
-import { Account, RegisterAccountInput, TokenizedAccount } from './types/account.provider.types';
+import { instituteProvider } from '../index';
+import { AccountDocument, toAccountObject } from '../../../../src/entities/account.entity';
+import deterministicId from '../../../../src/lib/deterministic-id';
+import generateToken from '../../helpers/token-generator.helper';
+import { validateEmailInput, validatePasswordInput } from '../../helpers/validator.helper';
+import { Account, RegisterAccountInput, TokenizedAccount } from '../types/account.provider.types';
 
 class AccountProvider {
   constructor(private collection: Collection<AccountDocument>) {}
