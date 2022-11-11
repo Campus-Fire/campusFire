@@ -14,13 +14,22 @@ export type Scalars = {
   ObjectID: any;
 };
 
+export type Account = {
+  __typename?: 'Account';
+  createdAt: Scalars['String'];
+  email: Scalars['String'];
+  id: Scalars['ObjectID'];
+  isVerified: Scalars['Boolean'];
+  password: Scalars['String'];
+  token: Scalars['String'];
+};
+
 export type CreateProfileInput = {
   dateOfBirth: Scalars['String'];
-  email: Scalars['String'];
   firstName: Scalars['String'];
   gender: Scalars['String'];
+  id: Scalars['ObjectID'];
   lastName: Scalars['String'];
-  password: Scalars['String'];
   preferredGender: Scalars['String'];
 };
 
@@ -35,10 +44,20 @@ export type Institute = {
 export type Mutation = {
   __typename?: 'Mutation';
   createProfile: Profile;
+  registerAccount: Account;
+  updateProfile: Profile;
 };
 
 export type MutationCreateProfileArgs = {
   input: CreateProfileInput;
+};
+
+export type MutationRegisterAccountArgs = {
+  input: RegisterAccountInput;
+};
+
+export type MutationUpdateProfileArgs = {
+  input: UpdateProfileInput;
 };
 
 export type Preference = {
@@ -51,17 +70,32 @@ export type Preference = {
 export type Profile = {
   __typename?: 'Profile';
   dateOfBirth: Scalars['String'];
-  email: Scalars['String'];
   firstName: Scalars['String'];
   gender: Scalars['String'];
   id: Scalars['ObjectID'];
   isActive: Scalars['Boolean'];
   lastName: Scalars['String'];
-  password: Scalars['String'];
 };
 
 export type Query = {
   __typename?: 'Query';
+  accounts: Array<Account>;
+  institutes: Array<Institute>;
   preference: Array<Preference>;
   profiles: Array<Profile>;
+};
+
+export type RegisterAccountInput = {
+  confirmPassword: Scalars['String'];
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
+export type UpdateProfileInput = {
+  dateOfBirth?: InputMaybe<Scalars['String']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  gender?: InputMaybe<Scalars['String']>;
+  id: Scalars['ObjectID'];
+  isActive?: InputMaybe<Scalars['Boolean']>;
+  lastName?: InputMaybe<Scalars['String']>;
 };

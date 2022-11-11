@@ -3,8 +3,6 @@ import { gql } from 'apollo-server';
 const typeDefs = gql`
   type Profile {
     id: ObjectID!
-    email: String!
-    password: String!
     firstName: String!
     lastName: String!
     dateOfBirth: String!
@@ -18,16 +16,25 @@ const typeDefs = gql`
 
   type Mutation {
     createProfile(input: CreateProfileInput!): Profile!
+    updateProfile(input: UpdateProfileInput!): Profile!
   }
 
   input CreateProfileInput {
-    email: String!
-    password: String!
+    id: ObjectID!
     firstName: String!
     lastName: String!
     dateOfBirth: String!
     gender: String!
     preferredGender: String!
+  }
+
+  input UpdateProfileInput {
+    id: ObjectID!
+    firstName: String
+    lastName: String
+    dateOfBirth: String
+    gender: String
+    isActive: Boolean
   }
 `;
 

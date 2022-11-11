@@ -1,13 +1,12 @@
-import { Collection } from 'mongodb';
+import { Collection, ObjectId } from 'mongodb';
 
-import validateStringInputs from '../../../src/lib/string-validator';
+import { preferenceProvider } from '.';
 import { ProfileDocument, toProfileObject } from '../../../src/entities/profile.entity';
-import { CreateProfileInput, Profile } from './types/profile.provider.types';
-import deterministicId from '../../../src/lib/deterministic-id';
-import { instituteProvider, preferenceProvider } from '.';
+import validateStringInputs from '../../../src/lib/string-validator';
+import { CreateProfileInput, Profile, UpdateProfileInput } from './types/profile.provider.types';
 
 class ProfileProvider {
-  constructor(private collection: Collection<ProfileDocument>) { }
+  constructor(private collection: Collection<ProfileDocument>) {}
 
   public async getProfiles(): Promise<Profile[]> {
     const profiles = await this.collection.find().toArray();
@@ -16,30 +15,21 @@ class ProfileProvider {
   }
 
   public async createProfile(input: CreateProfileInput): Promise<Profile> {
-    const { email, password, firstName, lastName, dateOfBirth, gender, preferredGender } = input;
-    const id = deterministicId(email);
+    const { id, firstName, lastName, dateOfBirth, gender, preferredGender } = input;
+
+    const userId = new ObjectId(id);
 
     if (preferredGender) {
       validateStringInputs(preferredGender);
-      await preferenceProvider.createUserPreference(id, preferredGender);
+      await preferenceProvider.createUserPreference(userId, preferredGender);
     }
-
-    if (email) {
-      validateStringInputs(email);
-      await this.userWithEmailExists(email);
-      await instituteProvider.isValidEmailExtension(id, email);
-    }
-
-    if (password) validateStringInputs(password);
     if (firstName) validateStringInputs(firstName);
     if (lastName) validateStringInputs(lastName);
     if (dateOfBirth) validateStringInputs(dateOfBirth);
     if (gender) validateStringInputs(gender);
 
     const data = await this.collection.insertOne({
-      _id: id,
-      email: email,
-      password: password,
+      _id: userId,
       firstName: firstName,
       lastName: lastName,
       dateOfBirth: dateOfBirth,
@@ -56,12 +46,36 @@ class ProfileProvider {
     return toProfileObject(profile);
   }
 
-  private async userWithEmailExists(email: string): Promise<void> {
-    const data = await this.collection.countDocuments({ email: email });
+  public async updateProfile(input: UpdateProfileInput): Promise<Profile> {
+    const { id, firstName, lastName, dateOfBirth, gender } = input;
 
-    if (data && data > 0) {
-      throw new Error(`User with ${email} already exists`);
+    const userId = new ObjectId(id);
+
+    if (firstName) validateStringInputs(firstName);
+    if (lastName) validateStringInputs(lastName);
+    if (dateOfBirth) validateStringInputs(dateOfBirth);
+    if (gender) validateStringInputs(gender);
+
+    const data = await this.collection.findOneAndUpdate(
+      { _id: userId },
+      {
+        $set: {
+          ...(firstName && { firstName: firstName }),
+          ...(lastName && { lastName: lastName }),
+          ...(dateOfBirth && { dateOfBirth: dateOfBirth }),
+          ...(gender && { gender: gender }),
+        },
+      },
+      { returnDocument: 'after' }
+    );
+
+    const profile = data.value;
+
+    if (!profile) {
+      throw new Error(`User with id ${id} does not exist`);
     }
+
+    return toProfileObject(profile);
   }
 }
 

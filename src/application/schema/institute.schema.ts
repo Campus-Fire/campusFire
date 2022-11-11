@@ -7,6 +7,10 @@ const typeDefs = gql`
     emailExt: String!
     userIds: [ObjectID]
   }
+
+  type Query {
+    institutes: [Institute!]!
+  }
 `;
 
 export { typeDefs };

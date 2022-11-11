@@ -1,6 +1,15 @@
 import { MongoClient } from 'mongodb';
 
-import { Preferences, preferences, profiles, Profiles, Institutes, institutes } from './initial-data';
+import {
+  Preferences,
+  preferences,
+  profiles,
+  Profiles,
+  Institutes,
+  institutes,
+  Accounts,
+  accounts,
+} from './initial-data';
 
 require('dotenv').config();
 
@@ -11,7 +20,7 @@ let client = new MongoClient(uri);
 
 const seedCollection = async (
   collectionName: string,
-  data: Preferences[] | Profiles[] | Institutes[]
+  data: Preferences[] | Profiles[] | Institutes[] | Accounts[]
 ): Promise<void> => {
   try {
     console.log(`MongoDB is connecting to ${uri}`);
@@ -45,6 +54,8 @@ const seedCollection = async (
     await seedCollection('preferences', preferences);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     await seedCollection('institutes', institutes);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await seedCollection('accounts', accounts);
   } catch (err) {
     console.log(err);
   }
