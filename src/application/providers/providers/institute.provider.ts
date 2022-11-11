@@ -1,4 +1,4 @@
-import { Collection } from 'mongodb';
+import { Collection, ObjectId } from 'mongodb';
 
 import { InstituteDocument, toInstituteObject } from '../../../../src/entities/institute.entity';
 import { Institute } from '../types/institute.provider.types';
@@ -16,22 +16,28 @@ class InstituteProvider {
     const emailParts = email.split('@');
 
     const data = await this.collection.findOne({ emailExt: emailParts[1] });
-
     if (!data) {
       throw new Error('Not a valid email. Please use University/College email');
     }
-    /*
-        const instituteData = await this.collection.updateOne(
-          { _id: data._id },
-          {
-            $push: { userIds: userId },
-          }
-        );
-    
-        if (!instituteData) {
-          throw new Error('Could not update Institute while creating user');
-        }
-        */
+  }
+
+  public async addToInstitute(id: ObjectId, email: string): Promise<void> {
+    const emailParts = email.split('@');
+
+    const data = await this.collection.findOne({ emailExt: emailParts[1] });
+    if (!data) {
+      throw new Error('Not a valid email. Please use University/College email');
+    }
+
+    const instituteData = await this.collection.updateOne(
+      { _id: data._id },
+      {
+        $push: { userIds: id },
+      }
+    );
+    if (!instituteData) {
+      throw new Error('Could not update Institute while creating user');
+    }
   }
 }
 

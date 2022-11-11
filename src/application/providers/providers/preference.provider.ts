@@ -15,10 +15,9 @@ class PreferenceProvider {
   public async createUserPreference(userId: ObjectId, gender: string): Promise<void> {
     const data = await this.collection.insertOne({
       _id: new ObjectId(),
-      userId: userId,
-      gender: gender,
+      userId,
+      gender,
     });
-
     if (!data) {
       throw new Error(`Failed in setting the Preferences for ${userId}`);
     }

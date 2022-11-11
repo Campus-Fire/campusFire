@@ -1,12 +1,13 @@
 import { Collection, ObjectId } from 'mongodb';
 
-import { preferenceProvider } from '../index';
+import { validateEmailInput, validateNameInput } from '../../../../src/application/helpers/validator.helper';
 import { ProfileDocument, toProfileObject } from '../../../../src/entities/profile.entity';
 import validateStringInputs from '../../../../src/lib/string-validator';
+import { instituteProvider, preferenceProvider } from '../index';
 import { CreateProfileInput, Profile, UpdateProfileInput } from '../types/profile.provider.types';
 
 class ProfileProvider {
-  constructor(private collection: Collection<ProfileDocument>) { }
+  constructor(private collection: Collection<ProfileDocument>) {}
 
   public async getProfiles(): Promise<Profile[]> {
     const profiles = await this.collection.find().toArray();
@@ -15,25 +16,25 @@ class ProfileProvider {
   }
 
   public async createProfile(input: CreateProfileInput): Promise<Profile> {
-    const { id, email, firstName, lastName, dateOfBirth, gender, preferredGender } = input;
-
+    const { id, email, firstName, lastName, gender, dateOfBirth, preferredGender } = input;
     const userId = new ObjectId(id);
 
-    if (preferredGender) {
-      validateStringInputs(preferredGender);
-      await preferenceProvider.createUserPreference(userId, preferredGender);
-    }
-    if (firstName) validateStringInputs(firstName);
-    if (lastName) validateStringInputs(lastName);
+    if (email) validateEmailInput(email);
+    if (firstName) validateNameInput(firstName);
+    if (lastName) validateNameInput(lastName);
+    if (gender) validateNameInput(gender);
     if (dateOfBirth) validateStringInputs(dateOfBirth);
-    if (gender) validateStringInputs(gender);
+    if (preferredGender) validateNameInput(preferredGender);
+
+    await preferenceProvider.createUserPreference(userId, preferredGender);
+    await instituteProvider.addToInstitute(userId, email);
 
     const data = await this.collection.insertOne({
       _id: userId,
-      firstName: firstName,
-      lastName: lastName,
-      dateOfBirth: dateOfBirth,
-      gender: gender,
+      firstName,
+      lastName,
+      dateOfBirth,
+      gender,
       isActive: true,
     });
 

@@ -22,4 +22,14 @@ const validatePasswordInput = (password: string): void => {
   }
 };
 
-export { validateEmailInput, validatePasswordInput };
+const validateNameInput = (name: string): void => {
+  const regEx = /([a-zA-Z])+/;
+
+  validateStringInputs(name);
+
+  if (!name.match(regEx)) {
+    throw new UserInputError('Invalid charater in input');
+  }
+};
+
+export { validateEmailInput, validatePasswordInput, validateNameInput };

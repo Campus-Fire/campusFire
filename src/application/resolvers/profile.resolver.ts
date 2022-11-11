@@ -18,7 +18,7 @@ const profileResolver = {
       const input = {
         id,
         email,
-        ...args.input
+        ...args.input,
       };
 
       return profileProvider.createProfile(input);
@@ -29,7 +29,7 @@ const profileResolver = {
       const input = {
         id,
         email,
-        ...args.input
+        ...args.input,
       };
 
       return profileProvider.updateProfile(input);
