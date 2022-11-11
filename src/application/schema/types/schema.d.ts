@@ -20,7 +20,7 @@ export type Account = {
   email: Scalars['String'];
   id: Scalars['ObjectID'];
   isVerified: Scalars['Boolean'];
-  password: Scalars['String'];
+  lastLogin?: Maybe<Scalars['String']>;
   token: Scalars['String'];
 };
 
@@ -41,15 +41,25 @@ export type Institute = {
   userIds?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
 };
 
+export type LoginInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createProfile: Profile;
+  login: Account;
   registerAccount: Account;
   updateProfile: Profile;
 };
 
 export type MutationCreateProfileArgs = {
   input: CreateProfileInput;
+};
+
+export type MutationLoginArgs = {
+  input: LoginInput;
 };
 
 export type MutationRegisterAccountArgs = {

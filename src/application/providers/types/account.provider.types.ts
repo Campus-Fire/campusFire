@@ -6,10 +6,18 @@ interface Account {
   password: string;
   isVerified: boolean;
   createdAt: string;
+  lastLogin?: string;
 }
 
-interface TokenizedAccount extends Account {
+interface SecureAccount extends Omit<Account, 'password'> {}
+
+interface TokenizedAccount extends SecureAccount {
   token: string;
+}
+
+interface LoginInput {
+  email: string;
+  password: string;
 }
 
 interface RegisterAccountInput {
@@ -18,4 +26,4 @@ interface RegisterAccountInput {
   confirmPassword: string;
 }
 
-export { Account, TokenizedAccount, RegisterAccountInput };
+export { Account, SecureAccount, TokenizedAccount, LoginInput, RegisterAccountInput };

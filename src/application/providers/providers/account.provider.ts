@@ -7,15 +7,46 @@ import { AccountDocument, toAccountObject } from '../../../../src/entities/accou
 import deterministicId from '../../../../src/lib/deterministic-id';
 import generateToken from '../../helpers/token-generator.helper';
 import { validateEmailInput, validatePasswordInput } from '../../helpers/validator.helper';
-import { Account, RegisterAccountInput, TokenizedAccount } from '../types/account.provider.types';
+import { LoginInput, RegisterAccountInput, SecureAccount, TokenizedAccount } from '../types/account.provider.types';
 
 class AccountProvider {
   constructor(private collection: Collection<AccountDocument>) {}
 
-  public async getAccounts(): Promise<Account[]> {
+  public async getAccounts(): Promise<SecureAccount[]> {
     const accounts = await this.collection.find().toArray();
 
     return accounts.map(toAccountObject);
+  }
+
+  public async login(input: LoginInput): Promise<TokenizedAccount> {
+    const { email, password } = input;
+
+    validateEmailInput(email);
+    validatePasswordInput(password);
+
+    const accountData = await this.collection.findOneAndUpdate(
+      { email: email },
+      { $set: { ...{ lastLogin: new Date().toISOString() } } },
+      { returnDocument: 'after' }
+    );
+
+    const account = accountData.value;
+    if (!account) {
+      throw new UserInputError('Unable to retrieve an user with provided email.');
+    }
+
+    const passwordMatch = await bcrypt.compare(password, account.password);
+    if (!passwordMatch) {
+      throw new UserInputError('Wrong Credentials!');
+    }
+
+    const document = toAccountObject(account);
+    const token = generateToken({ id: account._id, email: account.email });
+
+    return {
+      token,
+      ...document,
+    };
   }
 
   public async registerAccount(input: RegisterAccountInput): Promise<TokenizedAccount> {
@@ -44,7 +75,6 @@ class AccountProvider {
     });
 
     const account = await this.collection.findOne({ _id: accountData.insertedId });
-
     if (!account) {
       throw new Error('Failed to create the account.');
     }

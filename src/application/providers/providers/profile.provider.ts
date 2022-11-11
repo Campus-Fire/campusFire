@@ -38,7 +38,6 @@ class ProfileProvider {
     });
 
     const profile = await this.collection.findOne({ _id: data.insertedId });
-
     if (!profile) {
       throw new Error(`Could not create ${firstName} ${lastName} user`);
     }
@@ -70,7 +69,6 @@ class ProfileProvider {
     );
 
     const profile = data.value;
-
     if (!profile) {
       throw new Error(`User with id ${id} does not exist`);
     }
