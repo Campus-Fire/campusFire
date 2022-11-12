@@ -10,7 +10,7 @@ interface Account {
   verificationCode?: number;
 }
 
-interface SecureAccount extends Omit<Account, 'password'> { }
+interface SecureAccount extends Omit<Account, 'password'> {}
 
 interface TokenizedAccount extends SecureAccount {
   token: string;
@@ -27,4 +27,10 @@ interface RegisterAccountInput {
   confirmPassword: string;
 }
 
-export { Account, SecureAccount, TokenizedAccount, LoginInput, RegisterAccountInput };
+interface VerificationCodeInput {
+  id: ObjectId;
+  email: string;
+  code: string;
+}
+
+export { Account, SecureAccount, TokenizedAccount, LoginInput, RegisterAccountInput, VerificationCodeInput };

@@ -17,6 +17,11 @@ const typeDefs = gql`
   type Mutation {
     registerAccount(input: RegisterAccountInput!): Account!
     login(input: LoginInput!): Account!
+    verifyAccount(input: VerificationCodeInput!): Boolean!
+  }
+
+  input VerificationCodeInput {
+    code: String!
   }
 
   input LoginInput {
