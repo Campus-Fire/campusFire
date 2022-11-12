@@ -5,6 +5,9 @@ const typeDefs = gql`
     id: ObjectID!
     name: String!
     emailExt: String!
+    city: String!
+    province: String!
+    country: String!
     userIds: [ObjectID]
   }
 

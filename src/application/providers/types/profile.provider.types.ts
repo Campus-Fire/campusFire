@@ -11,6 +11,7 @@ interface Profile {
 
 interface CreateProfileInput {
   id: ObjectId;
+  email: string;
   firstName: string;
   lastName: string;
   dateOfBirth: string;

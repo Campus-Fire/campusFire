@@ -3,7 +3,7 @@ import { Preference } from '../schema/types/schema';
 
 const preferenceResolver = {
   Query: {
-    preference: async (): Promise<Preference[]> => {
+    async preference(): Promise<Preference[]> {
       return preferenceProvider.getAllPreferences();
     },
   },

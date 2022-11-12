@@ -20,7 +20,7 @@ export type Account = {
   email: Scalars['String'];
   id: Scalars['ObjectID'];
   isVerified: Scalars['Boolean'];
-  password: Scalars['String'];
+  lastLogin?: Maybe<Scalars['String']>;
   token: Scalars['String'];
 };
 
@@ -28,28 +28,40 @@ export type CreateProfileInput = {
   dateOfBirth: Scalars['String'];
   firstName: Scalars['String'];
   gender: Scalars['String'];
-  id: Scalars['ObjectID'];
   lastName: Scalars['String'];
   preferredGender: Scalars['String'];
 };
 
 export type Institute = {
   __typename?: 'Institute';
+  city: Scalars['String'];
+  country: Scalars['String'];
   emailExt: Scalars['String'];
   id: Scalars['ObjectID'];
   name: Scalars['String'];
+  province: Scalars['String'];
   userIds?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
+};
+
+export type LoginInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   createProfile: Profile;
+  login: Account;
   registerAccount: Account;
   updateProfile: Profile;
 };
 
 export type MutationCreateProfileArgs = {
   input: CreateProfileInput;
+};
+
+export type MutationLoginArgs = {
+  input: LoginInput;
 };
 
 export type MutationRegisterAccountArgs = {
@@ -95,7 +107,6 @@ export type UpdateProfileInput = {
   dateOfBirth?: InputMaybe<Scalars['String']>;
   firstName?: InputMaybe<Scalars['String']>;
   gender?: InputMaybe<Scalars['String']>;
-  id: Scalars['ObjectID'];
   isActive?: InputMaybe<Scalars['Boolean']>;
   lastName?: InputMaybe<Scalars['String']>;
 };

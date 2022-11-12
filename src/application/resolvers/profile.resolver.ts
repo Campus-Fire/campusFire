@@ -1,21 +1,30 @@
+import { ExpressContext } from 'apollo-server-express';
+
+import checkAuth from '../helpers/check-auth.helper';
 import { profileProvider } from '../providers';
-import { CreateProfileInput, Profile, UpdateProfileInput } from '../schema/types/schema';
+import { MutationCreateProfileArgs, MutationUpdateProfileArgs, Profile } from '../schema/types/schema';
 import { Root } from '../schema/types/types';
 
 const profileResolver = {
   Query: {
-    profiles: async (): Promise<Profile[]> => {
+    async profiles(): Promise<Profile[]> {
       return profileProvider.getProfiles();
     },
   },
 
   Mutation: {
-    createProfile: async (_: Root, args: { input: CreateProfileInput }): Promise<Profile> => {
-      return profileProvider.createProfile(args.input);
+    async createProfile(_: Root, args: MutationCreateProfileArgs, context: ExpressContext): Promise<Profile> {
+      const { id, email } = checkAuth(context);
+      const input = { id, email, ...args.input };
+
+      return profileProvider.createProfile(input);
     },
 
-    updateProfile: async (_: Root, args: { input: UpdateProfileInput }): Promise<Profile> => {
-      return profileProvider.updateProfile(args.input);
+    async updateProfile(_: Root, args: MutationUpdateProfileArgs, context: ExpressContext): Promise<Profile> {
+      const { id } = checkAuth(context);
+      const input = { id, ...args.input };
+
+      return profileProvider.updateProfile(input);
     },
   },
 };

@@ -10,6 +10,9 @@ const createApp = async (): Promise<void> => {
   const server = new ApolloServer({
     schema: makeExecutableSchema({ typeDefs, resolvers }),
     introspection: true,
+    context: (ctx) => {
+      return ctx;
+    },
   });
 
   server.listen({ port: PORT });

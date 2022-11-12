@@ -4,3 +4,5 @@
 
 **/types.d.ts
 **/schema.d.ts
+
+**/server.ts

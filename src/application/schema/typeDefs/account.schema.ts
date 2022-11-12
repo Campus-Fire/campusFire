@@ -4,9 +4,9 @@ const typeDefs = gql`
   type Account {
     id: ObjectID!
     email: String!
-    password: String!
     isVerified: Boolean!
     createdAt: String!
+    lastLogin: String
     token: String!
   }
 
@@ -16,6 +16,12 @@ const typeDefs = gql`
 
   type Mutation {
     registerAccount(input: RegisterAccountInput!): Account!
+    login(input: LoginInput!): Account!
+  }
+
+  input LoginInput {
+    email: String!
+    password: String!
   }
 
   input RegisterAccountInput {

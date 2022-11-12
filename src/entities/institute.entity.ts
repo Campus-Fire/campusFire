@@ -9,6 +9,9 @@ const toInstituteObject = (institute: InstituteDocument): Institute => {
     id: institute._id.toHexString(),
     name: institute.name,
     emailExt: institute.emailExt,
+    city: institute.city,
+    province: institute.province,
+    country: institute.country,
     userIds: institute.userIds,
   };
 };
