@@ -18,7 +18,7 @@ import getVerificationCode from '../../../../src/application/helpers/verificatio
 import sendVerificationEmail from '../../../../src/application/helpers/email-verification.helper';
 
 class AccountProvider {
-  constructor(private collection: Collection<AccountDocument>) {}
+  constructor(private collection: Collection<AccountDocument>) { }
 
   public async getAccounts(): Promise<SecureAccount[]> {
     const accounts = await this.collection.find().toArray();
@@ -122,6 +122,15 @@ class AccountProvider {
     }
 
     return false;
+  }
+
+  public async isAccountVerified(id: ObjectId): Promise<boolean> {
+    const accountData = await this.collection.findOne({ _id: id });
+    if (!accountData) {
+      throw new Error('Corresponding account not found');
+    }
+
+    return accountData.isVerified;
   }
 
   private async userWithEmailExists(email: string): Promise<void> {

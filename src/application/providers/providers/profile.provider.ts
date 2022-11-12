@@ -4,11 +4,11 @@ import { Collection, ObjectId } from 'mongodb';
 import { validateEmailInput, validateNameInput } from '../../../../src/application/helpers/validator.helper';
 import { ProfileDocument, toProfileObject } from '../../../../src/entities/profile.entity';
 import validateStringInputs from '../../../../src/lib/string-validator';
-import { instituteProvider, preferenceProvider } from '../index';
+import { accountProvider, instituteProvider, preferenceProvider } from '../index';
 import { CreateProfileInput, Profile, UpdateProfileInput } from '../types/profile.provider.types';
 
 class ProfileProvider {
-  constructor(private collection: Collection<ProfileDocument>) {}
+  constructor(private collection: Collection<ProfileDocument>) { }
 
   public async getProfiles(): Promise<Profile[]> {
     const profiles = await this.collection.find().toArray();
@@ -35,6 +35,9 @@ class ProfileProvider {
     validateStringInputs(dateOfBirth);
     validateNameInput(preferredGender);
 
+    if (!await accountProvider.isAccountVerified(userId)) {
+      throw new Error('Please verify account before creating a profile');
+    }
     await preferenceProvider.createUserPreference(userId, preferredGender);
     await instituteProvider.addToInstitute(userId, email);
 
@@ -66,6 +69,9 @@ class ProfileProvider {
     if (lastName) validateStringInputs(lastName);
     if (dateOfBirth) validateStringInputs(dateOfBirth);
     if (gender) validateStringInputs(gender);
+    if (!await accountProvider.isAccountVerified(userId)) {
+      throw new Error('Please verify account before updating profile');
+    }
 
     const data = await this.collection.findOneAndUpdate(
       { _id: userId },
