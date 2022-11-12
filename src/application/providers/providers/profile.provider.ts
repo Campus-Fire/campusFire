@@ -8,7 +8,7 @@ import { instituteProvider, preferenceProvider } from '../index';
 import { CreateProfileInput, Profile, UpdateProfileInput } from '../types/profile.provider.types';
 
 class ProfileProvider {
-  constructor(private collection: Collection<ProfileDocument>) {}
+  constructor(private collection: Collection<ProfileDocument>) { }
 
   public async getProfiles(): Promise<Profile[]> {
     const profiles = await this.collection.find().toArray();
@@ -60,7 +60,7 @@ class ProfileProvider {
     const userId = new ObjectId(id);
 
     if (!id) {
-      throw new UserInputError('Incomplete information provided to create a profile');
+      throw new UserInputError('Incomplete information provided to update a profile');
     }
     if (firstName) validateStringInputs(firstName);
     if (lastName) validateStringInputs(lastName);

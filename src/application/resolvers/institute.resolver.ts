@@ -3,7 +3,7 @@ import { Institute } from '../schema/types/schema';
 
 const instituteResolver = {
   Query: {
-    institutes: async (): Promise<Institute[]> => {
+    async institutes(): Promise<Institute[]> {
       return instituteProvider.getInstitutes();
     },
   },

@@ -34,9 +34,12 @@ export type CreateProfileInput = {
 
 export type Institute = {
   __typename?: 'Institute';
+  city: Scalars['String'];
+  country: Scalars['String'];
   emailExt: Scalars['String'];
   id: Scalars['ObjectID'];
   name: Scalars['String'];
+  province: Scalars['String'];
   userIds?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
 };
 

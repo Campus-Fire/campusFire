@@ -30,6 +30,9 @@ interface Institutes {
   _id: ObjectID;
   name: string;
   emailExt: string;
+  city: string;
+  province: string;
+  country: string;
   userIds?: ObjectID[];
 }
 
@@ -158,12 +161,17 @@ const institutes: Institutes[] = [
     _id: UniID.UCalgary,
     name: 'University of Calgary',
     emailExt: 'ucalgary.ca',
+    city: 'Calgary',
+    province: 'Alberta',
+    country: 'Canada',
     userIds: [UserID.JackJones, UserID.KimGarcia, UserID.JohnSmith],
   },
   {
     _id: UniID.SAIT,
     name: 'SAIT',
-    emailExt: 'edu.sait.ca',
+    emailExt: 'edu.sait.ca', city: 'Calgary',
+    province: 'Alberta',
+    country: 'Canada',
     userIds: [UserID.MaryMartinez, UserID.MikeWilliams],
   },
 ];

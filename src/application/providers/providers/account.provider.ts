@@ -10,7 +10,7 @@ import { validateEmailInput, validatePasswordInput } from '../../helpers/validat
 import { LoginInput, RegisterAccountInput, SecureAccount, TokenizedAccount } from '../types/account.provider.types';
 
 class AccountProvider {
-  constructor(private collection: Collection<AccountDocument>) {}
+  constructor(private collection: Collection<AccountDocument>) { }
 
   public async getAccounts(): Promise<SecureAccount[]> {
     const accounts = await this.collection.find().toArray();
@@ -25,7 +25,7 @@ class AccountProvider {
     validatePasswordInput(password);
 
     const accountData = await this.collection.findOneAndUpdate(
-      { email: email },
+      { email },
       { $set: { ...{ lastLogin: new Date().toISOString() } } },
       { returnDocument: 'after' }
     );
@@ -55,7 +55,6 @@ class AccountProvider {
     if (password !== confirmPassword) {
       throw new UserInputError('Passwords do not match.');
     }
-
     validateEmailInput(email);
     validatePasswordInput(password);
     validatePasswordInput(confirmPassword);
@@ -68,7 +67,7 @@ class AccountProvider {
 
     const accountData = await this.collection.insertOne({
       _id: userId,
-      email: email,
+      email,
       password: hashedPassword,
       createdAt: new Date().toISOString(),
       isVerified: false,
@@ -89,8 +88,7 @@ class AccountProvider {
   }
 
   private async userWithEmailExists(email: string): Promise<void> {
-    const data = await this.collection.countDocuments({ email: email });
-
+    const data = await this.collection.countDocuments({ email });
     if (data && data > 0) {
       throw new Error(`User with ${email} email already exists.`);
     }
