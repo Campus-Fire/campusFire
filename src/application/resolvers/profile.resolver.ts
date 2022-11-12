@@ -15,22 +15,14 @@ const profileResolver = {
   Mutation: {
     async createProfile(_: Root, args: MutationCreateProfileArgs, context: ExpressContext): Promise<Profile> {
       const { id, email } = checkAuth(context);
-      const input = {
-        id,
-        email,
-        ...args.input,
-      };
+      const input = { id, email, ...args.input };
 
       return profileProvider.createProfile(input);
     },
 
     async updateProfile(_: Root, args: MutationUpdateProfileArgs, context: ExpressContext): Promise<Profile> {
-      const { id, email } = checkAuth(context);
-      const input = {
-        id,
-        email,
-        ...args.input,
-      };
+      const { id } = checkAuth(context);
+      const input = { id, ...args.input };
 
       return profileProvider.updateProfile(input);
     },

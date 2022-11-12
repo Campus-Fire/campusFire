@@ -21,7 +21,6 @@ interface CreateProfileInput {
 
 interface UpdateProfileInput {
   id: ObjectId;
-  email: string;
   firstName?: string | null;
   lastName?: string | null;
   dateOfBirth?: string | null;

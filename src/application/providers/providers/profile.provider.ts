@@ -1,3 +1,4 @@
+import { UserInputError } from 'apollo-server';
 import { Collection, ObjectId } from 'mongodb';
 
 import { validateEmailInput, validateNameInput } from '../../../../src/application/helpers/validator.helper';
@@ -19,12 +20,20 @@ class ProfileProvider {
     const { id, email, firstName, lastName, gender, dateOfBirth, preferredGender } = input;
     const userId = new ObjectId(id);
 
-    if (email) validateEmailInput(email);
-    if (firstName) validateNameInput(firstName);
-    if (lastName) validateNameInput(lastName);
-    if (gender) validateNameInput(gender);
-    if (dateOfBirth) validateStringInputs(dateOfBirth);
-    if (preferredGender) validateNameInput(preferredGender);
+    const profileCount = await this.collection.countDocuments({ _id: userId });
+    if (profileCount > 0) {
+      throw new Error('Please try to update the profile later');
+    }
+
+    if (!id || !email || !firstName || !lastName || !gender || !dateOfBirth || !preferredGender) {
+      throw new UserInputError('Incomplete information provided to create a profile');
+    }
+    validateEmailInput(email);
+    validateNameInput(firstName);
+    validateNameInput(lastName);
+    validateNameInput(gender);
+    validateStringInputs(dateOfBirth);
+    validateNameInput(preferredGender);
 
     await preferenceProvider.createUserPreference(userId, preferredGender);
     await instituteProvider.addToInstitute(userId, email);
@@ -48,9 +57,11 @@ class ProfileProvider {
 
   public async updateProfile(input: UpdateProfileInput): Promise<Profile> {
     const { id, firstName, lastName, dateOfBirth, gender } = input;
-
     const userId = new ObjectId(id);
 
+    if (!id) {
+      throw new UserInputError('Incomplete information provided to create a profile');
+    }
     if (firstName) validateStringInputs(firstName);
     if (lastName) validateStringInputs(lastName);
     if (dateOfBirth) validateStringInputs(dateOfBirth);
