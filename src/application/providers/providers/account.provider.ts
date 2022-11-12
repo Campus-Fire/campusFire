@@ -1,18 +1,24 @@
 import { UserInputError } from 'apollo-server';
 import bcrypt from 'bcryptjs';
-import { Collection } from 'mongodb';
+import { Collection, ObjectId } from 'mongodb';
 
 import { instituteProvider } from '../index';
 import { AccountDocument, toAccountObject } from '../../../../src/entities/account.entity';
 import deterministicId from '../../../../src/lib/deterministic-id';
 import generateToken from '../../helpers/token-generator.helper';
 import { validateEmailInput, validatePasswordInput } from '../../helpers/validator.helper';
-import { LoginInput, RegisterAccountInput, SecureAccount, TokenizedAccount } from '../types/account.provider.types';
+import {
+  LoginInput,
+  RegisterAccountInput,
+  SecureAccount,
+  TokenizedAccount,
+  VerificationCodeInput,
+} from '../types/account.provider.types';
 import getVerificationCode from '../../../../src/application/helpers/verification-code.helper';
 import sendVerificationEmail from '../../../../src/application/helpers/email-verification.helper';
 
 class AccountProvider {
-  constructor(private collection: Collection<AccountDocument>) { }
+  constructor(private collection: Collection<AccountDocument>) {}
 
   public async getAccounts(): Promise<SecureAccount[]> {
     const accounts = await this.collection.find().toArray();
@@ -91,6 +97,31 @@ class AccountProvider {
       token,
       ...document,
     };
+  }
+
+  public async verifyAccount(input: VerificationCodeInput): Promise<boolean> {
+    const { id, email, code } = input;
+    const userId = new ObjectId(id);
+
+    const accountData = await this.collection.findOne({ _id: userId, email });
+    if (!accountData) {
+      throw new Error('Account not found');
+    }
+
+    if (accountData.verificationCode === Number(code)) {
+      const data = await this.collection.findOneAndUpdate(
+        { _id: userId, email },
+        { $set: { ...{ isVerified: true } } },
+        { returnDocument: 'after' }
+      );
+      if (!data.value) {
+        throw new Error('Unable to verify the account');
+      }
+
+      return true;
+    }
+
+    return false;
   }
 
   private async userWithEmailExists(email: string): Promise<void> {

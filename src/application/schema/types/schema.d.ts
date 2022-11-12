@@ -54,6 +54,7 @@ export type Mutation = {
   login: Account;
   registerAccount: Account;
   updateProfile: Profile;
+  verifyAccount: Scalars['Boolean'];
 };
 
 export type MutationCreateProfileArgs = {
@@ -70,6 +71,10 @@ export type MutationRegisterAccountArgs = {
 
 export type MutationUpdateProfileArgs = {
   input: UpdateProfileInput;
+};
+
+export type MutationVerifyAccountArgs = {
+  input: VerificationCodeInput;
 };
 
 export type Preference = {
@@ -109,4 +114,8 @@ export type UpdateProfileInput = {
   gender?: InputMaybe<Scalars['String']>;
   isActive?: InputMaybe<Scalars['Boolean']>;
   lastName?: InputMaybe<Scalars['String']>;
+};
+
+export type VerificationCodeInput = {
+  code: Scalars['String'];
 };

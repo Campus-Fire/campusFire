@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 
 import config from '../../../config';
 
-const sendVerificationEmail = (email: string, code: number) => {
+const sendVerificationEmail = (email: string, code: number): void => {
   const transport = nodemailer.createTransport({
     host: config.EMAIL_SERVICE_HOST,
     port: config.EMAIL_SERVICE_PORT,
