@@ -8,6 +8,8 @@ import deterministicId from '../../../../src/lib/deterministic-id';
 import generateToken from '../../helpers/token-generator.helper';
 import { validateEmailInput, validatePasswordInput } from '../../helpers/validator.helper';
 import { LoginInput, RegisterAccountInput, SecureAccount, TokenizedAccount } from '../types/account.provider.types';
+import getVerificationCode from '../../../../src/application/helpers/verification-code.helper';
+import sendVerificationEmail from '../../../../src/application/helpers/email-verification.helper';
 
 class AccountProvider {
   constructor(private collection: Collection<AccountDocument>) { }
@@ -62,6 +64,9 @@ class AccountProvider {
     await instituteProvider.isValidEmailExtension(email);
     await this.userWithEmailExists(email);
 
+    const verificationCode = getVerificationCode();
+    sendVerificationEmail(email, verificationCode);
+
     const userId = deterministicId(email);
     const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -71,6 +76,7 @@ class AccountProvider {
       password: hashedPassword,
       createdAt: new Date().toISOString(),
       isVerified: false,
+      verificationCode,
     });
 
     const account = await this.collection.findOne({ _id: accountData.insertedId });

@@ -7,9 +7,10 @@ interface Account {
   isVerified: boolean;
   createdAt: string;
   lastLogin?: string;
+  verificationCode?: number;
 }
 
-interface SecureAccount extends Omit<Account, 'password'> {}
+interface SecureAccount extends Omit<Account, 'password'> { }
 
 interface TokenizedAccount extends SecureAccount {
   token: string;

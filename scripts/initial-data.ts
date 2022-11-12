@@ -169,7 +169,8 @@ const institutes: Institutes[] = [
   {
     _id: UniID.SAIT,
     name: 'SAIT',
-    emailExt: 'edu.sait.ca', city: 'Calgary',
+    emailExt: 'edu.sait.ca',
+    city: 'Calgary',
     province: 'Alberta',
     country: 'Canada',
     userIds: [UserID.MaryMartinez, UserID.MikeWilliams],
