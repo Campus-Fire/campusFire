@@ -1,6 +1,6 @@
 import { Document } from 'mongodb';
 
-import { Profile } from '../application/providers/types/profile.provider.types';
+import { Profile } from '../application/providers/profile/profile.provider.types';
 
 interface ProfileDocument extends Document, Omit<Profile, 'id'> {}
 

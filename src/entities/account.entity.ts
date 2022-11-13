@@ -1,6 +1,6 @@
 import { Document } from 'mongodb';
 
-import { Account, SecureAccount } from '../../src/application/providers/types/account.provider.types';
+import { Account, SecureAccount } from '../application/providers/account/account.provider.types';
 
 interface AccountDocument extends Document, Omit<Account, 'id'> {}
 

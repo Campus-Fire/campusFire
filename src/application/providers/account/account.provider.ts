@@ -2,23 +2,23 @@ import { UserInputError } from 'apollo-server';
 import bcrypt from 'bcryptjs';
 import { Collection, ObjectId } from 'mongodb';
 
+import { AccountDocument, toAccountObject } from '../../../entities/account.entity';
+import deterministicId from '../../helpers/deterministic-id';
+import sendVerificationEmail from '../../helpers/email-verification';
+import generateToken from '../../helpers/token-generator';
+import { validateEmailInput, validatePasswordInput } from '../../helpers/validator';
+import getVerificationCode from '../../helpers/verification-code';
 import { instituteProvider } from '../index';
-import { AccountDocument, toAccountObject } from '../../../../src/entities/account.entity';
-import deterministicId from '../../../../src/lib/deterministic-id';
-import generateToken from '../../helpers/token-generator.helper';
-import { validateEmailInput, validatePasswordInput } from '../../helpers/validator.helper';
 import {
   LoginInput,
   RegisterAccountInput,
   SecureAccount,
   TokenizedAccount,
   VerificationCodeInput,
-} from '../types/account.provider.types';
-import getVerificationCode from '../../../../src/application/helpers/verification-code.helper';
-import sendVerificationEmail from '../../../../src/application/helpers/email-verification.helper';
+} from './account.provider.types';
 
 class AccountProvider {
-  constructor(private collection: Collection<AccountDocument>) { }
+  constructor(private collection: Collection<AccountDocument>) {}
 
   public async getAccounts(): Promise<SecureAccount[]> {
     const accounts = await this.collection.find().toArray();

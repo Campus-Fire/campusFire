@@ -1,6 +1,6 @@
 import { UserInputError } from 'apollo-server';
 
-import validateStringInputs from '../../../src/lib/string-validator';
+import validateStringInputs from './string-validator';
 
 const validateEmailInput = (email: string): void => {
   const regEx = /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/;

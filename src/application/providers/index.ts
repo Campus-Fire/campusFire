@@ -1,9 +1,9 @@
 import { setupDb } from '../database';
 
-import { AccountProvider } from './providers/account.provider';
-import { InstituteProvider } from './providers/institute.provider';
-import { PreferenceProvider } from './providers/preference.provider';
-import { ProfileProvider } from './providers/profile.provider';
+import { AccountProvider } from './account/account.provider';
+import { InstituteProvider } from './institute/institute.provider';
+import { PreferenceProvider } from './preference/preference.provider';
+import { ProfileProvider } from './profile/profile.provider';
 
 const db = setupDb();
 
