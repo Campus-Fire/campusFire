@@ -8,7 +8,7 @@ import { accountProvider, instituteProvider, preferenceProvider } from '../index
 import { CreateProfileInput, Profile, UpdateProfileInput } from './profile.provider.types';
 
 class ProfileProvider {
-  constructor(private collection: Collection<ProfileDocument>) { }
+  constructor(private collection: Collection<ProfileDocument>) {}
 
   public async getProfiles(): Promise<Profile[]> {
     const profiles = await this.collection.find().toArray();

@@ -14,11 +14,11 @@ import {
   RegisterAccountInput,
   SecureAccount,
   TokenizedAccount,
-  VerificationCodeInput
+  VerificationCodeInput,
 } from './account.provider.types';
 
 class AccountProvider {
-  constructor(private collection: Collection<AccountDocument>) { }
+  constructor(private collection: Collection<AccountDocument>) {}
 
   public async getAccounts(): Promise<SecureAccount[]> {
     const accounts = await this.collection.find().toArray();

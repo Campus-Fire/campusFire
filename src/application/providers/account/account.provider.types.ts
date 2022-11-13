@@ -10,7 +10,7 @@ interface Account {
   verificationCode?: number;
 }
 
-interface SecureAccount extends Omit<Account, 'password'> { }
+interface SecureAccount extends Omit<Account, 'password'> {}
 
 interface TokenizedAccount extends SecureAccount {
   token: string;
