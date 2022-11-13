@@ -1,8 +1,8 @@
 import { Document } from 'mongodb';
 
-import { Preference } from '../../src/application/providers/types/preference.provider.types';
+import { Preference } from '../application/providers/preference/preference.provider.types';
 
-interface PreferenceDocument extends Document, Preference {}
+interface PreferenceDocument extends Document, Preference { }
 
 const toPreferenceObject = (preference: PreferenceDocument): Preference => {
   return {

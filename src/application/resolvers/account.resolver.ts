@@ -1,16 +1,16 @@
 import { ExpressContext } from 'apollo-server-express';
 
-import checkAuth from '../helpers/check-auth.helper';
-import { accountProvider } from '../providers';
 import {
   Account,
   MutationLoginArgs,
   MutationRegisterAccountArgs,
-  MutationVerifyAccountArgs,
+  MutationVerifyAccountArgs
 } from '../schema/types/schema';
 import { Root } from '../schema/types/types';
+import checkAuth from '../helpers/check-auth';
+import { accountProvider } from '../providers';
 
-interface UntokenizedAccount extends Omit<Account, 'token'> {}
+interface UntokenizedAccount extends Omit<Account, 'token'> { }
 
 const accountResolver = {
   Query: {

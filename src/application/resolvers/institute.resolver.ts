@@ -1,5 +1,5 @@
-import { instituteProvider } from '../providers';
 import { Institute } from '../schema/types/schema';
+import { instituteProvider } from '../providers';
 
 const instituteResolver = {
   Query: {

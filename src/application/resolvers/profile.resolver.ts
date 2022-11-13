@@ -1,9 +1,9 @@
 import { ExpressContext } from 'apollo-server-express';
 
-import checkAuth from '../helpers/check-auth.helper';
-import { profileProvider } from '../providers';
 import { MutationCreateProfileArgs, MutationUpdateProfileArgs, Profile } from '../schema/types/schema';
 import { Root } from '../schema/types/types';
+import checkAuth from '../helpers/check-auth';
+import { profileProvider } from '../providers';
 
 const profileResolver = {
   Query: {

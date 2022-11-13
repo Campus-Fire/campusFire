@@ -1,11 +1,11 @@
 import { UserInputError } from 'apollo-server';
 import { Collection, ObjectId } from 'mongodb';
 
-import { validateEmailInput, validateNameInput } from '../../../../src/application/helpers/validator.helper';
-import { ProfileDocument, toProfileObject } from '../../../../src/entities/profile.entity';
-import validateStringInputs from '../../../../src/lib/string-validator';
+import { ProfileDocument, toProfileObject } from '../../../entities/profile.entity';
+import validateStringInputs from '../../helpers/string-validator';
+import { validateEmailInput, validateNameInput } from '../../helpers/validator';
 import { accountProvider, instituteProvider, preferenceProvider } from '../index';
-import { CreateProfileInput, Profile, UpdateProfileInput } from '../types/profile.provider.types';
+import { CreateProfileInput, Profile, UpdateProfileInput } from './profile.provider.types';
 
 class ProfileProvider {
   constructor(private collection: Collection<ProfileDocument>) { }
@@ -35,7 +35,7 @@ class ProfileProvider {
     validateStringInputs(dateOfBirth);
     validateNameInput(preferredGender);
 
-    if (!await accountProvider.isAccountVerified(userId)) {
+    if (!(await accountProvider.isAccountVerified(userId))) {
       throw new Error('Please verify account before creating a profile');
     }
     await preferenceProvider.createUserPreference(userId, preferredGender);
@@ -69,7 +69,7 @@ class ProfileProvider {
     if (lastName) validateStringInputs(lastName);
     if (dateOfBirth) validateStringInputs(dateOfBirth);
     if (gender) validateStringInputs(gender);
-    if (!await accountProvider.isAccountVerified(userId)) {
+    if (!(await accountProvider.isAccountVerified(userId))) {
       throw new Error('Please verify account before updating profile');
     }
 

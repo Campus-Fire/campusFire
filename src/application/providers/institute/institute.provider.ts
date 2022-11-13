@@ -1,10 +1,10 @@
 import { Collection, ObjectId } from 'mongodb';
 
-import { InstituteDocument, toInstituteObject } from '../../../../src/entities/institute.entity';
-import { Institute } from '../types/institute.provider.types';
+import { InstituteDocument, toInstituteObject } from '../../../entities/institute.entity';
+import { Institute } from './institute.provider.types';
 
 class InstituteProvider {
-  constructor(private collection: Collection<InstituteDocument>) {}
+  constructor(private collection: Collection<InstituteDocument>) { }
 
   public async getInstitutes(): Promise<Institute[]> {
     const institutes = await this.collection.find().toArray();
