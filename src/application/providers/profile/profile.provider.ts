@@ -93,6 +93,15 @@ class ProfileProvider {
 
     return toProfileObject(profile);
   }
+
+  public async isUserActive(id: ObjectId): Promise<boolean> {
+    const profileData = await this.collection.findOne({ _id: id });
+    if (!profileData) {
+      throw new Error('User not found!');
+    }
+
+    return profileData.isActive;
+  }
 }
 
 export { ProfileProvider };
