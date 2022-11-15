@@ -14,4 +14,10 @@ interface SendMessageInput {
   id: ObjectId;
 }
 
-export { Message, SendMessageInput };
+interface ReceiveMessageInput {
+  user: ObjectId;
+  oppUser: ObjectId;
+  id: ObjectId;
+}
+
+export { Message, SendMessageInput, ReceiveMessageInput };

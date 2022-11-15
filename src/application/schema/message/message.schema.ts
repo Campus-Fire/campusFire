@@ -20,8 +20,8 @@ const typeDefs = gql`
   }
 
   input ReceiveMessageInput {
-    from: ObjectID!
-    to: ObjectID!
+    user: ObjectID!
+    oppUser: ObjectID!
   }
 `;
 

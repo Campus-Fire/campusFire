@@ -2,7 +2,7 @@ import { ExpressContext } from 'apollo-server-express';
 
 import checkAuth from '../helpers/check-auth';
 import { messageProvider } from '../providers';
-import { MutationSendMessageArgs } from '../schema/types/schema';
+import { Message, MutationReceiveMessageArgs, MutationSendMessageArgs } from '../schema/types/schema';
 import { Root } from '../schema/types/types';
 
 const messageResolver = {
@@ -12,6 +12,13 @@ const messageResolver = {
       const input = { id, ...args.input };
 
       return messageProvider.sendMessage(input);
+    },
+
+    async receiveMessage(_: Root, args: MutationReceiveMessageArgs, context: ExpressContext): Promise<Message[]> {
+      const { id } = checkAuth(context);
+      const input = { id, ...args.input };
+
+      return messageProvider.getMessages(input);
     },
   },
 };

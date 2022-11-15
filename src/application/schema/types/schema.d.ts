@@ -121,8 +121,8 @@ export type Query = {
 };
 
 export type ReceiveMessageInput = {
-  from: Scalars['ObjectID'];
-  to: Scalars['ObjectID'];
+  oppUser: Scalars['ObjectID'];
+  user: Scalars['ObjectID'];
 };
 
 export type RegisterAccountInput = {
