@@ -48,12 +48,23 @@ export type LoginInput = {
   password: Scalars['String'];
 };
 
+export type Message = {
+  __typename?: 'Message';
+  at: Scalars['String'];
+  from: Scalars['ObjectID'];
+  text: Scalars['String'];
+  to: Scalars['ObjectID'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createProfile: Profile;
   login: Account;
+  receiveMessage?: Maybe<Array<Maybe<Message>>>;
   registerAccount: Account;
+  sendMessage: Scalars['Boolean'];
   updateProfile: Profile;
+  verifyAccount: Scalars['Boolean'];
 };
 
 export type MutationCreateProfileArgs = {
@@ -64,12 +75,24 @@ export type MutationLoginArgs = {
   input: LoginInput;
 };
 
+export type MutationReceiveMessageArgs = {
+  input: ReceiveMessageInput;
+};
+
 export type MutationRegisterAccountArgs = {
   input: RegisterAccountInput;
 };
 
+export type MutationSendMessageArgs = {
+  input: SendMessageInput;
+};
+
 export type MutationUpdateProfileArgs = {
   input: UpdateProfileInput;
+};
+
+export type MutationVerifyAccountArgs = {
+  input: VerificationCodeInput;
 };
 
 export type Preference = {
@@ -97,10 +120,21 @@ export type Query = {
   profiles: Array<Profile>;
 };
 
+export type ReceiveMessageInput = {
+  oppUser: Scalars['ObjectID'];
+  user: Scalars['ObjectID'];
+};
+
 export type RegisterAccountInput = {
   confirmPassword: Scalars['String'];
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type SendMessageInput = {
+  from: Scalars['ObjectID'];
+  text: Scalars['String'];
+  to: Scalars['ObjectID'];
 };
 
 export type UpdateProfileInput = {
@@ -109,4 +143,8 @@ export type UpdateProfileInput = {
   gender?: InputMaybe<Scalars['String']>;
   isActive?: InputMaybe<Scalars['Boolean']>;
   lastName?: InputMaybe<Scalars['String']>;
+};
+
+export type VerificationCodeInput = {
+  code: Scalars['String'];
 };

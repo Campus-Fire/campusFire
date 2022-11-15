@@ -1,5 +1,5 @@
-import { preferenceProvider } from '../providers';
 import { Preference } from '../schema/types/schema';
+import { preferenceProvider } from '../providers';
 
 const preferenceResolver = {
   Query: {

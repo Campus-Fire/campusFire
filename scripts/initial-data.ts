@@ -1,6 +1,6 @@
 import { ObjectID } from 'bson';
 
-import deterministicId from '../src/lib/deterministic-id';
+import deterministicId from '../src/application/helpers/deterministic-id';
 
 interface Accounts {
   _id: ObjectID;

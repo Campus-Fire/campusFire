@@ -1,7 +1,7 @@
 import { Collection, ObjectId } from 'mongodb';
 
-import { InstituteDocument, toInstituteObject } from '../../../../src/entities/institute.entity';
-import { Institute } from '../types/institute.provider.types';
+import { InstituteDocument, toInstituteObject } from '../../../entities/institute.entity';
+import { Institute } from './institute.provider.types';
 
 class InstituteProvider {
   constructor(private collection: Collection<InstituteDocument>) {}
@@ -22,6 +22,7 @@ class InstituteProvider {
   }
 
   public async addToInstitute(id: ObjectId, email: string): Promise<void> {
+    const userId = new ObjectId(id);
     const emailParts = email.split('@');
 
     const data = await this.collection.findOne({ emailExt: emailParts[1] });
@@ -32,7 +33,7 @@ class InstituteProvider {
     const instituteData = await this.collection.updateOne(
       { _id: data._id },
       {
-        $push: { userIds: id },
+        $push: { userIds: userId },
       }
     );
     if (!instituteData) {
