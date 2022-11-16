@@ -8,7 +8,10 @@ const toPreferenceObject = (preference: PreferenceDocument): Preference => {
   return {
     userId: preference.userId,
     gender: preference.gender,
-    likes: preference.likes,
+    usersEncountered: preference.usersEncountered,
+    liked: preference.liked,
+    likedBy: preference.likedBy,
+    disliked: preference.disliked,
   };
 };
 

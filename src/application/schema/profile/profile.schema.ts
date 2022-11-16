@@ -11,7 +11,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    profiles: [Profile!]!
+    getProfile: Profile!
   }
 
   type Mutation {

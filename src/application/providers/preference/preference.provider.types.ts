@@ -3,7 +3,15 @@ import { ObjectId } from 'mongodb';
 interface Preference {
   userId: ObjectId;
   gender: string;
-  likes?: ObjectId[];
+  usersEncountered?: ObjectId[];
+  liked?: ObjectId[];
+  likedBy?: ObjectId[];
+  disliked?: ObjectId[];
 }
 
-export { Preference };
+interface ProfileInteractionInput {
+  id: ObjectId;
+  profileId: ObjectId;
+}
+
+export { Preference, ProfileInteractionInput };

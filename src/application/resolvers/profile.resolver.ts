@@ -7,8 +7,10 @@ import { profileProvider } from '../providers';
 
 const profileResolver = {
   Query: {
-    async profiles(): Promise<Profile[]> {
-      return profileProvider.getProfiles();
+    async getProfile(_: Root, args: any, context: ExpressContext): Promise<Profile> {
+      const { id } = checkAuth(context);
+
+      return profileProvider.getProfile(id);
     },
   },
 
