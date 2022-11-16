@@ -1,6 +1,6 @@
 import { Collection, ObjectId } from 'mongodb';
 
-import { profileProvider } from '../index';
+import { preferenceProvider, profileProvider } from '../index';
 import validateStringInputs from '../../../application/helpers/string-validator';
 import { MessageDocument, toMessageObject } from '../../../entities/message.entity';
 import { Message, ReceiveMessageInput, SendMessageInput } from './message.provider.types';
@@ -24,6 +24,7 @@ class MessageProvider {
       throw new Error('Receiver is not an active user');
     }
 
+    await preferenceProvider.areUsersMatched(senderId, receiverId);
     validateStringInputs(text);
 
     const data = await this.collection.insertOne({

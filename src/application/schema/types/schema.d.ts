@@ -59,6 +59,8 @@ export type Message = {
 export type Mutation = {
   __typename?: 'Mutation';
   createProfile: Profile;
+  dislikeUserProfile: Preference;
+  likeUserProfile: Preference;
   login: Account;
   receiveMessage?: Maybe<Array<Maybe<Message>>>;
   registerAccount: Account;
@@ -69,6 +71,14 @@ export type Mutation = {
 
 export type MutationCreateProfileArgs = {
   input: CreateProfileInput;
+};
+
+export type MutationDislikeUserProfileArgs = {
+  input: ProfileInteractionInput;
+};
+
+export type MutationLikeUserProfileArgs = {
+  input: ProfileInteractionInput;
 };
 
 export type MutationLoginArgs = {
@@ -97,9 +107,12 @@ export type MutationVerifyAccountArgs = {
 
 export type Preference = {
   __typename?: 'Preference';
+  disliked?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
   gender: Scalars['String'];
-  likes?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
+  liked?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
+  likedBy?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
   userId: Scalars['ObjectID'];
+  usersEncountered?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
 };
 
 export type Profile = {
@@ -112,12 +125,16 @@ export type Profile = {
   lastName: Scalars['String'];
 };
 
+export type ProfileInteractionInput = {
+  profileId: Scalars['ObjectID'];
+};
+
 export type Query = {
   __typename?: 'Query';
   accounts: Array<Account>;
+  getProfile: Profile;
   institutes: Array<Institute>;
   preference: Array<Preference>;
-  profiles: Array<Profile>;
 };
 
 export type ReceiveMessageInput = {

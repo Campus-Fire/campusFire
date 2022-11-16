@@ -4,11 +4,23 @@ const typeDefs = gql`
   type Preference {
     userId: ObjectID!
     gender: String!
-    likes: [ObjectID]
+    usersEncountered: [ObjectID]
+    liked: [ObjectID]
+    likedBy: [ObjectID]
+    disliked: [ObjectID]
   }
 
   type Query {
     preference: [Preference!]!
+  }
+
+  type Mutation {
+    likeUserProfile(input: ProfileInteractionInput!): Preference!
+    dislikeUserProfile(input: ProfileInteractionInput!): Preference!
+  }
+
+  input ProfileInteractionInput {
+    profileId: ObjectID!
   }
 `;
 

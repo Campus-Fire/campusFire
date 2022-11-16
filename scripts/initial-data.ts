@@ -23,7 +23,6 @@ interface Profiles {
 interface Preferences {
   userId: ObjectID;
   gender: string;
-  likes?: ObjectID[];
 }
 
 interface Institutes {
@@ -134,17 +133,14 @@ const preferences: Preferences[] = [
   {
     userId: UserID.JohnSmith,
     gender: 'F',
-    likes: [UserID.KimGarcia],
   },
   {
     userId: UserID.MikeWilliams,
     gender: 'F',
-    likes: [UserID.MaryMartinez],
   },
   {
     userId: UserID.KimGarcia,
     gender: 'M',
-    likes: [UserID.JackJones, UserID.JohnSmith],
   },
   {
     userId: UserID.MaryMartinez,

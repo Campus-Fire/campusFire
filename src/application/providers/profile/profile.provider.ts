@@ -10,10 +10,25 @@ import { CreateProfileInput, Profile, UpdateProfileInput } from './profile.provi
 class ProfileProvider {
   constructor(private collection: Collection<ProfileDocument>) {}
 
-  public async getProfiles(): Promise<Profile[]> {
-    const profiles = await this.collection.find().toArray();
+  public async getProfile(id: any): Promise<Profile> {
+    const userId = new ObjectId(id);
 
-    return profiles.map(toProfileObject);
+    const profileCount = await this.collection.countDocuments({ _id: userId });
+    if (profileCount === 0) {
+      throw new Error('User not found!');
+    }
+
+    const preferredGender = await preferenceProvider.getUserPreferredGender(userId);
+    const profilesData = await this.collection.find({ gender: preferredGender }).toArray();
+    const profiles = profilesData.map(toProfileObject);
+
+    for (let profile of profiles) {
+      if (!(await preferenceProvider.isUserEncounteredBefore(userId, new ObjectId(profile.id)))) {
+        return profile;
+      }
+    }
+
+    throw new Error('No profiles can be found for user');
   }
 
   public async createProfile(input: CreateProfileInput): Promise<Profile> {
