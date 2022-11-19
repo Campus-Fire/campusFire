@@ -1,5 +1,4 @@
 import { UserInputError } from 'apollo-server';
-
 import validateStringInputs from './string-validator';
 
 const validateEmailInput = (email: string): void => {

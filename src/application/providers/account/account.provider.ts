@@ -1,14 +1,13 @@
 import { UserInputError } from 'apollo-server';
 import bcrypt from 'bcryptjs';
 import { Collection, ObjectId } from 'mongodb';
-
 import { AccountDocument, toAccountObject } from '../../../entities/account.entity';
-import deterministicId from '../../helpers/deterministic-id';
-import sendVerificationEmail from '../../helpers/email-verification';
-import generateToken from '../../helpers/token-generator';
-import { validateEmailInput, validatePasswordInput } from '../../helpers/validator';
-import getVerificationCode from '../../helpers/verification-code';
-import { instituteProvider } from '../index';
+import deterministicId from '../../../helpers/deterministic-id';
+import sendVerificationEmail from '../../../helpers/email-verification';
+import generateToken from '../../../helpers/token-generator';
+import { validateEmailInput, validatePasswordInput } from '../../../helpers/validator';
+import getVerificationCode from '../../../helpers/verification-code';
+import { instituteProvider } from '../../indexes/provider';
 import {
   LoginInput,
   RegisterAccountInput,

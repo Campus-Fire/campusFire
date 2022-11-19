@@ -1,5 +1,5 @@
+import { instituteProvider } from '../indexes/provider';
 import { Institute } from '../schema/types/schema';
-import { instituteProvider } from '../providers';
 
 const instituteResolver = {
   Query: {

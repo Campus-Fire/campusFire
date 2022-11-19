@@ -1,8 +1,8 @@
-import { MutationDislikeUserProfileArgs, MutationLikeUserProfileArgs, Preference } from '../schema/types/schema';
-import { preferenceProvider } from '../providers';
-import { Root } from '../schema/types/types';
 import { ExpressContext } from 'apollo-server-express';
-import checkAuth from '../helpers/check-auth';
+import checkAuth from '../../helpers/check-auth';
+import { preferenceProvider } from '../indexes/provider';
+import { MutationDislikeUserProfileArgs, MutationLikeUserProfileArgs, Preference } from '../schema/types/schema';
+import { Root } from '../schema/types/types';
 
 const preferenceResolver = {
   Query: {

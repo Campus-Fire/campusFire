@@ -1,5 +1,4 @@
 import { Collection, ObjectId } from 'mongodb';
-
 import { InstituteDocument, toInstituteObject } from '../../../entities/institute.entity';
 import { Institute } from './institute.provider.types';
 

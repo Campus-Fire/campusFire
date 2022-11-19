@@ -1,8 +1,7 @@
 import { Collection, ObjectId } from 'mongodb';
-
-import { preferenceProvider, profileProvider } from '../index';
-import validateStringInputs from '../../../application/helpers/string-validator';
 import { MessageDocument, toMessageObject } from '../../../entities/message.entity';
+import validateStringInputs from '../../../helpers/string-validator';
+import { preferenceProvider, profileProvider } from '../../indexes/provider';
 import { Message, ReceiveMessageInput, SendMessageInput } from './message.provider.types';
 
 class MessageProvider {

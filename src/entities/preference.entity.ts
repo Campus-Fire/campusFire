@@ -1,5 +1,4 @@
 import { Document } from 'mongodb';
-
 import { Preference } from '../application/providers/preference/preference.provider.types';
 
 interface PreferenceDocument extends Document, Preference {}
