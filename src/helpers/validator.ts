@@ -1,5 +1,18 @@
 import { UserInputError } from 'apollo-server';
-import validateStringInputs from './string-validator';
+
+const validateStringInputs = (input: string | string[]): void => {
+  if (Array.isArray(input)) {
+    input.forEach((elem: string) => {
+      if (!elem.trim()) {
+        throw new Error('Inputs cannot be empty strings');
+      }
+    });
+  } else {
+    if (!input.trim()) {
+      throw new Error('Inputs cannot be empty strings');
+    }
+  }
+};
 
 const validateEmailInput = (email: string): void => {
   const regEx = /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/;
@@ -31,4 +44,4 @@ const validateNameInput = (name: string): void => {
   }
 };
 
-export { validateEmailInput, validatePasswordInput, validateNameInput };
+export { validateStringInputs, validateEmailInput, validatePasswordInput, validateNameInput };

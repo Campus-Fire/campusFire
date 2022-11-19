@@ -1,4 +1,5 @@
 import { ExpressContext } from 'apollo-server-express';
+
 import checkAuth from '../../helpers/check-auth';
 import { profileProvider } from '../indexes/provider';
 import { MutationCreateProfileArgs, MutationUpdateProfileArgs, Profile } from '../schema/types/schema';

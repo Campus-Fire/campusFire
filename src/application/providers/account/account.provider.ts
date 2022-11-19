@@ -1,6 +1,7 @@
 import { UserInputError } from 'apollo-server';
 import bcrypt from 'bcryptjs';
 import { Collection, ObjectId } from 'mongodb';
+
 import { AccountDocument, toAccountObject } from '../../../entities/account.entity';
 import deterministicId from '../../../helpers/deterministic-id';
 import sendVerificationEmail from '../../../helpers/email-verification';
@@ -17,7 +18,7 @@ import {
 } from './account.provider.types';
 
 class AccountProvider {
-  constructor(private collection: Collection<AccountDocument>) {}
+  constructor(private collection: Collection<AccountDocument>) { }
 
   public async getAccounts(): Promise<SecureAccount[]> {
     const accounts = await this.collection.find().toArray();

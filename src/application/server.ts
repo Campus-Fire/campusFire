@@ -1,5 +1,6 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { ApolloServer } from 'apollo-server';
+
 import { resolvers } from './indexes/resolver';
 import { typeDefs } from './schema';
 

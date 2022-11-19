@@ -1,11 +1,12 @@
 import { Collection, ObjectId } from 'mongodb';
+
+import { validateStringInputs } from '../../../helpers/validator';
 import { MessageDocument, toMessageObject } from '../../../entities/message.entity';
-import validateStringInputs from '../../../helpers/string-validator';
 import { preferenceProvider, profileProvider } from '../../indexes/provider';
 import { Message, ReceiveMessageInput, SendMessageInput } from './message.provider.types';
 
 class MessageProvider {
-  constructor(private collection: Collection<MessageDocument>) {}
+  constructor(private collection: Collection<MessageDocument>) { }
 
   public async sendMessage(input: SendMessageInput): Promise<boolean> {
     const { id, from, to, text } = input;

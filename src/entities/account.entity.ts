@@ -1,7 +1,8 @@
 import { Document } from 'mongodb';
+
 import { Account, SecureAccount } from '../application/providers/account/account.provider.types';
 
-interface AccountDocument extends Document, Omit<Account, 'id'> {}
+interface AccountDocument extends Document, Omit<Account, 'id'> { }
 
 const toAccountObject = (account: AccountDocument): SecureAccount => {
   return {

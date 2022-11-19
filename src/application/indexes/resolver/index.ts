@@ -1,4 +1,5 @@
 import { merge } from 'lodash';
+
 import { accountResolver } from '../../resolvers/account.resolver';
 import { instituteResolver } from '../../resolvers/institute.resolver';
 import { messageResolver } from '../../resolvers/message.resolver';

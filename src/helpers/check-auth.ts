@@ -1,5 +1,6 @@
 import { AuthenticationError, ExpressContext } from 'apollo-server-express';
 import jwt from 'jsonwebtoken';
+
 import config from '../../config';
 
 const checkAuth = (context: ExpressContext): any => {

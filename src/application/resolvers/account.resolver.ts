@@ -1,4 +1,5 @@
 import { ExpressContext } from 'apollo-server-express';
+
 import checkAuth from '../../helpers/check-auth';
 import { accountProvider } from '../indexes/provider';
 import {
@@ -9,7 +10,7 @@ import {
 } from '../schema/types/schema';
 import { Root } from '../schema/types/types';
 
-interface UntokenizedAccount extends Omit<Account, 'token'> {}
+interface UntokenizedAccount extends Omit<Account, 'token'> { }
 
 const accountResolver = {
   Query: {

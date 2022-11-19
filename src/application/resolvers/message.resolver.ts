@@ -1,4 +1,5 @@
 import { ExpressContext } from 'apollo-server-express';
+
 import checkAuth from '../../helpers/check-auth';
 import { messageProvider } from '../indexes/provider';
 import { Message, MutationReceiveMessageArgs, MutationSendMessageArgs } from '../schema/types/schema';

@@ -1,4 +1,5 @@
 import { gql } from 'apollo-server-core';
+
 import { typeDefs as accountTypeDefs } from './account/account.schema';
 import { typeDefs as instituteTypeDefs } from './institute/institute.schema';
 import { typeDefs as messageTypeDefs } from './message/message.schema';

@@ -1,13 +1,13 @@
 import { UserInputError } from 'apollo-server';
 import { Collection, ObjectId } from 'mongodb';
+
 import { ProfileDocument, toProfileObject } from '../../../entities/profile.entity';
-import validateStringInputs from '../../../helpers/string-validator';
-import { validateEmailInput, validateNameInput } from '../../../helpers/validator';
+import { validateEmailInput, validateNameInput, validateStringInputs } from '../../../helpers/validator';
 import { accountProvider, instituteProvider, preferenceProvider } from '../../indexes/provider';
 import { CreateProfileInput, Profile, UpdateProfileInput } from './profile.provider.types';
 
 class ProfileProvider {
-  constructor(private collection: Collection<ProfileDocument>) {}
+  constructor(private collection: Collection<ProfileDocument>) { }
 
   public async getProfile(id: any): Promise<Profile> {
     const userId = new ObjectId(id);
