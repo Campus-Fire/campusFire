@@ -1,12 +1,12 @@
 import { UserInputError } from 'apollo-server';
 import { Collection, ObjectId } from 'mongodb';
-import { profileProvider } from '..';
 
 import { PreferenceDocument, toPreferenceObject } from '../../../entities/preference.entity';
+import { profileProvider } from '../../indexes/provider';
 import { Preference, ProfileInteractionInput } from './preference.provider.types';
 
 class PreferenceProvider {
-  constructor(private collection: Collection<PreferenceDocument>) {}
+  constructor(private collection: Collection<PreferenceDocument>) { }
 
   public async getAllPreferences(): Promise<Preference[]> {
     const preference = await this.collection.find().toArray();

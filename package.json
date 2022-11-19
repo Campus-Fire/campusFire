@@ -36,6 +36,7 @@
     "apollo-server": "^3.3.0",
     "async-exit-hook": "^2.0.1",
     "bcryptjs": "^2.4.3",
+    "date-fns": "^2.29.3",
     "dotenv": "^10.0.0",
     "graphql": "^15.8.0",
     "graphql-codegen": "^0.4.0",

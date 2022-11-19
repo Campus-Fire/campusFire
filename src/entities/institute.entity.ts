@@ -2,7 +2,7 @@ import { Document } from 'mongodb';
 
 import { Institute } from '../application/providers/institute/institute.provider.types';
 
-interface InstituteDocument extends Document, Omit<Institute, 'id'> {}
+interface InstituteDocument extends Document, Omit<Institute, 'id'> { }
 
 const toInstituteObject = (institute: InstituteDocument): Institute => {
   return {

@@ -1,10 +1,10 @@
-import { setupDb } from '../database';
+import { setupDb } from '../../database';
 
-import { AccountProvider } from './account/account.provider';
-import { InstituteProvider } from './institute/institute.provider';
-import { MessageProvider } from './message/message.provider';
-import { PreferenceProvider } from './preference/preference.provider';
-import { ProfileProvider } from './profile/profile.provider';
+import { AccountProvider } from '../../providers/account/account.provider';
+import { InstituteProvider } from '../../providers/institute/institute.provider';
+import { MessageProvider } from '../../providers/message/message.provider';
+import { PreferenceProvider } from '../../providers/preference/preference.provider';
+import { ProfileProvider } from '../../providers/profile/profile.provider';
 
 const db = setupDb();
 

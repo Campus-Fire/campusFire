@@ -2,7 +2,7 @@ import { Document } from 'mongodb';
 
 import { Preference } from '../application/providers/preference/preference.provider.types';
 
-interface PreferenceDocument extends Document, Preference {}
+interface PreferenceDocument extends Document, Preference { }
 
 const toPreferenceObject = (preference: PreferenceDocument): Preference => {
   return {

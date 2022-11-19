@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-import config from '../../../config';
+import config from '../../config';
 
 const sendVerificationEmail = (email: string, code: number): void => {
   const transport = nodemailer.createTransport({
