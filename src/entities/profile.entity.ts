@@ -2,7 +2,7 @@ import { Document } from 'mongodb';
 
 import { Profile } from '../application/providers/profile/profile.provider.types';
 
-interface ProfileDocument extends Document, Omit<Profile, 'id'> { }
+interface ProfileDocument extends Document, Omit<Profile, 'id'> {}
 
 const toProfileObject = (profile: ProfileDocument): Profile => {
   return {

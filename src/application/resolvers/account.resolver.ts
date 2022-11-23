@@ -10,7 +10,7 @@ import {
 } from '../schema/types/schema';
 import { Root } from '../schema/types/types';
 
-interface UntokenizedAccount extends Omit<Account, 'token'> { }
+interface UntokenizedAccount extends Omit<Account, 'token'> {}
 
 const accountResolver = {
   Query: {

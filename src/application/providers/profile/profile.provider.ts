@@ -7,7 +7,7 @@ import { accountProvider, instituteProvider, preferenceProvider } from '../../in
 import { CreateProfileInput, Profile, UpdateProfileInput } from './profile.provider.types';
 
 class ProfileProvider {
-  constructor(private collection: Collection<ProfileDocument>) { }
+  constructor(private collection: Collection<ProfileDocument>) {}
 
   public async getProfile(id: any): Promise<Profile> {
     const userId = new ObjectId(id);
