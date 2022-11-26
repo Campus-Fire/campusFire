@@ -1,3 +1,4 @@
+import { ApolloError } from 'apollo-server';
 import { Collection, ObjectId } from 'mongodb';
 
 import { InstituteDocument, toInstituteObject } from '../../../entities/institute.entity';
@@ -17,28 +18,19 @@ class InstituteProvider {
 
     const data = await this.collection.findOne({ emailExt: emailParts[1] });
     if (!data) {
-      throw new Error('Not a valid email. Please use University/College email');
+      throw new ApolloError('Invalid Email. Ensure it is University/College email');
     }
   }
 
-  public async addToInstitute(id: ObjectId, email: string): Promise<void> {
-    const userId = new ObjectId(id);
+  public async getInstituteId(email: string): Promise<ObjectId> {
     const emailParts = email.split('@');
 
     const data = await this.collection.findOne({ emailExt: emailParts[1] });
     if (!data) {
-      throw new Error('Not a valid email. Please use University/College email');
+      throw new ApolloError('Invalid Email. Ensure it is University/College email');
     }
 
-    const instituteData = await this.collection.updateOne(
-      { _id: data._id },
-      {
-        $push: { userIds: userId },
-      }
-    );
-    if (!instituteData) {
-      throw new Error('Could not update Institute while creating user');
-    }
+    return data._id;
   }
 }
 

@@ -11,6 +11,7 @@ const toProfileObject = (profile: ProfileDocument): Profile => {
     lastName: profile.lastName,
     gender: profile.gender,
     isActive: profile.isActive,
+    instituteId: profile.instituteId,
     dateOfBirth: profile.dateOfBirth,
   };
 };

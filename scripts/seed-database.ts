@@ -1,20 +1,19 @@
 import { MongoClient } from 'mongodb';
 
+import config from '../config';
 import {
-  Preferences,
-  preferences,
-  profiles,
-  Profiles,
-  Institutes,
-  institutes,
   Accounts,
   accounts,
+  Institutes,
+  institutes,
+  Preferences,
+  preferences,
+  Profiles,
+  profiles,
 } from './initial-data';
 
-require('dotenv').config();
-
-const uri = process.env.MONGO_CONNECTION_STRING ?? '';
-const dbName = process.env.DB_NAME;
+const uri = config.MONGO_CONNECTION_STRING ?? '';
+const dbName = config.DB_NAME;
 
 let client = new MongoClient(uri);
 

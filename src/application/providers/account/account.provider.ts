@@ -18,7 +18,7 @@ import {
 } from './account.provider.types';
 
 class AccountProvider {
-  constructor(private collection: Collection<AccountDocument>) {}
+  constructor(private collection: Collection<AccountDocument>) { }
 
   public async getAccounts(): Promise<SecureAccount[]> {
     const accounts = await this.collection.find().toArray();
@@ -67,13 +67,16 @@ class AccountProvider {
     validatePasswordInput(password);
     validatePasswordInput(confirmPassword);
 
+    const userId = deterministicId(email);
+    if (await this.isExistingUser(userId)) {
+      throw new UserInputError('User already exists. Please try logging in.');
+    }
+
     await instituteProvider.isValidEmailExtension(email);
-    await this.userWithEmailExists(email);
 
     const verificationCode = getVerificationCode();
     sendVerificationEmail(email, verificationCode);
 
-    const userId = deterministicId(email);
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const accountData = await this.collection.insertOne({
@@ -100,28 +103,23 @@ class AccountProvider {
   }
 
   public async verifyAccount(input: VerificationCodeInput): Promise<boolean> {
-    const { id, email, code } = input;
+    const { id, code } = input;
+
     const userId = new ObjectId(id);
-
-    const accountData = await this.collection.findOne({ _id: userId, email });
-    if (!accountData) {
-      throw new Error('Account not found');
+    if (!(await this.isExistingUser(userId))) {
+      throw new UserInputError('User does not exists');
     }
 
-    if (accountData.verificationCode === Number(code)) {
-      const data = await this.collection.findOneAndUpdate(
-        { _id: userId, email },
-        { $set: { ...{ isVerified: true } } },
-        { returnDocument: 'after' }
-      );
-      if (!data.value) {
-        throw new Error('Unable to verify the account');
-      }
-
-      return true;
+    const data = await this.collection.findOneAndUpdate(
+      { _id: userId, verificationCode: code },
+      { $set: { ...{ isVerified: true } } },
+      { returnDocument: 'after' }
+    );
+    if (!data.value) {
+      throw new Error('Unable to verify the account');
     }
 
-    return false;
+    return data.value.isVerified;
   }
 
   public async isAccountVerified(id: ObjectId): Promise<boolean> {
@@ -133,11 +131,10 @@ class AccountProvider {
     return accountData.isVerified;
   }
 
-  private async userWithEmailExists(email: string): Promise<void> {
-    const data = await this.collection.countDocuments({ email });
-    if (data && data > 0) {
-      throw new Error(`User with ${email} email already exists.`);
-    }
+  public async isExistingUser(id: ObjectId): Promise<boolean> {
+    const data = await this.collection.countDocuments({ _id: id });
+
+    return data > 0;
   }
 }
 

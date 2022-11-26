@@ -29,8 +29,8 @@ const accountResolver = {
     },
 
     async verifyAccount(_: Root, args: MutationVerifyAccountArgs, context: ExpressContext): Promise<boolean> {
-      const { id, email } = checkAuth(context);
-      const input = { id, email, ...args.input };
+      const tokenAuth = checkAuth(context);
+      const input = { ...tokenAuth, ...args.input };
 
       return accountProvider.verifyAccount(input);
     },

@@ -21,7 +21,7 @@ export type Account = {
   id: Scalars['ObjectID'];
   isVerified: Scalars['Boolean'];
   lastLogin?: Maybe<Scalars['String']>;
-  token: Scalars['String'];
+  token?: Maybe<Scalars['String']>;
 };
 
 export type CreateProfileInput = {
@@ -40,7 +40,6 @@ export type Institute = {
   id: Scalars['ObjectID'];
   name: Scalars['String'];
   province: Scalars['String'];
-  userIds?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
 };
 
 export type LoginInput = {
@@ -121,6 +120,7 @@ export type Profile = {
   firstName: Scalars['String'];
   gender: Scalars['String'];
   id: Scalars['ObjectID'];
+  instituteId: Scalars['ObjectID'];
   isActive: Scalars['Boolean'];
   lastName: Scalars['String'];
 };

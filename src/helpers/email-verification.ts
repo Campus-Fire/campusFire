@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 
 import config from '../../config';
 
-const sendVerificationEmail = (email: string, code: number): void => {
+const sendVerificationEmail = (email: string, code: string): void => {
   const transport = nodemailer.createTransport({
     host: config.EMAIL_SERVICE_HOST,
     port: config.EMAIL_SERVICE_PORT,
@@ -17,9 +17,9 @@ const sendVerificationEmail = (email: string, code: number): void => {
     from: 'CampusFire',
     to: `${email}`,
     subject: 'Verification code for CampusFire',
-    text: `Please use the following verification code to confirm your registration on CampusFire. 
+    text: `Please use the following verification code to confirm your registration on CampusFire.
     
-    ${code}`,
+    Code - ${code}`,
   };
 
   transport.sendMail(mailOptions, function (err, info) {

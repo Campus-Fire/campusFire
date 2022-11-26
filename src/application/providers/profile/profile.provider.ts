@@ -36,7 +36,7 @@ class ProfileProvider {
 
     const profileCount = await this.collection.countDocuments({ _id: userId });
     if (profileCount > 0) {
-      throw new Error('Please try to update the profile later');
+      throw new Error('Can not create a duplicate profile');
     }
 
     if (!id || !email || !firstName || !lastName || !gender || !dateOfBirth || !preferredGender) {
@@ -53,7 +53,7 @@ class ProfileProvider {
       throw new Error('Please verify account before creating a profile');
     }
     await preferenceProvider.createUserPreference(userId, preferredGender);
-    await instituteProvider.addToInstitute(userId, email);
+    const instituteId = await instituteProvider.getInstituteId(email);
 
     const data = await this.collection.insertOne({
       _id: userId,
@@ -61,6 +61,7 @@ class ProfileProvider {
       lastName,
       dateOfBirth,
       gender,
+      instituteId,
       isActive: true,
     });
 
@@ -74,8 +75,6 @@ class ProfileProvider {
 
   public async updateProfile(input: UpdateProfileInput): Promise<Profile> {
     const { id, firstName, lastName, dateOfBirth, gender } = input;
-    const userId = new ObjectId(id);
-
     if (!id) {
       throw new UserInputError('Incomplete information provided to update a profile');
     }
@@ -83,6 +82,8 @@ class ProfileProvider {
     if (lastName) validateStringInputs(lastName);
     if (dateOfBirth) validateStringInputs(dateOfBirth);
     if (gender) validateStringInputs(gender);
+
+    const userId = new ObjectId(id);
     if (!(await accountProvider.isAccountVerified(userId))) {
       throw new Error('Please verify account before updating profile');
     }
@@ -102,7 +103,7 @@ class ProfileProvider {
 
     const profile = data.value;
     if (!profile) {
-      throw new Error(`User with id ${id} does not exist`);
+      throw new Error(`Profile with id - ${id}, does not exist`);
     }
 
     return toProfileObject(profile);

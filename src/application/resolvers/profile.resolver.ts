@@ -16,8 +16,8 @@ const profileResolver = {
 
   Mutation: {
     async createProfile(_: Root, args: MutationCreateProfileArgs, context: ExpressContext): Promise<Profile> {
-      const { id, email } = checkAuth(context);
-      const input = { id, email, ...args.input };
+      const tokenAuth = checkAuth(context);
+      const input = { ...tokenAuth, ...args.input };
 
       return profileProvider.createProfile(input);
     },

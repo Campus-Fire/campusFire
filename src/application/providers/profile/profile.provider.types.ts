@@ -6,6 +6,7 @@ interface Profile {
   lastName: string;
   dateOfBirth: string;
   gender: string;
+  instituteId: ObjectId;
   isActive: boolean;
 }
 

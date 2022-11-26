@@ -7,6 +7,7 @@ const typeDefs = gql`
     lastName: String!
     dateOfBirth: String!
     gender: String!
+    instituteId: ObjectID!
     isActive: Boolean!
   }
 

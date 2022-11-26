@@ -9,7 +9,7 @@ const generateToken = (account: { id: any; email: any }): string => {
       email: account.email,
     },
     config.SECRET_TOKEN_KEY,
-    { expiresIn: '1h' }
+    { expiresIn: '2h' }
   );
 };
 

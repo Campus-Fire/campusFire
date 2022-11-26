@@ -7,7 +7,7 @@ const typeDefs = gql`
     isVerified: Boolean!
     createdAt: String!
     lastLogin: String
-    token: String!
+    token: String
   }
 
   type Query {
