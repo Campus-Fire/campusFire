@@ -14,10 +14,10 @@ const sendVerificationEmail = (email: string, code: number): void => {
   });
 
   const mailOptions = {
-    from: 'unitryst@gmail.com',
+    from: 'CampusFire',
     to: `${email}`,
-    subject: 'Verification code for UniTryst',
-    text: `Please use the following verification code to confirm your registration on UniTryst. 
+    subject: 'Verification code for CampusFire',
+    text: `Please use the following verification code to confirm your registration on CampusFire. 
     
     ${code}`,
   };
