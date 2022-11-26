@@ -32,7 +32,6 @@ interface Institutes {
   city: string;
   province: string;
   country: string;
-  userIds?: ObjectID[];
 }
 
 const UserID = {
@@ -160,7 +159,6 @@ const institutes: Institutes[] = [
     city: 'Calgary',
     province: 'Alberta',
     country: 'Canada',
-    userIds: [UserID.JackJones, UserID.KimGarcia, UserID.JohnSmith],
   },
   {
     _id: UniID.SAIT,
@@ -169,7 +167,6 @@ const institutes: Institutes[] = [
     city: 'Calgary',
     province: 'Alberta',
     country: 'Canada',
-    userIds: [UserID.MaryMartinez, UserID.MikeWilliams],
   },
 ];
 
