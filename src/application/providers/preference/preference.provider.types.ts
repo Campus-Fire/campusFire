@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 
 interface Preference {
-  userId: ObjectId;
+  id: ObjectId;
   gender: string;
   usersEncountered?: ObjectId[];
   liked?: ObjectId[];

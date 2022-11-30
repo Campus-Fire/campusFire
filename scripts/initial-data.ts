@@ -21,7 +21,7 @@ interface Profiles {
 }
 
 interface Preferences {
-  userId: ObjectID;
+  _id: ObjectID;
   gender: string;
 }
 
@@ -130,23 +130,23 @@ const profiles: Profiles[] = [
 
 const preferences: Preferences[] = [
   {
-    userId: UserID.JohnSmith,
+    _id: UserID.JohnSmith,
     gender: 'F',
   },
   {
-    userId: UserID.MikeWilliams,
+    _id: UserID.MikeWilliams,
     gender: 'F',
   },
   {
-    userId: UserID.KimGarcia,
+    _id: UserID.KimGarcia,
     gender: 'M',
   },
   {
-    userId: UserID.MaryMartinez,
+    _id: UserID.MaryMartinez,
     gender: 'M',
   },
   {
-    userId: UserID.JackJones,
+    _id: UserID.JackJones,
     gender: 'B',
   },
 ];

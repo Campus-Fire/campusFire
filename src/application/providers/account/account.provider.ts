@@ -4,7 +4,7 @@ import { Collection, ObjectId } from 'mongodb';
 
 import { AccountDocument, toAccountObject } from '../../../entities/account.entity';
 import deterministicId from '../../../helpers/deterministic-id';
-import sendVerificationEmail from '../../../helpers/email-verification';
+import { sendVerificationEmail, sendPasswordResetEmail } from '../../../helpers/email-verification';
 import generateToken from '../../../helpers/token-generator';
 import { validateEmailInput, validatePasswordInput } from '../../../helpers/validator';
 import getVerificationCode from '../../../helpers/verification-code';
@@ -14,6 +14,7 @@ import {
   RegisterAccountInput,
   SecureAccount,
   TokenizedAccount,
+  UpdatePasswordInput,
   VerificationCodeInput,
 } from './account.provider.types';
 
@@ -74,11 +75,9 @@ class AccountProvider {
 
     await instituteProvider.isValidEmailExtension(email);
 
-    const verificationCode = getVerificationCode();
-    sendVerificationEmail(email, verificationCode);
-
+    // might need a better hashing algorithm here
     const hashedPassword = await bcrypt.hash(password, 12);
-
+    const verificationCode = getVerificationCode();
     const accountData = await this.collection.insertOne({
       _id: userId,
       email,
@@ -92,6 +91,8 @@ class AccountProvider {
     if (!account) {
       throw new Error('Failed to create the account.');
     }
+
+    sendVerificationEmail(email, verificationCode);
 
     const document = toAccountObject(account);
     const token = generateToken({ id: account._id, email: account.email });
@@ -135,6 +136,72 @@ class AccountProvider {
     const data = await this.collection.countDocuments({ _id: id });
 
     return data > 0;
+  }
+
+  public async resendVerificationCode(email: string): Promise<boolean> {
+    validateEmailInput(email);
+
+    const verificationCode = getVerificationCode();
+    const accountData = await this.collection.findOneAndUpdate(
+      { email },
+      { $set: { ...{ verificationCode } } },
+      { returnDocument: 'after' }
+    );
+
+    const account = accountData.value;
+    if (!account) {
+      throw new Error('Unable to send new Verification code.');
+    }
+
+    sendVerificationEmail(email, verificationCode);
+
+    return (account.verificationCode === verificationCode);
+  }
+
+  public async resetPassword(email: string): Promise<boolean> {
+    validateEmailInput(email);
+
+    const passwordResetCode = getVerificationCode();
+    const accountData = await this.collection.findOneAndUpdate(
+      { email },
+      { $set: { ...{ passwordResetCode } } },
+      { returnDocument: 'after' }
+    );
+
+    const account = accountData.value;
+    if (!account) {
+      throw new Error('Unable to send new Verification code.');
+    }
+
+    sendPasswordResetEmail(email, passwordResetCode);
+
+    return (account.passwordResetCode === passwordResetCode);
+  }
+
+  public async updatePassword(input: UpdatePasswordInput): Promise<SecureAccount> {
+    const { email, code, password, confirmPassword } = input;
+
+    if (password !== confirmPassword) {
+      throw new UserInputError('Passwords do not match.');
+    }
+    validateEmailInput(email);
+    validatePasswordInput(password);
+    validatePasswordInput(confirmPassword);
+
+    // might need a better hashing algorithm here
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const accountData = await this.collection.findOneAndUpdate(
+      { email, passwordResetCode: code },
+      { $set: { ...{ password: hashedPassword } } },
+      { returnDocument: 'after' }
+    );
+
+    const account = accountData.value;
+    if (!account) {
+      throw new UserInputError('Unable to update your password. Please try again!');
+    }
+
+    return toAccountObject(account);
   }
 }
 

@@ -40,11 +40,8 @@ const checkAuth = (context: ExpressContext): TokenAuth => {
   const derivedId = deterministicId(email).toString();
   const userId = new ObjectId(id).toString();
 
-  console.log(derivedId);
-  console.log(userId);
-
   if (userId !== derivedId) {
-    throw new AuthenticationError('Unmatching Id and Email');
+    throw new AuthenticationError('Invalid/Expired token');
   }
 
   return { id, email };

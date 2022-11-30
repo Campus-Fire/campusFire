@@ -6,11 +6,13 @@ import {
   Account,
   MutationLoginArgs,
   MutationRegisterAccountArgs,
+  MutationResetPasswordArgs,
+  MutationUpdatePasswordArgs,
   MutationVerifyAccountArgs,
 } from '../schema/types/schema';
 import { Root } from '../schema/types/types';
 
-interface UntokenizedAccount extends Omit<Account, 'token'> {}
+interface UntokenizedAccount extends Omit<Account, 'token'> { }
 
 const accountResolver = {
   Query: {
@@ -34,6 +36,20 @@ const accountResolver = {
 
       return accountProvider.verifyAccount(input);
     },
+
+    async resendVerificationCode(_: Root, args: any, context: ExpressContext): Promise<boolean> {
+      const { email } = checkAuth(context);
+
+      return accountProvider.resendVerificationCode(email);
+    },
+
+    async resetPassword(_: Root, args: MutationResetPasswordArgs): Promise<boolean> {
+      return accountProvider.resetPassword(args.input.email);
+    },
+
+    async updatePassword(_: Root, args: MutationUpdatePasswordArgs): Promise<Account> {
+      return accountProvider.updatePassword(args.input);
+    }
   },
 };
 

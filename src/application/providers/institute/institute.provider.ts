@@ -5,7 +5,7 @@ import { InstituteDocument, toInstituteObject } from '../../../entities/institut
 import { Institute } from './institute.provider.types';
 
 class InstituteProvider {
-  constructor(private collection: Collection<InstituteDocument>) {}
+  constructor(private collection: Collection<InstituteDocument>) { }
 
   public async getInstitutes(): Promise<Institute[]> {
     const institutes = await this.collection.find().toArray();
@@ -18,7 +18,7 @@ class InstituteProvider {
 
     const data = await this.collection.findOne({ emailExt: emailParts[1] });
     if (!data) {
-      throw new ApolloError('Invalid Email. Ensure it is University/College email');
+      throw new ApolloError('Invalid Email. Ensure it is valid University/College email');
     }
   }
 

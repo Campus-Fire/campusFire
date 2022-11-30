@@ -58,26 +58,19 @@ export type Message = {
 export type Mutation = {
   __typename?: 'Mutation';
   createProfile: Profile;
-  dislikeUserProfile: Preference;
-  likeUserProfile: Preference;
   login: Account;
   receiveMessage?: Maybe<Array<Maybe<Message>>>;
   registerAccount: Account;
+  resendVerificationCode: Scalars['Boolean'];
+  resetPassword: Scalars['Boolean'];
   sendMessage: Scalars['Boolean'];
+  updatePassword: Account;
   updateProfile: Profile;
   verifyAccount: Scalars['Boolean'];
 };
 
 export type MutationCreateProfileArgs = {
   input: CreateProfileInput;
-};
-
-export type MutationDislikeUserProfileArgs = {
-  input: ProfileInteractionInput;
-};
-
-export type MutationLikeUserProfileArgs = {
-  input: ProfileInteractionInput;
 };
 
 export type MutationLoginArgs = {
@@ -92,8 +85,16 @@ export type MutationRegisterAccountArgs = {
   input: RegisterAccountInput;
 };
 
+export type MutationResetPasswordArgs = {
+  input: ResetPasswordInput;
+};
+
 export type MutationSendMessageArgs = {
   input: SendMessageInput;
+};
+
+export type MutationUpdatePasswordArgs = {
+  input: UpdatePasswordInput;
 };
 
 export type MutationUpdateProfileArgs = {
@@ -108,9 +109,9 @@ export type Preference = {
   __typename?: 'Preference';
   disliked?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
   gender: Scalars['String'];
+  id: Scalars['ObjectID'];
   liked?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
   likedBy?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
-  userId: Scalars['ObjectID'];
   usersEncountered?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
 };
 
@@ -123,10 +124,6 @@ export type Profile = {
   instituteId: Scalars['ObjectID'];
   isActive: Scalars['Boolean'];
   lastName: Scalars['String'];
-};
-
-export type ProfileInteractionInput = {
-  profileId: Scalars['ObjectID'];
 };
 
 export type Query = {
@@ -148,10 +145,21 @@ export type RegisterAccountInput = {
   password: Scalars['String'];
 };
 
+export type ResetPasswordInput = {
+  email: Scalars['String'];
+};
+
 export type SendMessageInput = {
   from: Scalars['ObjectID'];
   text: Scalars['String'];
   to: Scalars['ObjectID'];
+};
+
+export type UpdatePasswordInput = {
+  code: Scalars['String'];
+  confirmPassword: Scalars['String'];
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type UpdateProfileInput = {
