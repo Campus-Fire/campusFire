@@ -9,29 +9,20 @@ import { CreateProfileInput, Profile, UpdateProfileInput } from './profile.provi
 class ProfileProvider {
   constructor(private collection: Collection<ProfileDocument>) {}
 
-  public async getProfile(id: any): Promise<Profile> {
+  public async getAllProfiles(id: any): Promise<Profile[]> {
     const userId = new ObjectId(id);
+    const profilesData = await this.collection
+      .find({
+        _id: { $ne: userId },
+      })
+      .toArray();
 
-    const profileCount = await this.collection.countDocuments({ _id: userId });
-    if (profileCount === 0) {
-      throw new Error('User not found!');
-    }
-
-    const preferredGender = await preferenceProvider.getUserPreferredGender(userId);
-    const profilesData = await this.collection.find({ gender: preferredGender }).toArray();
-    const profiles = profilesData.map(toProfileObject);
-
-    for (let profile of profiles) {
-      if (!(await preferenceProvider.isUserEncounteredBefore(userId, new ObjectId(profile.id)))) {
-        return profile;
-      }
-    }
-
-    throw new Error('No profiles can be found for user');
+    return profilesData.map(toProfileObject);
   }
 
   public async createProfile(input: CreateProfileInput): Promise<Profile> {
-    const { id, email, firstName, lastName, gender, dateOfBirth, preferredGender } = input;
+    const { id, email, firstName, lastName, gender, dateOfBirth, tagline, about, faculty, location, preferredGender } =
+      input;
     const userId = new ObjectId(id);
 
     const profileCount = await this.collection.countDocuments({ _id: userId });
@@ -48,6 +39,10 @@ class ProfileProvider {
     validateNameInput(gender);
     validateStringInputs(dateOfBirth);
     validateNameInput(preferredGender);
+    validateStringInputs(tagline);
+    validateStringInputs(about);
+    validateStringInputs(faculty);
+    validateStringInputs(location);
 
     if (!(await accountProvider.isAccountVerified(userId))) {
       throw new Error('Please verify account before creating a profile');
@@ -61,7 +56,11 @@ class ProfileProvider {
       lastName,
       dateOfBirth,
       gender,
+      tagline,
+      about,
       instituteId,
+      faculty,
+      location,
       isActive: true,
     });
 
@@ -74,7 +73,7 @@ class ProfileProvider {
   }
 
   public async updateProfile(input: UpdateProfileInput): Promise<Profile> {
-    const { id, firstName, lastName, dateOfBirth, gender } = input;
+    const { id, firstName, lastName, dateOfBirth, gender, tagline, about, faculty, isActive } = input;
     if (!id) {
       throw new UserInputError('Incomplete information provided to update a profile');
     }
@@ -82,6 +81,9 @@ class ProfileProvider {
     if (lastName) validateStringInputs(lastName);
     if (dateOfBirth) validateStringInputs(dateOfBirth);
     if (gender) validateStringInputs(gender);
+    if (tagline) validateStringInputs(tagline);
+    if (about) validateStringInputs(about);
+    if (faculty) validateStringInputs(faculty);
 
     const userId = new ObjectId(id);
     if (!(await accountProvider.isAccountVerified(userId))) {
@@ -96,6 +98,10 @@ class ProfileProvider {
           ...(lastName && { lastName: lastName }),
           ...(dateOfBirth && { dateOfBirth: dateOfBirth }),
           ...(gender && { gender: gender }),
+          ...(tagline && { tagline: tagline }),
+          ...(about && { about: about }),
+          ...(faculty && { faculty: faculty }),
+          ...(isActive && { isActive: isActive }),
         },
       },
       { returnDocument: 'after' }

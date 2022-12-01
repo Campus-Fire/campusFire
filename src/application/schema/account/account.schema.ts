@@ -23,14 +23,14 @@ const typeDefs = gql`
     updatePassword(input: UpdatePasswordInput!): Account!
   }
 
-  input UpdatePasswordInput{
+  input UpdatePasswordInput {
     email: String!
     code: String!
     password: String!
     confirmPassword: String!
   }
 
-  input ResetPasswordInput{
+  input ResetPasswordInput {
     email: String!
   }
 

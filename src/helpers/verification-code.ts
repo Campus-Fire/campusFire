@@ -5,7 +5,7 @@ const getVerificationCode = (): string => {
     code = 5;
   }
 
-  for (let num = 0; num < 4; num++) {
+  for (let num = 0; num < 3; num++) {
     code = code * 10 + Math.floor(Math.random() * 10);
   }
 

@@ -12,7 +12,6 @@ const transport = nodemailer.createTransport({
   },
 });
 
-
 const sendVerificationEmail = (email: string, code: string): void => {
   const mailOptions = {
     from: 'CampusFire',

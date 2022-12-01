@@ -19,7 +19,7 @@ import {
 } from './account.provider.types';
 
 class AccountProvider {
-  constructor(private collection: Collection<AccountDocument>) { }
+  constructor(private collection: Collection<AccountDocument>) {}
 
   public async getAccounts(): Promise<SecureAccount[]> {
     const accounts = await this.collection.find().toArray();
@@ -155,7 +155,7 @@ class AccountProvider {
 
     sendVerificationEmail(email, verificationCode);
 
-    return (account.verificationCode === verificationCode);
+    return account.verificationCode === verificationCode;
   }
 
   public async resetPassword(email: string): Promise<boolean> {
@@ -175,7 +175,7 @@ class AccountProvider {
 
     sendPasswordResetEmail(email, passwordResetCode);
 
-    return (account.passwordResetCode === passwordResetCode);
+    return account.passwordResetCode === passwordResetCode;
   }
 
   public async updatePassword(input: UpdatePasswordInput): Promise<SecureAccount> {

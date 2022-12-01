@@ -11,7 +11,7 @@ interface Account {
   passwordResetCode?: string;
 }
 
-interface SecureAccount extends Omit<Account, 'password'> { }
+interface SecureAccount extends Omit<Account, 'password'> {}
 
 interface TokenizedAccount extends SecureAccount {
   token: string;
@@ -41,4 +41,12 @@ interface UpdatePasswordInput {
   confirmPassword: string;
 }
 
-export { Account, SecureAccount, TokenizedAccount, LoginInput, RegisterAccountInput, VerificationCodeInput, UpdatePasswordInput };
+export {
+  Account,
+  SecureAccount,
+  TokenizedAccount,
+  LoginInput,
+  RegisterAccountInput,
+  VerificationCodeInput,
+  UpdatePasswordInput,
+};

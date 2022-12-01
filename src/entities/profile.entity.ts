@@ -10,9 +10,13 @@ const toProfileObject = (profile: ProfileDocument): Profile => {
     firstName: profile.firstName,
     lastName: profile.lastName,
     gender: profile.gender,
-    isActive: profile.isActive,
-    instituteId: profile.instituteId,
     dateOfBirth: profile.dateOfBirth,
+    tagline: profile.tagline,
+    about: profile.about,
+    instituteId: profile.instituteId,
+    faculty: profile.faculty,
+    location: profile.location,
+    isActive: profile.isActive,
   };
 };
 

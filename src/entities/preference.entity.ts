@@ -8,10 +8,6 @@ const toPreferenceObject = (preference: PreferenceDocument): Preference => {
   return {
     id: preference._id.toHexString(),
     gender: preference.gender,
-    usersEncountered: preference.usersEncountered,
-    liked: preference.liked,
-    likedBy: preference.likedBy,
-    disliked: preference.disliked,
   };
 };
 
