@@ -42,6 +42,12 @@ export enum Gender {
   Other = 'OTHER',
 }
 
+export type Image = {
+  __typename?: 'Image';
+  id: Scalars['ObjectID'];
+  src: Scalars['String'];
+};
+
 export type Institute = {
   __typename?: 'Institute';
   city: Scalars['String'];
@@ -66,6 +72,7 @@ export type Mutation = {
   resetPassword: Scalars['Boolean'];
   updatePassword: Account;
   updateProfile: Profile;
+  uploadImage: Scalars['String'];
   verifyAccount: Scalars['Boolean'];
 };
 
@@ -91,6 +98,10 @@ export type MutationUpdatePasswordArgs = {
 
 export type MutationUpdateProfileArgs = {
   input: UpdateProfileInput;
+};
+
+export type MutationUploadImageArgs = {
+  input: UploadImageInput;
 };
 
 export type MutationVerifyAccountArgs = {
@@ -153,6 +164,10 @@ export type UpdateProfileInput = {
   lastName?: InputMaybe<Scalars['String']>;
   location?: InputMaybe<Scalars['String']>;
   tagline?: InputMaybe<Scalars['String']>;
+};
+
+export type UploadImageInput = {
+  imgSrc: Scalars['String'];
 };
 
 export type VerificationCodeInput = {

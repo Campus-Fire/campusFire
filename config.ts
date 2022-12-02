@@ -8,6 +8,11 @@ const config = {
   USER_PASSWORD: 'hycqmgvyfjaloiaj',
   EMAIL_SERVICE_HOST: 'smtp.gmail.com',
   EMAIL_SERVICE_PORT: 465,
+
+  CLOUDINARY_URL: 'cloudinary://834917414362113:FtT-tAuv9cE_w_b0x3saYEgLP_w@dt0duopxa',
+  CLOUDINARY_CLOUD_NAME: 'dt0duopxa',
+  CLOUDINARY_API_KEY: '834917414362113',
+  CLOUDINARY_API_SECRET: 'FtT-tAuv9cE_w_b0x3saYEgLP_w',
 };
 
 export default config;

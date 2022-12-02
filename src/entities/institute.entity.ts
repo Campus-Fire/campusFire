@@ -12,7 +12,6 @@ const toInstituteObject = (institute: InstituteDocument): Institute => {
     city: institute.city,
     province: institute.province,
     country: institute.country,
-    userIds: institute.userIds,
   };
 };
 

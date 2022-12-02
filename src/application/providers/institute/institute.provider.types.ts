@@ -7,7 +7,6 @@ interface Institute {
   city: string;
   province: string;
   country: string;
-  userIds?: ObjectId[];
 }
 
 export { Institute };
