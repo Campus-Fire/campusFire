@@ -1,9 +1,16 @@
 import { AuthenticationError, ExpressContext } from 'apollo-server-express';
 import jwt from 'jsonwebtoken';
+import { ObjectId } from 'mongodb';
 
 import config from '../../config';
+import deterministicId from './deterministic-id';
 
-const checkAuth = (context: ExpressContext): any => {
+export interface TokenAuth {
+  id: any;
+  email: any;
+}
+
+const verifyToken = (context: ExpressContext): any => {
   const authHeaders = context.req.headers.authorization;
   if (authHeaders) {
     // Bearer .....
@@ -25,6 +32,19 @@ const checkAuth = (context: ExpressContext): any => {
   }
 
   throw new AuthenticationError('Authentication headers are not provided');
+};
+
+const checkAuth = (context: ExpressContext): TokenAuth => {
+  const { id, email } = verifyToken(context);
+
+  const derivedId = deterministicId(email).toString();
+  const userId = new ObjectId(id).toString();
+
+  if (userId !== derivedId) {
+    throw new AuthenticationError('Invalid/Expired token');
+  }
+
+  return { id, email };
 };
 
 export default checkAuth;

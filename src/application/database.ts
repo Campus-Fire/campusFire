@@ -1,10 +1,10 @@
 import { Db, Document, MongoClient } from 'mongodb';
 
-require('dotenv').config();
+import config from '../../config';
 
 const setupDb = (): Db => {
-  const uri = process.env.MONGO_CONNECTION_STRING ?? '';
-  const dbName = process.env.DB_NAME;
+  const uri = config.MONGO_CONNECTION_STRING;
+  const dbName = config.DB_NAME;
 
   console.log(`MongoDB is connecting to ${uri}`);
   const client = new MongoClient(uri);

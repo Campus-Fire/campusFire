@@ -12,6 +12,7 @@ const toAccountObject = (account: AccountDocument): SecureAccount => {
     createdAt: account.createdAt,
     lastLogin: account.lastLogin,
     verificationCode: account.verificationCode,
+    passwordResetCode: account.passwordResetCode,
   };
 };
 

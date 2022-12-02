@@ -8,7 +8,6 @@ const typeDefs = gql`
     city: String!
     province: String!
     country: String!
-    userIds: [ObjectID]
   }
 
   type Query {

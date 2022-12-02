@@ -7,17 +7,17 @@ import { Root } from '../schema/types/types';
 
 const profileResolver = {
   Query: {
-    async getProfile(_: Root, args: any, context: ExpressContext): Promise<Profile> {
+    async profiles(_: Root, args: any, context: ExpressContext): Promise<Profile[]> {
       const { id } = checkAuth(context);
 
-      return profileProvider.getProfile(id);
+      return profileProvider.getAllProfiles(id);
     },
   },
 
   Mutation: {
     async createProfile(_: Root, args: MutationCreateProfileArgs, context: ExpressContext): Promise<Profile> {
-      const { id, email } = checkAuth(context);
-      const input = { id, email, ...args.input };
+      const tokenAuth = checkAuth(context);
+      const input = { ...tokenAuth, ...args.input };
 
       return profileProvider.createProfile(input);
     },

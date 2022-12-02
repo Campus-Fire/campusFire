@@ -1,17 +1,10 @@
 import { ObjectId } from 'mongodb';
 
+import { Gender } from '../../../application/schema/types/schema';
+
 interface Preference {
-  userId: ObjectId;
-  gender: string;
-  usersEncountered?: ObjectId[];
-  liked?: ObjectId[];
-  likedBy?: ObjectId[];
-  disliked?: ObjectId[];
-}
-
-interface ProfileInteractionInput {
   id: ObjectId;
-  profileId: ObjectId;
+  gender: Gender;
 }
 
-export { Preference, ProfileInteractionInput };
+export { Preference };

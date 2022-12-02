@@ -1,9 +1,10 @@
 import { UserInputError } from 'apollo-server';
 import { Collection, ObjectId } from 'mongodb';
 
+import { Gender } from '../../../application/schema/types/schema';
 import { PreferenceDocument, toPreferenceObject } from '../../../entities/preference.entity';
 import { profileProvider } from '../../indexes/provider';
-import { Preference, ProfileInteractionInput } from './preference.provider.types';
+import { Preference } from './preference.provider.types';
 
 class PreferenceProvider {
   constructor(private collection: Collection<PreferenceDocument>) {}
@@ -14,10 +15,9 @@ class PreferenceProvider {
     return preference.map(toPreferenceObject);
   }
 
-  public async createUserPreference(userId: ObjectId, gender: string): Promise<void> {
+  public async createUserPreference(userId: ObjectId, gender: Gender): Promise<void> {
     const data = await this.collection.insertOne({
-      _id: new ObjectId(),
-      userId,
+      _id: userId,
       gender,
     });
     if (!data) {
@@ -50,6 +50,7 @@ class PreferenceProvider {
     return false;
   }
 
+  /*
   public async likeUserProfile(input: ProfileInteractionInput): Promise<Preference> {
     const { id, profileId } = input;
 
@@ -123,6 +124,7 @@ class PreferenceProvider {
       throw new Error('Users are not matched with each other');
     }
   }
+  */
 }
 
 export { PreferenceProvider };

@@ -21,15 +21,31 @@ export type Account = {
   id: Scalars['ObjectID'];
   isVerified: Scalars['Boolean'];
   lastLogin?: Maybe<Scalars['String']>;
-  token: Scalars['String'];
+  token?: Maybe<Scalars['String']>;
 };
 
 export type CreateProfileInput = {
+  about: Scalars['String'];
   dateOfBirth: Scalars['String'];
+  faculty: Scalars['String'];
   firstName: Scalars['String'];
-  gender: Scalars['String'];
+  gender: Gender;
   lastName: Scalars['String'];
-  preferredGender: Scalars['String'];
+  location: Scalars['String'];
+  preferredGender: Gender;
+  tagline: Scalars['String'];
+};
+
+export enum Gender {
+  Female = 'FEMALE',
+  Male = 'MALE',
+  Other = 'OTHER',
+}
+
+export type Image = {
+  __typename?: 'Image';
+  id: Scalars['ObjectID'];
+  src: Scalars['String'];
 };
 
 export type Institute = {
@@ -40,7 +56,6 @@ export type Institute = {
   id: Scalars['ObjectID'];
   name: Scalars['String'];
   province: Scalars['String'];
-  userIds?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
 };
 
 export type LoginInput = {
@@ -48,24 +63,16 @@ export type LoginInput = {
   password: Scalars['String'];
 };
 
-export type Message = {
-  __typename?: 'Message';
-  at: Scalars['String'];
-  from: Scalars['ObjectID'];
-  text: Scalars['String'];
-  to: Scalars['ObjectID'];
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   createProfile: Profile;
-  dislikeUserProfile: Preference;
-  likeUserProfile: Preference;
   login: Account;
-  receiveMessage?: Maybe<Array<Maybe<Message>>>;
   registerAccount: Account;
-  sendMessage: Scalars['Boolean'];
+  resendVerificationCode: Scalars['Boolean'];
+  resetPassword: Scalars['Boolean'];
+  updatePassword: Account;
   updateProfile: Profile;
+  uploadImage: Scalars['String'];
   verifyAccount: Scalars['Boolean'];
 };
 
@@ -73,32 +80,28 @@ export type MutationCreateProfileArgs = {
   input: CreateProfileInput;
 };
 
-export type MutationDislikeUserProfileArgs = {
-  input: ProfileInteractionInput;
-};
-
-export type MutationLikeUserProfileArgs = {
-  input: ProfileInteractionInput;
-};
-
 export type MutationLoginArgs = {
   input: LoginInput;
-};
-
-export type MutationReceiveMessageArgs = {
-  input: ReceiveMessageInput;
 };
 
 export type MutationRegisterAccountArgs = {
   input: RegisterAccountInput;
 };
 
-export type MutationSendMessageArgs = {
-  input: SendMessageInput;
+export type MutationResetPasswordArgs = {
+  input: ResetPasswordInput;
+};
+
+export type MutationUpdatePasswordArgs = {
+  input: UpdatePasswordInput;
 };
 
 export type MutationUpdateProfileArgs = {
   input: UpdateProfileInput;
+};
+
+export type MutationUploadImageArgs = {
+  input: UploadImageInput;
 };
 
 export type MutationVerifyAccountArgs = {
@@ -107,39 +110,31 @@ export type MutationVerifyAccountArgs = {
 
 export type Preference = {
   __typename?: 'Preference';
-  disliked?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
-  gender: Scalars['String'];
-  liked?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
-  likedBy?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
-  userId: Scalars['ObjectID'];
-  usersEncountered?: Maybe<Array<Maybe<Scalars['ObjectID']>>>;
+  gender: Gender;
+  id: Scalars['ObjectID'];
 };
 
 export type Profile = {
   __typename?: 'Profile';
+  about: Scalars['String'];
   dateOfBirth: Scalars['String'];
+  faculty: Scalars['String'];
   firstName: Scalars['String'];
-  gender: Scalars['String'];
+  gender: Gender;
   id: Scalars['ObjectID'];
+  instituteId: Scalars['ObjectID'];
   isActive: Scalars['Boolean'];
   lastName: Scalars['String'];
-};
-
-export type ProfileInteractionInput = {
-  profileId: Scalars['ObjectID'];
+  location: Scalars['String'];
+  tagline: Scalars['String'];
 };
 
 export type Query = {
   __typename?: 'Query';
   accounts: Array<Account>;
-  getProfile: Profile;
   institutes: Array<Institute>;
   preference: Array<Preference>;
-};
-
-export type ReceiveMessageInput = {
-  oppUser: Scalars['ObjectID'];
-  user: Scalars['ObjectID'];
+  profiles: Array<Profile>;
 };
 
 export type RegisterAccountInput = {
@@ -148,18 +143,31 @@ export type RegisterAccountInput = {
   password: Scalars['String'];
 };
 
-export type SendMessageInput = {
-  from: Scalars['ObjectID'];
-  text: Scalars['String'];
-  to: Scalars['ObjectID'];
+export type ResetPasswordInput = {
+  email: Scalars['String'];
+};
+
+export type UpdatePasswordInput = {
+  code: Scalars['String'];
+  confirmPassword: Scalars['String'];
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type UpdateProfileInput = {
+  about?: InputMaybe<Scalars['String']>;
   dateOfBirth?: InputMaybe<Scalars['String']>;
+  faculty?: InputMaybe<Scalars['String']>;
   firstName?: InputMaybe<Scalars['String']>;
-  gender?: InputMaybe<Scalars['String']>;
+  gender?: InputMaybe<Gender>;
   isActive?: InputMaybe<Scalars['Boolean']>;
   lastName?: InputMaybe<Scalars['String']>;
+  location?: InputMaybe<Scalars['String']>;
+  tagline?: InputMaybe<Scalars['String']>;
+};
+
+export type UploadImageInput = {
+  imgSrc: Scalars['String'];
 };
 
 export type VerificationCodeInput = {

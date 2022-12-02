@@ -1,11 +1,18 @@
 import { ObjectId } from 'mongodb';
 
+import { Gender } from '../../../application/schema/types/schema';
+
 interface Profile {
   id: ObjectId;
   firstName: string;
   lastName: string;
   dateOfBirth: string;
-  gender: string;
+  gender: Gender;
+  tagline: string;
+  about: string;
+  instituteId: ObjectId;
+  faculty: string;
+  location: string;
   isActive: boolean;
 }
 
@@ -15,8 +22,12 @@ interface CreateProfileInput {
   firstName: string;
   lastName: string;
   dateOfBirth: string;
-  gender: string;
-  preferredGender: string;
+  gender: Gender;
+  tagline: string;
+  about: string;
+  faculty: string;
+  location: string;
+  preferredGender: Gender;
 }
 
 interface UpdateProfileInput {
@@ -24,7 +35,10 @@ interface UpdateProfileInput {
   firstName?: string | null;
   lastName?: string | null;
   dateOfBirth?: string | null;
-  gender?: string | null;
+  gender?: Gender | null;
+  tagline?: string | null;
+  about?: string | null;
+  faculty?: string | null;
   isActive?: boolean | null;
 }
 

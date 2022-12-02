@@ -2,16 +2,12 @@ import { Document } from 'mongodb';
 
 import { Preference } from '../application/providers/preference/preference.provider.types';
 
-interface PreferenceDocument extends Document, Preference {}
+interface PreferenceDocument extends Document, Omit<Preference, 'id'> {}
 
 const toPreferenceObject = (preference: PreferenceDocument): Preference => {
   return {
-    userId: preference.userId,
+    id: preference._id.toHexString(),
     gender: preference.gender,
-    usersEncountered: preference.usersEncountered,
-    liked: preference.liked,
-    likedBy: preference.likedBy,
-    disliked: preference.disliked,
   };
 };
 

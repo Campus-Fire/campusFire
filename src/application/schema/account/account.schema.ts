@@ -7,7 +7,7 @@ const typeDefs = gql`
     isVerified: Boolean!
     createdAt: String!
     lastLogin: String
-    token: String!
+    token: String
   }
 
   type Query {
@@ -18,6 +18,20 @@ const typeDefs = gql`
     registerAccount(input: RegisterAccountInput!): Account!
     login(input: LoginInput!): Account!
     verifyAccount(input: VerificationCodeInput!): Boolean!
+    resendVerificationCode: Boolean!
+    resetPassword(input: ResetPasswordInput!): Boolean!
+    updatePassword(input: UpdatePasswordInput!): Account!
+  }
+
+  input UpdatePasswordInput {
+    email: String!
+    code: String!
+    password: String!
+    confirmPassword: String!
+  }
+
+  input ResetPasswordInput {
+    email: String!
   }
 
   input VerificationCodeInput {

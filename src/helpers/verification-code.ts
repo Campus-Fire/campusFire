@@ -1,12 +1,15 @@
-const getVerificationCode = (): number => {
-  let code: number = 0;
+const getVerificationCode = (): string => {
+  let code: number = Math.floor(Math.random() * 10);
 
-  for (let num = 0; num < 6; num++) {
+  if (!code || code === 0) {
+    code = 5;
+  }
+
+  for (let num = 0; num < 3; num++) {
     code = code * 10 + Math.floor(Math.random() * 10);
   }
-  console.log(code);
 
-  return code;
+  return code.toString();
 };
 
 export default getVerificationCode;

@@ -6,12 +6,17 @@ const typeDefs = gql`
     firstName: String!
     lastName: String!
     dateOfBirth: String!
-    gender: String!
+    gender: Gender!
+    tagline: String!
+    about: String!
+    instituteId: ObjectID!
+    faculty: String!
+    location: String!
     isActive: Boolean!
   }
 
   type Query {
-    getProfile: Profile!
+    profiles: [Profile!]!
   }
 
   type Mutation {
@@ -23,15 +28,23 @@ const typeDefs = gql`
     firstName: String!
     lastName: String!
     dateOfBirth: String!
-    gender: String!
-    preferredGender: String!
+    gender: Gender!
+    tagline: String!
+    about: String!
+    faculty: String!
+    location: String!
+    preferredGender: Gender!
   }
 
   input UpdateProfileInput {
     firstName: String
     lastName: String
     dateOfBirth: String
-    gender: String
+    gender: Gender
+    tagline: String
+    about: String
+    faculty: String
+    location: String
     isActive: Boolean
   }
 `;
