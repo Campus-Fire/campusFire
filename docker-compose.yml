@@ -1,9 +1,14 @@
 version: '3.1'
 
 services:
+  app:
+    container_name: campusfire-app
+    image: campusfire-app
+    ports:
+      - '4001:4001'
   mongodb:
+    container_name: campusfire-database
     image: 'bitnami/mongodb:4.4'
-    container_name: campusfire
     ports:
       - '27017:27017'
     environment:
