@@ -59,14 +59,10 @@ class AccountProvider {
   }
 
   public async registerAccount(input: RegisterAccountInput): Promise<TokenizedAccount> {
-    const { email, password, confirmPassword } = input;
+    const { email, password } = input;
 
-    if (password !== confirmPassword) {
-      throw new UserInputError('Passwords do not match.');
-    }
     validateEmailInput(email);
     validatePasswordInput(password);
-    validatePasswordInput(confirmPassword);
 
     const userId = deterministicId(email);
     if (await this.isExistingUser(userId)) {
