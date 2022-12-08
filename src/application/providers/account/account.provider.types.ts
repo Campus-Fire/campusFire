@@ -25,7 +25,6 @@ interface LoginInput {
 interface RegisterAccountInput {
   email: string;
   password: string;
-  confirmPassword: string;
 }
 
 interface VerificationCodeInput {

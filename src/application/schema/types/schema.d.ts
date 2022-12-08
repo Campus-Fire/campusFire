@@ -138,7 +138,6 @@ export type Query = {
 };
 
 export type RegisterAccountInput = {
-  confirmPassword: Scalars['String'];
   email: Scalars['String'];
   password: Scalars['String'];
 };

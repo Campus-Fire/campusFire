@@ -46,7 +46,6 @@ const typeDefs = gql`
   input RegisterAccountInput {
     email: String!
     password: String!
-    confirmPassword: String!
   }
 `;
 
