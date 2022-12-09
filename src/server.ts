@@ -1,8 +1,8 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { ApolloServer } from 'apollo-server';
 
-import { resolvers } from './indexes/resolver';
-import { typeDefs } from './schema';
+import { resolvers } from './application/indexes/resolver';
+import { typeDefs } from './application/schema';
 
 const PORT = 4001;
 

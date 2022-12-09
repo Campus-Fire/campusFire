@@ -1,0 +1,9 @@
+node_modules
+src
+scripts
+
+codegen.yml
+README.md
+
+.github
+.husky

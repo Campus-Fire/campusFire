@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-import config from '../../config';
+import config from '../../config.integration';
 
 const transport = nodemailer.createTransport({
   host: config.EMAIL_SERVICE_HOST,

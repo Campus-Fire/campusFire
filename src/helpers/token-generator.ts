@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-import config from '../../config';
+import config from '../../config.integration';
 import { TokenAuth } from './check-auth';
 
 const generateToken = (account: TokenAuth): string => {
