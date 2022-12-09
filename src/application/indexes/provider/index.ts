@@ -1,4 +1,4 @@
-import { setupDb } from '../../database';
+import { setupDb } from '../../../database';
 
 import { AccountProvider } from '../../providers/account/account.provider';
 import { InstituteProvider } from '../../providers/institute/institute.provider';

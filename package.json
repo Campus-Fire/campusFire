@@ -4,7 +4,7 @@
   "description": "API and Server",
   "main": "server.ts",
   "scripts": {
-    "start": "nodemon src/application/server.ts",
+    "start": "nodemon src/server.ts",
     "seed:database": "ts-node scripts/seed-database.ts",
     "generate:types": "graphql-codegen",
     "test": "NODE_ENV=test TZ=UTC jest",
@@ -15,7 +15,7 @@
     "format": "prettier --write \"**/*.{ts,js,json,graphql,gql,yaml,yml,md}\"",
     "format:check": "prettier --check \"**/*.{ts,js,json,graphql,gql,yaml,yml,md}\"",
     "prepare": "husky install",
-    "build": "npm run build"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
