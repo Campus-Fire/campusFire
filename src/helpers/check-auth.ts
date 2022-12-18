@@ -2,7 +2,7 @@ import { AuthenticationError, ExpressContext } from 'apollo-server-express';
 import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongodb';
 
-import config from '../../config.integration';
+import config from '../../config';
 import deterministicId from './deterministic-id';
 
 export interface TokenAuth {

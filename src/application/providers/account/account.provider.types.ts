@@ -11,7 +11,7 @@ interface Account {
   passwordResetCode?: string;
 }
 
-interface SecureAccount extends Omit<Account, 'password'> {}
+interface SecureAccount extends Omit<Account, 'password'> { }
 
 interface TokenizedAccount extends SecureAccount {
   token: string;
@@ -33,7 +33,8 @@ interface VerificationCodeInput {
   code: string;
 }
 
-interface UpdatePasswordInput {
+interface ResetPasswordInput {
+  id: ObjectId;
   email: string;
   code: string;
   password: string;
@@ -47,5 +48,5 @@ export {
   LoginInput,
   RegisterAccountInput,
   VerificationCodeInput,
-  UpdatePasswordInput,
+  ResetPasswordInput
 };

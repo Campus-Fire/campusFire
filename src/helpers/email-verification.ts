@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-import config from '../../config.integration';
+import config from '../../config';
 
 const transport = nodemailer.createTransport({
   host: config.EMAIL_SERVICE_HOST,
@@ -17,9 +17,8 @@ const sendVerificationEmail = (email: string, code: string): void => {
     from: 'CampusFire',
     to: `${email}`,
     subject: 'Verification code for CampusFire',
-    text: `Please use the following verification code to confirm your registration on CampusFire.
-    
-    Code - ${code}`,
+    text: `Please use the following verification code to confirm your registration on CampusFire.`,
+    html: `<h1>${code}</h1>`,
   };
 
   transport.sendMail(mailOptions, function (err, info) {
@@ -32,10 +31,9 @@ const sendPasswordResetEmail = (email: string, code: string): void => {
   const mailOptions = {
     from: 'CampusFire',
     to: `${email}`,
-    subject: 'Password Reset code',
-    text: `Please use the following code to reset your password.
-    
-    Code - ${code}`,
+    subject: 'Reset Password',
+    text: `Copy & Paste in your Browser ${code}.\nThe link is only valid for 1 hour.`,
+    html: `<h3>Your password reset Code is <h3> <h1>${code}</h1>`
   };
 
   transport.sendMail(mailOptions, function (err, info) {

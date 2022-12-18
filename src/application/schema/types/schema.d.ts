@@ -58,6 +58,38 @@ export type Institute = {
   province: Scalars['String'];
 };
 
+export enum Interest {
+  Art = 'ART',
+  Coding = 'CODING',
+  Cooking = 'COOKING',
+  Dancing = 'DANCING',
+  Exercise = 'EXERCISE',
+  Football = 'FOOTBALL',
+  Gardening = 'GARDENING',
+  Gym = 'GYM',
+  Hiking = 'HIKING',
+  Hockey = 'HOCKEY',
+  Indi = 'INDI',
+  Movies = 'MOVIES',
+  Music = 'MUSIC',
+  Netflix = 'NETFLIX',
+  Outdoors = 'OUTDOORS',
+  Pets = 'PETS',
+  Photography = 'PHOTOGRAPHY',
+  Politics = 'POLITICS',
+  Pop = 'POP',
+  Rap = 'RAP',
+  Rock = 'ROCK',
+  Running = 'RUNNING',
+  Skiing = 'SKIING',
+  Soccer = 'SOCCER',
+  Sports = 'SPORTS',
+  Studying = 'STUDYING',
+  Theatre = 'THEATRE',
+  Travelling = 'TRAVELLING',
+  Trekking = 'TREKKING',
+}
+
 export type LoginInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -66,18 +98,22 @@ export type LoginInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   createProfile: Profile;
+  forgotPasswordRequest: Scalars['Boolean'];
   login: Account;
   registerAccount: Account;
   resendVerificationCode: Scalars['Boolean'];
-  resetPassword: Scalars['Boolean'];
-  updatePassword: Account;
+  resetPassword: Account;
   updateProfile: Profile;
   uploadImage: Scalars['String'];
-  verifyAccount: Scalars['Boolean'];
+  verifyAccountRegistration: Scalars['Boolean'];
 };
 
 export type MutationCreateProfileArgs = {
   input: CreateProfileInput;
+};
+
+export type MutationForgotPasswordRequestArgs = {
+  input: ResetPasswordRequestInput;
 };
 
 export type MutationLoginArgs = {
@@ -92,10 +128,6 @@ export type MutationResetPasswordArgs = {
   input: ResetPasswordInput;
 };
 
-export type MutationUpdatePasswordArgs = {
-  input: UpdatePasswordInput;
-};
-
 export type MutationUpdateProfileArgs = {
   input: UpdateProfileInput;
 };
@@ -104,7 +136,7 @@ export type MutationUploadImageArgs = {
   input: UploadImageInput;
 };
 
-export type MutationVerifyAccountArgs = {
+export type MutationVerifyAccountRegistrationArgs = {
   input: VerificationCodeInput;
 };
 
@@ -143,14 +175,13 @@ export type RegisterAccountInput = {
 };
 
 export type ResetPasswordInput = {
-  email: Scalars['String'];
-};
-
-export type UpdatePasswordInput = {
   code: Scalars['String'];
   confirmPassword: Scalars['String'];
-  email: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type ResetPasswordRequestInput = {
+  email: Scalars['String'];
 };
 
 export type UpdateProfileInput = {

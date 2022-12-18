@@ -17,20 +17,19 @@ const typeDefs = gql`
   type Mutation {
     registerAccount(input: RegisterAccountInput!): Account!
     login(input: LoginInput!): Account!
-    verifyAccount(input: VerificationCodeInput!): Boolean!
+    verifyAccountRegistration(input: VerificationCodeInput!): Boolean!
     resendVerificationCode: Boolean!
-    resetPassword(input: ResetPasswordInput!): Boolean!
-    updatePassword(input: UpdatePasswordInput!): Account!
+    forgotPasswordRequest(input: ResetPasswordRequestInput!): Boolean!
+    resetPassword(input: ResetPasswordInput!): Account!
   }
 
-  input UpdatePasswordInput {
-    email: String!
+  input ResetPasswordInput {
     code: String!
     password: String!
     confirmPassword: String!
   }
 
-  input ResetPasswordInput {
+  input ResetPasswordRequestInput {
     email: String!
   }
 

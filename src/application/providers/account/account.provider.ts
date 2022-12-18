@@ -5,21 +5,21 @@ import { Collection, ObjectId } from 'mongodb';
 import { AccountDocument, toAccountObject } from '../../../entities/account.entity';
 import deterministicId from '../../../helpers/deterministic-id';
 import { sendVerificationEmail, sendPasswordResetEmail } from '../../../helpers/email-verification';
-import generateToken from '../../../helpers/token-generator';
+import { generateToken, generateResetPasswortToken } from '../../../helpers/token-generator';
 import { validateEmailInput, validatePasswordInput } from '../../../helpers/validator';
 import getVerificationCode from '../../../helpers/verification-code';
 import { instituteProvider } from '../../indexes/provider';
 import {
   LoginInput,
   RegisterAccountInput,
+  ResetPasswordInput,
   SecureAccount,
   TokenizedAccount,
-  UpdatePasswordInput,
   VerificationCodeInput,
 } from './account.provider.types';
 
 class AccountProvider {
-  constructor(private collection: Collection<AccountDocument>) {}
+  constructor(private collection: Collection<AccountDocument>) { }
 
   public async getAccounts(): Promise<SecureAccount[]> {
     const accounts = await this.collection.find().toArray();
@@ -30,11 +30,13 @@ class AccountProvider {
   public async login(input: LoginInput): Promise<TokenizedAccount> {
     const { email, password } = input;
 
-    validateEmailInput(email);
+    const userEmail = email.toLowerCase()
+
+    validateEmailInput(userEmail);
     validatePasswordInput(password);
 
     const accountData = await this.collection.findOneAndUpdate(
-      { email },
+      { email: userEmail },
       { $set: { ...{ lastLogin: new Date().toISOString() } } },
       { returnDocument: 'after' }
     );
@@ -61,22 +63,24 @@ class AccountProvider {
   public async registerAccount(input: RegisterAccountInput): Promise<TokenizedAccount> {
     const { email, password } = input;
 
-    validateEmailInput(email);
+    const userEmail = email.toLowerCase();
+
+    validateEmailInput(userEmail);
     validatePasswordInput(password);
 
-    const userId = deterministicId(email);
+    const userId = deterministicId(userEmail);
     if (await this.isExistingUser(userId)) {
       throw new UserInputError('User already exists. Please try logging in.');
     }
 
-    await instituteProvider.isValidEmailExtension(email);
+    await instituteProvider.isValidEmailExtension(userEmail);
 
     // might need a better hashing algorithm here
     const hashedPassword = await bcrypt.hash(password, 12);
     const verificationCode = getVerificationCode();
     const accountData = await this.collection.insertOne({
       _id: userId,
-      email,
+      email: userEmail,
       password: hashedPassword,
       createdAt: new Date().toISOString(),
       isVerified: false,
@@ -88,7 +92,7 @@ class AccountProvider {
       throw new Error('Failed to create the account.');
     }
 
-    sendVerificationEmail(email, verificationCode);
+    sendVerificationEmail(userEmail, verificationCode);
 
     const document = toAccountObject(account);
     const token = generateToken({ id: account._id, email: account.email });
@@ -99,7 +103,7 @@ class AccountProvider {
     };
   }
 
-  public async verifyAccount(input: VerificationCodeInput): Promise<boolean> {
+  public async verifyAccountRegistration(input: VerificationCodeInput): Promise<boolean> {
     const { id, code } = input;
 
     const userId = new ObjectId(id);
@@ -154,27 +158,34 @@ class AccountProvider {
     return account.verificationCode === verificationCode;
   }
 
-  public async resetPassword(email: string): Promise<boolean> {
-    validateEmailInput(email);
+  public async sendForgotPasswordRequest(email: string): Promise<boolean> {
+    const userEmail = email.toLowerCase();
+    const userId = deterministicId(email);
 
-    const passwordResetCode = getVerificationCode();
+    if (!await this.isExistingUser(userId)) {
+      return false;
+    }
+
+    // const token = generateResetPasswortToken({ id: userId, email: userEmail });
+    const code = getVerificationCode();
+
     const accountData = await this.collection.findOneAndUpdate(
-      { email },
-      { $set: { ...{ passwordResetCode } } },
+      { _id: userId },
+      { $set: { ...{ passwordResetCode: code } } },
       { returnDocument: 'after' }
     );
 
     const account = accountData.value;
     if (!account) {
-      throw new Error('Unable to send new Verification code.');
+      throw new Error('Unable to send password verification code')
     }
 
-    sendPasswordResetEmail(email, passwordResetCode);
+    sendPasswordResetEmail(userEmail, code);
 
-    return account.passwordResetCode === passwordResetCode;
+    return account.passwordResetCode === code;
   }
 
-  public async updatePassword(input: UpdatePasswordInput): Promise<SecureAccount> {
+  public async resetPassword(input: ResetPasswordInput): Promise<SecureAccount> {
     const { email, code, password, confirmPassword } = input;
 
     if (password !== confirmPassword) {

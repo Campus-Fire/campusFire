@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-import config from '../config.integration';
+import config from '../config';
 import { Institutes, institutes } from './initial-data';
 
 const uri = config.MONGO_CONNECTION_STRING ?? '';
