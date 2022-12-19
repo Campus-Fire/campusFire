@@ -1,4 +1,5 @@
 import { gql } from 'apollo-server-core';
+import { DateTimeTypeDefinition } from 'graphql-scalars';
 
 import { typeDefs as accountTypeDefs } from './account/account.schema';
 import { typeDefs as instituteTypeDefs } from './institute/institute.schema';
@@ -9,7 +10,8 @@ import { typeDefs as imageTypeDefs } from './image/image.schema';
 
 const scalarSchema = gql`
   scalar ObjectID
-  scalar Long
+  scalar DateTime
+  scalar Date
 `;
 
 const typeDefs = gql`

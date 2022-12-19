@@ -6,7 +6,7 @@ const typeDefs = gql`
     instituteId: ObjectID!
     firstName: String!
     lastName: String!
-    dateOfBirth: String!
+    dateOfBirth: Date!
     gender: Gender!
     tagline: String!
     about: String!
@@ -27,7 +27,7 @@ const typeDefs = gql`
   input CreateProfileInput {
     firstName: String!
     lastName: String!
-    dateOfBirth: String!
+    dateOfBirth: Date!
     gender: Gender!
     tagline: String!
     about: String!

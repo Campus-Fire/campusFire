@@ -5,8 +5,8 @@ const typeDefs = gql`
     id: ObjectID!
     email: String!
     isVerified: Boolean!
-    createdAt: String!
-    lastLogin: String
+    createdAt: DateTime!
+    lastLogin: DateTime
     token: String
   }
 

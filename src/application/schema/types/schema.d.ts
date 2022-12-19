@@ -10,23 +10,24 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  Long: any;
+  Date: any;
+  DateTime: any;
   ObjectID: any;
 };
 
 export type Account = {
   __typename?: 'Account';
-  createdAt: Scalars['String'];
+  createdAt: Scalars['DateTime'];
   email: Scalars['String'];
   id: Scalars['ObjectID'];
   isVerified: Scalars['Boolean'];
-  lastLogin?: Maybe<Scalars['String']>;
+  lastLogin?: Maybe<Scalars['DateTime']>;
   token?: Maybe<Scalars['String']>;
 };
 
 export type CreateProfileInput = {
   about: Scalars['String'];
-  dateOfBirth: Scalars['String'];
+  dateOfBirth: Scalars['Date'];
   faculty: Faculty;
   firstName: Scalars['String'];
   gender: Gender;
@@ -164,7 +165,7 @@ export type Preference = {
 export type Profile = {
   __typename?: 'Profile';
   about: Scalars['String'];
-  dateOfBirth: Scalars['String'];
+  dateOfBirth: Scalars['Date'];
   faculty: Faculty;
   firstName: Scalars['String'];
   gender: Gender;

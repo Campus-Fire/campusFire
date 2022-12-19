@@ -4,6 +4,8 @@ generates:
   ./src/application/schema/types/schema.d.ts:
     plugins:
       - typescript
+    config:
+      scalars:
 
 hooks:
   afterAllFileWrite:
