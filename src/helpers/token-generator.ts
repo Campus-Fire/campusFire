@@ -20,9 +20,9 @@ const generateResetPasswortToken = (account: TokenAuth): string => {
       id: account.id,
       email: account.email,
     },
-    config.RESET_PASSWORD_KEY,
-    { expiresIn: '24h' }
-  )
-}
+    config.SECRET_TOKEN_KEY,
+    { expiresIn: '1h' }
+  );
+};
 
 export { generateToken, generateResetPasswortToken };

@@ -27,14 +27,29 @@ export type Account = {
 export type CreateProfileInput = {
   about: Scalars['String'];
   dateOfBirth: Scalars['String'];
-  faculty: Scalars['String'];
+  faculty: Faculty;
   firstName: Scalars['String'];
   gender: Gender;
+  interests: Array<Interest>;
   lastName: Scalars['String'];
-  location: Scalars['String'];
-  preferredGender: Gender;
+  onResidence: Scalars['Boolean'];
   tagline: Scalars['String'];
 };
+
+export enum Faculty {
+  CummingSchoolOfMedicine = 'CUMMING_SCHOOL_OF_MEDICINE',
+  FacultyOfArts = 'FACULTY_OF_ARTS',
+  FacultyOfKinesiology = 'FACULTY_OF_KINESIOLOGY',
+  FacultyOfLaw = 'FACULTY_OF_LAW',
+  FacultyOfNursing = 'FACULTY_OF_NURSING',
+  FacultyOfScience = 'FACULTY_OF_SCIENCE',
+  FacultyOfSocialWork = 'FACULTY_OF_SOCIAL_WORK',
+  FacultyOfVeterinaryMedicine = 'FACULTY_OF_VETERINARY_MEDICINE',
+  HaskayneSchoolOfBusiness = 'HASKAYNE_SCHOOL_OF_BUSINESS',
+  SchoolOfArchitecturePlanningAndLandscape = 'SCHOOL_OF_ARCHITECTURE_PLANNING_AND_LANDSCAPE',
+  SchulichSchoolOfEngineering = 'SCHULICH_SCHOOL_OF_ENGINEERING',
+  WerklundSchoolOfEducation = 'WERKLUND_SCHOOL_OF_EDUCATION',
+}
 
 export enum Gender {
   Female = 'FEMALE',
@@ -98,13 +113,13 @@ export type LoginInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   createProfile: Profile;
-  forgotPasswordRequest: Scalars['Boolean'];
+  forgotPasswordRequest: Scalars['String'];
   login: Account;
   registerAccount: Account;
   resendVerificationCode: Scalars['Boolean'];
   resetPassword: Account;
-  updateProfile: Profile;
   uploadImage: Scalars['String'];
+  verifyAccountPasswordReset: Scalars['Boolean'];
   verifyAccountRegistration: Scalars['Boolean'];
 };
 
@@ -128,12 +143,12 @@ export type MutationResetPasswordArgs = {
   input: ResetPasswordInput;
 };
 
-export type MutationUpdateProfileArgs = {
-  input: UpdateProfileInput;
-};
-
 export type MutationUploadImageArgs = {
   input: UploadImageInput;
+};
+
+export type MutationVerifyAccountPasswordResetArgs = {
+  input: VerificationCodeInput;
 };
 
 export type MutationVerifyAccountRegistrationArgs = {
@@ -150,14 +165,15 @@ export type Profile = {
   __typename?: 'Profile';
   about: Scalars['String'];
   dateOfBirth: Scalars['String'];
-  faculty: Scalars['String'];
+  faculty: Faculty;
   firstName: Scalars['String'];
   gender: Gender;
   id: Scalars['ObjectID'];
   instituteId: Scalars['ObjectID'];
+  interests: Array<Interest>;
   isActive: Scalars['Boolean'];
   lastName: Scalars['String'];
-  location: Scalars['String'];
+  onResidence: Scalars['Boolean'];
   tagline: Scalars['String'];
 };
 
@@ -166,7 +182,9 @@ export type Query = {
   accounts: Array<Account>;
   institutes: Array<Institute>;
   preference: Array<Preference>;
+  privacyPolicy: Scalars['String'];
   profiles: Array<Profile>;
+  termsOfUse: Scalars['String'];
 };
 
 export type RegisterAccountInput = {
@@ -175,25 +193,12 @@ export type RegisterAccountInput = {
 };
 
 export type ResetPasswordInput = {
-  code: Scalars['String'];
   confirmPassword: Scalars['String'];
   password: Scalars['String'];
 };
 
 export type ResetPasswordRequestInput = {
   email: Scalars['String'];
-};
-
-export type UpdateProfileInput = {
-  about?: InputMaybe<Scalars['String']>;
-  dateOfBirth?: InputMaybe<Scalars['String']>;
-  faculty?: InputMaybe<Scalars['String']>;
-  firstName?: InputMaybe<Scalars['String']>;
-  gender?: InputMaybe<Gender>;
-  isActive?: InputMaybe<Scalars['Boolean']>;
-  lastName?: InputMaybe<Scalars['String']>;
-  location?: InputMaybe<Scalars['String']>;
-  tagline?: InputMaybe<Scalars['String']>;
 };
 
 export type UploadImageInput = {

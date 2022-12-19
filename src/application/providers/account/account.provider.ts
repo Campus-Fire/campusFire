@@ -19,7 +19,7 @@ import {
 } from './account.provider.types';
 
 class AccountProvider {
-  constructor(private collection: Collection<AccountDocument>) { }
+  constructor(private collection: Collection<AccountDocument>) {}
 
   public async getAccounts(): Promise<SecureAccount[]> {
     const accounts = await this.collection.find().toArray();
@@ -30,11 +30,12 @@ class AccountProvider {
   public async login(input: LoginInput): Promise<TokenizedAccount> {
     const { email, password } = input;
 
-    const userEmail = email.toLowerCase()
+    const userEmail = email.toLowerCase();
 
     validateEmailInput(userEmail);
     validatePasswordInput(password);
 
+    // Could set wrong login date in case of wrong passwords
     const accountData = await this.collection.findOneAndUpdate(
       { email: userEmail },
       { $set: { ...{ lastLogin: new Date().toISOString() } } },
@@ -158,16 +159,16 @@ class AccountProvider {
     return account.verificationCode === verificationCode;
   }
 
-  public async sendForgotPasswordRequest(email: string): Promise<boolean> {
+  public async sendForgotPasswordRequest(email: string): Promise<string> {
     const userEmail = email.toLowerCase();
     const userId = deterministicId(email);
 
-    if (!await this.isExistingUser(userId)) {
-      return false;
+    if (!(await this.isExistingUser(userId))) {
+      throw new UserInputError('Can not find a user with that email.');
     }
 
-    // const token = generateResetPasswortToken({ id: userId, email: userEmail });
     const code = getVerificationCode();
+    const token = generateResetPasswortToken({ id: userId, email: userEmail });
 
     const accountData = await this.collection.findOneAndUpdate(
       { _id: userId },
@@ -177,28 +178,42 @@ class AccountProvider {
 
     const account = accountData.value;
     if (!account) {
-      throw new Error('Unable to send password verification code')
+      throw new Error('Unable to send password verification code');
     }
 
     sendPasswordResetEmail(userEmail, code);
 
-    return account.passwordResetCode === code;
+    return token;
   }
 
-  public async resetPassword(input: ResetPasswordInput): Promise<SecureAccount> {
-    const { email, code, password, confirmPassword } = input;
+  public async verifyAccountPasswordReset(input: VerificationCodeInput): Promise<boolean> {
+    const { id, email, code } = input;
+
+    const userId = new ObjectId(id);
+    if (!(await this.isExistingUser(userId))) {
+      throw new UserInputError('User does not exists');
+    }
+
+    const data = await this.collection.findOne({ _id: userId, passwordResetCode: code });
+
+    return data?.email === email;
+  }
+
+  public async resetPassword(input: ResetPasswordInput): Promise<TokenizedAccount> {
+    const { id, email, password, confirmPassword } = input;
 
     if (password !== confirmPassword) {
       throw new UserInputError('Passwords do not match.');
     }
-    validateEmailInput(email);
     validatePasswordInput(password);
     validatePasswordInput(confirmPassword);
+
+    const userId = new ObjectId(id);
 
     // might need a better hashing algorithm here
     const hashedPassword = await bcrypt.hash(password, 12);
     const accountData = await this.collection.findOneAndUpdate(
-      { email, passwordResetCode: code },
+      { _id: userId, email },
       { $set: { ...{ password: hashedPassword } } },
       { returnDocument: 'after' }
     );
@@ -208,7 +223,13 @@ class AccountProvider {
       throw new UserInputError('Unable to update your password. Please try again!');
     }
 
-    return toAccountObject(account);
+    const token = generateToken({ id: account._id, email: account.email });
+    const document = toAccountObject(account);
+
+    return {
+      token,
+      ...document,
+    };
   }
 }
 

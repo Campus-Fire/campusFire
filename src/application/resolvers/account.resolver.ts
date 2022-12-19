@@ -8,16 +8,25 @@ import {
   MutationLoginArgs,
   MutationRegisterAccountArgs,
   MutationResetPasswordArgs,
+  MutationVerifyAccountPasswordResetArgs,
   MutationVerifyAccountRegistrationArgs,
 } from '../schema/types/schema';
 import { Root } from '../schema/types/types';
 
-interface UntokenizedAccount extends Omit<Account, 'token'> { }
+interface UntokenizedAccount extends Omit<Account, 'token'> {}
 
 const accountResolver = {
   Query: {
     async accounts(): Promise<UntokenizedAccount[]> {
       return accountProvider.getAccounts();
+    },
+
+    async termsOfUse(): Promise<string> {
+      return 'returnsTermsOfUsePageURL';
+    },
+
+    async privacyPolicy(): Promise<string> {
+      return 'returnsPrivacyPolicy';
     },
   },
 
@@ -30,7 +39,11 @@ const accountResolver = {
       return accountProvider.registerAccount(args.input);
     },
 
-    async verifyAccountRegistration(_: Root, args: MutationVerifyAccountRegistrationArgs, context: ExpressContext): Promise<boolean> {
+    async verifyAccountRegistration(
+      _: Root,
+      args: MutationVerifyAccountRegistrationArgs,
+      context: ExpressContext
+    ): Promise<boolean> {
       const tokenAuth = checkAuth(context);
       const input = { ...tokenAuth, ...args.input };
 
@@ -43,8 +56,19 @@ const accountResolver = {
       return accountProvider.resendVerificationCode(email);
     },
 
-    async forgotPasswordRequest(_: Root, args: MutationForgotPasswordRequestArgs): Promise<boolean> {
-      return accountProvider.sendForgotPasswordRequest(args.input.email)
+    async forgotPasswordRequest(_: Root, args: MutationForgotPasswordRequestArgs): Promise<string> {
+      return accountProvider.sendForgotPasswordRequest(args.input.email);
+    },
+
+    async verifyAccountPasswordReset(
+      _: Root,
+      args: MutationVerifyAccountPasswordResetArgs,
+      context: ExpressContext
+    ): Promise<boolean> {
+      const passwordResetToken = checkAuth(context);
+      const input = { ...passwordResetToken, ...args.input };
+
+      return accountProvider.verifyAccountPasswordReset(input);
     },
 
     async resetPassword(_: Root, args: MutationResetPasswordArgs, context: ExpressContext): Promise<Account> {
@@ -52,7 +76,7 @@ const accountResolver = {
       const input = { ...tokenAuth, ...args.input };
 
       return accountProvider.resetPassword(input);
-    }
+    },
   },
 };
 

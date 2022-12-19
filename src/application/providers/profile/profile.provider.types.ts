@@ -1,18 +1,19 @@
 import { ObjectId } from 'mongodb';
 
-import { Gender } from '../../../application/schema/types/schema';
+import { Faculty, Gender, Interest } from '../../../application/schema/types/schema';
 
 interface Profile {
   id: ObjectId;
+  instituteId: ObjectId;
   firstName: string;
   lastName: string;
   dateOfBirth: string;
   gender: Gender;
   tagline: string;
   about: string;
-  instituteId: ObjectId;
-  faculty: string;
-  location: string;
+  faculty: Faculty;
+  interests: Interest[];
+  onResidence: boolean;
   isActive: boolean;
 }
 
@@ -25,21 +26,9 @@ interface CreateProfileInput {
   gender: Gender;
   tagline: string;
   about: string;
-  faculty: string;
-  location: string;
-  preferredGender: Gender;
+  faculty: Faculty;
+  interests: Interest[];
+  onResidence: boolean;
 }
 
-interface UpdateProfileInput {
-  id: ObjectId;
-  firstName?: string | null;
-  lastName?: string | null;
-  dateOfBirth?: string | null;
-  gender?: Gender | null;
-  tagline?: string | null;
-  about?: string | null;
-  faculty?: string | null;
-  isActive?: boolean | null;
-}
-
-export { Profile, CreateProfileInput, UpdateProfileInput };
+export { Profile, CreateProfileInput };

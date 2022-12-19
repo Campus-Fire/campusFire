@@ -5,8 +5,7 @@ const config = {
     'mongodb+srv://campusfire-staging-rw:52lpwAZOtn34eNwY@cluster0.tfweizu.mongodb.net/?retryWrites=true&w=majority',
   DB_NAME: 'campusFire',
 
-  SECRET_TOKEN_KEY: 'campus_fire_secret_key_for_json_web_tokens',
-  RESET_PASSWORD_KEY: 'campus_fire_secret_key_for_password_reset_token_generators_to_be_sent_in_email',
+  SECRET_TOKEN_KEY: 'C@mpu$_F1r3_$3cr3t_k3y_f0r_J$0N_w3b_t0k3n$',
 
   USER_EMAIL: 'unitryst@gmail.com',
   USER_PASSWORD: 'hycqmgvyfjaloiaj',

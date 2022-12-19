@@ -12,6 +12,8 @@ const typeDefs = gql`
 
   type Query {
     accounts: [Account!]!
+    termsOfUse: String!
+    privacyPolicy: String!
   }
 
   type Mutation {
@@ -19,12 +21,12 @@ const typeDefs = gql`
     login(input: LoginInput!): Account!
     verifyAccountRegistration(input: VerificationCodeInput!): Boolean!
     resendVerificationCode: Boolean!
-    forgotPasswordRequest(input: ResetPasswordRequestInput!): Boolean!
+    forgotPasswordRequest(input: ResetPasswordRequestInput!): String!
+    verifyAccountPasswordReset(input: VerificationCodeInput!): Boolean!
     resetPassword(input: ResetPasswordInput!): Account!
   }
 
   input ResetPasswordInput {
-    code: String!
     password: String!
     confirmPassword: String!
   }
