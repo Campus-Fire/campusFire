@@ -3,11 +3,11 @@ import { Collection, ObjectId } from 'mongodb';
 
 import { ProfileDocument, toProfileObject } from '../../../entities/profile.entity';
 import { validateEmailInput, validateNameInput, validateStringInputs } from '../../../helpers/validator';
-import { accountProvider, instituteProvider, preferenceProvider } from '../../indexes/provider';
+import { accountProvider, instituteProvider } from '../../indexes/provider';
 import { CreateProfileInput, Profile } from './profile.provider.types';
 
 class ProfileProvider {
-  constructor(private collection: Collection<ProfileDocument>) { }
+  constructor(private collection: Collection<ProfileDocument>) {}
 
   public async getAllProfiles(id: any): Promise<Profile[]> {
     const userId = new ObjectId(id);
@@ -21,7 +21,8 @@ class ProfileProvider {
   }
 
   public async createProfile(input: CreateProfileInput): Promise<Profile> {
-    const { id, email, firstName, lastName, dateOfBirth, gender, tagline, about, interests, faculty, onResidence } = input;
+    const { id, email, firstName, lastName, dateOfBirth, gender, tagline, about, interests, faculty, onResidence } =
+      input;
     const userId = new ObjectId(id);
 
     const profileCount = await this.collection.countDocuments({ _id: userId });
@@ -29,7 +30,18 @@ class ProfileProvider {
       throw new Error('Can not create a duplicate profile');
     }
 
-    if (!id || !email || !firstName || !lastName || !dateOfBirth || !gender || !tagline || !about || !interests || !faculty) {
+    if (
+      !id ||
+      !email ||
+      !firstName ||
+      !lastName ||
+      !dateOfBirth ||
+      !gender ||
+      !tagline ||
+      !about ||
+      !interests ||
+      !faculty
+    ) {
       throw new UserInputError('Incomplete information provided to create a profile');
     }
     validateEmailInput(email);
@@ -56,7 +68,7 @@ class ProfileProvider {
       interests,
       faculty,
       onResidence,
-      isActive: true
+      isActive: true,
     });
 
     const profile = await this.collection.findOne({ _id: profileData.insertedId });

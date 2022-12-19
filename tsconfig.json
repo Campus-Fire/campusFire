@@ -12,24 +12,11 @@
     "sourceMap": true,
     "outDir": "build",
     "baseUrl": ".",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "types": [
-      "jest",
-      "@types/jest"
-    ],
+    "typeRoots": ["node_modules/@types"],
+    "types": ["jest", "@types/jest"],
     "paths": {
-      "*": [
-        "*",
-        "node_modules/*",
-        "src/*"
-      ]
+      "*": ["*", "node_modules/*", "src/*"]
     }
   },
-  "include": [
-    "src/*",
-    "src/**/*",
-    "scripts/*"
-  ]
+  "include": ["src/*", "src/**/*", "scripts/*"]
 }

@@ -20,7 +20,7 @@ const profileResolver = {
       const input = { ...tokenAuth, ...args.input };
 
       return profileProvider.createProfile(input);
-    }
+    },
   },
 };
 
