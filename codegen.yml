@@ -6,6 +6,7 @@ generates:
       - typescript
     config:
       scalars:
+        Date: Date
 
 hooks:
   afterAllFileWrite:

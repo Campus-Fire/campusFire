@@ -10,8 +10,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  Date: any;
-  DateTime: any;
+  Date: Date;
   ObjectID: any;
 };
 
@@ -61,8 +60,15 @@ export enum Gender {
 
 export type Image = {
   __typename?: 'Image';
+  addedAt: Scalars['Date'];
   id: Scalars['ObjectID'];
+  isPrimary: Scalars['Boolean'];
   src: Scalars['String'];
+  userId: Scalars['ObjectID'];
+};
+
+export type ImageInput = {
+  imgId: Scalars['ObjectID'];
 };
 
 export type Institute = {
@@ -120,7 +126,9 @@ export type Mutation = {
   registerAccount: Account;
   resendVerificationCode: Scalars['Boolean'];
   resetPassword: Account;
-  uploadImage: Scalars['String'];
+  setPrimaryImage: Scalars['String'];
+  uploadMultipleImages: Array<Scalars['String']>;
+  uploadSingleImage: Scalars['String'];
   verifyAccountPasswordReset: Scalars['Boolean'];
   verifyAccountRegistration: Scalars['Boolean'];
 };
@@ -145,8 +153,16 @@ export type MutationResetPasswordArgs = {
   input: ResetPasswordInput;
 };
 
-export type MutationUploadImageArgs = {
-  input: UploadImageInput;
+export type MutationSetPrimaryImageArgs = {
+  input: ImageInput;
+};
+
+export type MutationUploadMultipleImagesArgs = {
+  input: UploadMultpleImagesInput;
+};
+
+export type MutationUploadSingleImageArgs = {
+  input: UploadSingleImageInput;
 };
 
 export type MutationVerifyAccountPasswordResetArgs = {
@@ -203,7 +219,11 @@ export type ResetPasswordRequestInput = {
   email: Scalars['String'];
 };
 
-export type UploadImageInput = {
+export type UploadMultpleImagesInput = {
+  imgSources: Array<Scalars['String']>;
+};
+
+export type UploadSingleImageInput = {
   imgSrc: Scalars['String'];
 };
 

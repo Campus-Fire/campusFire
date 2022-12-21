@@ -4,12 +4,26 @@ interface Image {
   id: ObjectId;
   userId: ObjectId;
   src: string;
+  isPrimary: boolean;
+  addedAt: Date;
 }
 
-interface UploadImageInput {
+interface UploadSingleImageInput {
   id: ObjectId;
   email: string;
   imgSrc: string;
 }
 
-export { Image, UploadImageInput };
+interface UploadMultipleImageInput {
+  id: ObjectId;
+  email: string;
+  imgSources: string[];
+}
+
+interface ImageInput {
+  id: ObjectId;
+  imgId: ObjectId;
+}
+
+
+export { Image, UploadSingleImageInput, UploadMultipleImageInput, ImageInput };
