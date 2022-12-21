@@ -1,6 +1,7 @@
 import { UserInputError } from 'apollo-server';
 import bcrypt from 'bcryptjs';
 import { Collection, ObjectId } from 'mongodb';
+import { addYears, isAfter } from 'date-fns';
 
 import { AccountDocument, toAccountObject } from '../../../entities/account.entity';
 import deterministicId from '../../../helpers/deterministic-id';
@@ -19,7 +20,7 @@ import {
 } from './account.provider.types';
 
 class AccountProvider {
-  constructor(private collection: Collection<AccountDocument>) {}
+  constructor(private collection: Collection<AccountDocument>) { }
 
   public async getAccounts(): Promise<SecureAccount[]> {
     const accounts = await this.collection.find().toArray();
@@ -35,16 +36,22 @@ class AccountProvider {
     validateEmailInput(userEmail);
     validatePasswordInput(password);
 
-    // Could set wrong login date in case of wrong passwords
+    const now = new Date();
+
+    // Could set wrong last login in case of wrong passwords or disabled account
     const accountData = await this.collection.findOneAndUpdate(
       { email: userEmail },
-      { $set: { ...{ lastLogin: new Date().toISOString() } } },
+      { $set: { ...{ lastLogin: now } } },
       { returnDocument: 'after' }
     );
 
     const account = accountData.value;
     if (!account) {
       throw new UserInputError('Unable to retrieve an user with provided email.');
+    }
+
+    if (isAfter(now, account.expiresAt)) {
+      throw new Error('Your account has been disable. Please contact us to re-enable it');
     }
 
     const passwordMatch = await bcrypt.compare(password, account.password);
@@ -79,11 +86,14 @@ class AccountProvider {
     // might need a better hashing algorithm here
     const hashedPassword = await bcrypt.hash(password, 12);
     const verificationCode = getVerificationCode();
+    const now = new Date();
+
     const accountData = await this.collection.insertOne({
       _id: userId,
       email: userEmail,
       password: hashedPassword,
-      createdAt: new Date().toISOString(),
+      createdAt: now,
+      expiresAt: addYears(now, 4),
       isVerified: false,
       verificationCode,
     });

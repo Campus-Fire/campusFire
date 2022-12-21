@@ -7,7 +7,7 @@ interface Profile {
   instituteId: ObjectId;
   firstName: string;
   lastName: string;
-  dateOfBirth: string;
+  dateOfBirth: Date;
   gender: Gender;
   tagline: string;
   about: string;

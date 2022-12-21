@@ -5,13 +5,14 @@ interface Account {
   email: string;
   password: string;
   isVerified: boolean;
-  createdAt: string;
-  lastLogin?: string;
+  createdAt: Date;
+  expiresAt: Date
+  lastLogin?: Date;
   verificationCode?: string;
   passwordResetCode?: string;
 }
 
-interface SecureAccount extends Omit<Account, 'password'> {}
+interface SecureAccount extends Omit<Account, 'password'> { }
 
 interface TokenizedAccount extends SecureAccount {
   token: string;

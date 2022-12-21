@@ -27,7 +27,7 @@ const typeDefs = gql`
   input CreateProfileInput {
     firstName: String!
     lastName: String!
-    dateOfBirth: Date!
+    dateOfBirth: String!
     gender: Gender!
     tagline: String!
     about: String!

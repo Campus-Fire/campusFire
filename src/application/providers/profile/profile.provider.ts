@@ -7,7 +7,7 @@ import { accountProvider, instituteProvider } from '../../indexes/provider';
 import { CreateProfileInput, Profile } from './profile.provider.types';
 
 class ProfileProvider {
-  constructor(private collection: Collection<ProfileDocument>) {}
+  constructor(private collection: Collection<ProfileDocument>) { }
 
   public async getAllProfiles(id: any): Promise<Profile[]> {
     const userId = new ObjectId(id);
@@ -30,18 +30,7 @@ class ProfileProvider {
       throw new Error('Can not create a duplicate profile');
     }
 
-    if (
-      !id ||
-      !email ||
-      !firstName ||
-      !lastName ||
-      !dateOfBirth ||
-      !gender ||
-      !tagline ||
-      !about ||
-      !interests ||
-      !faculty
-    ) {
+    if (!firstName || !lastName || !dateOfBirth || !gender || !tagline || !about || !interests || !faculty) {
       throw new UserInputError('Incomplete information provided to create a profile');
     }
     validateEmailInput(email);
@@ -55,13 +44,14 @@ class ProfileProvider {
       throw new Error('Please verify account before creating a profile');
     }
     const instituteId = await instituteProvider.getInstituteId(email);
+    const dBirth = new Date(dateOfBirth);
 
     const profileData = await this.collection.insertOne({
       _id: userId,
       instituteId,
       firstName,
       lastName,
-      dateOfBirth,
+      dateOfBirth: dBirth,
       gender,
       tagline,
       about,

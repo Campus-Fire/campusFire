@@ -17,17 +17,18 @@ export type Scalars = {
 
 export type Account = {
   __typename?: 'Account';
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['Date'];
   email: Scalars['String'];
+  expiresAt: Scalars['Date'];
   id: Scalars['ObjectID'];
   isVerified: Scalars['Boolean'];
-  lastLogin?: Maybe<Scalars['DateTime']>;
+  lastLogin?: Maybe<Scalars['Date']>;
   token?: Maybe<Scalars['String']>;
 };
 
 export type CreateProfileInput = {
   about: Scalars['String'];
-  dateOfBirth: Scalars['Date'];
+  dateOfBirth: Scalars['String'];
   faculty: Faculty;
   firstName: Scalars['String'];
   gender: Gender;
