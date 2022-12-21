@@ -9,7 +9,7 @@ import { typeDefs as imageTypeDefs } from './image/image.schema';
 
 const scalarSchema = gql`
   scalar ObjectID
-  scalar Long
+  scalar Date
 `;
 
 const typeDefs = gql`

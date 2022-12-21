@@ -5,13 +5,14 @@ interface Account {
   email: string;
   password: string;
   isVerified: boolean;
-  createdAt: string;
-  lastLogin?: string;
+  createdAt: Date;
+  expiresAt: Date
+  lastLogin?: Date;
   verificationCode?: string;
   passwordResetCode?: string;
 }
 
-interface SecureAccount extends Omit<Account, 'password'> {}
+interface SecureAccount extends Omit<Account, 'password'> { }
 
 interface TokenizedAccount extends SecureAccount {
   token: string;
@@ -33,9 +34,9 @@ interface VerificationCodeInput {
   code: string;
 }
 
-interface UpdatePasswordInput {
+interface ResetPasswordInput {
+  id: ObjectId;
   email: string;
-  code: string;
   password: string;
   confirmPassword: string;
 }
@@ -47,5 +48,5 @@ export {
   LoginInput,
   RegisterAccountInput,
   VerificationCodeInput,
-  UpdatePasswordInput,
+  ResetPasswordInput,
 };

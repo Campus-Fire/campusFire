@@ -10,31 +10,47 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  Long: any;
+  Date: Date;
   ObjectID: any;
 };
 
 export type Account = {
   __typename?: 'Account';
-  createdAt: Scalars['String'];
+  createdAt: Scalars['Date'];
   email: Scalars['String'];
+  expiresAt: Scalars['Date'];
   id: Scalars['ObjectID'];
   isVerified: Scalars['Boolean'];
-  lastLogin?: Maybe<Scalars['String']>;
+  lastLogin?: Maybe<Scalars['Date']>;
   token?: Maybe<Scalars['String']>;
 };
 
 export type CreateProfileInput = {
   about: Scalars['String'];
   dateOfBirth: Scalars['String'];
-  faculty: Scalars['String'];
+  faculty: Faculty;
   firstName: Scalars['String'];
   gender: Gender;
+  interests: Array<Interest>;
   lastName: Scalars['String'];
-  location: Scalars['String'];
-  preferredGender: Gender;
+  onResidence: Scalars['Boolean'];
   tagline: Scalars['String'];
 };
+
+export enum Faculty {
+  CummingSchoolOfMedicine = 'CUMMING_SCHOOL_OF_MEDICINE',
+  FacultyOfArts = 'FACULTY_OF_ARTS',
+  FacultyOfKinesiology = 'FACULTY_OF_KINESIOLOGY',
+  FacultyOfLaw = 'FACULTY_OF_LAW',
+  FacultyOfNursing = 'FACULTY_OF_NURSING',
+  FacultyOfScience = 'FACULTY_OF_SCIENCE',
+  FacultyOfSocialWork = 'FACULTY_OF_SOCIAL_WORK',
+  FacultyOfVeterinaryMedicine = 'FACULTY_OF_VETERINARY_MEDICINE',
+  HaskayneSchoolOfBusiness = 'HASKAYNE_SCHOOL_OF_BUSINESS',
+  SchoolOfArchitecturePlanningAndLandscape = 'SCHOOL_OF_ARCHITECTURE_PLANNING_AND_LANDSCAPE',
+  SchulichSchoolOfEngineering = 'SCHULICH_SCHOOL_OF_ENGINEERING',
+  WerklundSchoolOfEducation = 'WERKLUND_SCHOOL_OF_EDUCATION',
+}
 
 export enum Gender {
   Female = 'FEMALE',
@@ -44,8 +60,15 @@ export enum Gender {
 
 export type Image = {
   __typename?: 'Image';
+  addedAt: Scalars['Date'];
   id: Scalars['ObjectID'];
+  isPrimary: Scalars['Boolean'];
   src: Scalars['String'];
+  userId: Scalars['ObjectID'];
+};
+
+export type ImageInput = {
+  imgId: Scalars['ObjectID'];
 };
 
 export type Institute = {
@@ -58,6 +81,38 @@ export type Institute = {
   province: Scalars['String'];
 };
 
+export enum Interest {
+  Art = 'ART',
+  Coding = 'CODING',
+  Cooking = 'COOKING',
+  Dancing = 'DANCING',
+  Exercise = 'EXERCISE',
+  Football = 'FOOTBALL',
+  Gardening = 'GARDENING',
+  Gym = 'GYM',
+  Hiking = 'HIKING',
+  Hockey = 'HOCKEY',
+  Indi = 'INDI',
+  Movies = 'MOVIES',
+  Music = 'MUSIC',
+  Netflix = 'NETFLIX',
+  Outdoors = 'OUTDOORS',
+  Pets = 'PETS',
+  Photography = 'PHOTOGRAPHY',
+  Politics = 'POLITICS',
+  Pop = 'POP',
+  Rap = 'RAP',
+  Rock = 'ROCK',
+  Running = 'RUNNING',
+  Skiing = 'SKIING',
+  Soccer = 'SOCCER',
+  Sports = 'SPORTS',
+  Studying = 'STUDYING',
+  Theatre = 'THEATRE',
+  Travelling = 'TRAVELLING',
+  Trekking = 'TREKKING',
+}
+
 export type LoginInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -66,18 +121,24 @@ export type LoginInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   createProfile: Profile;
+  forgotPasswordRequest: Scalars['String'];
   login: Account;
   registerAccount: Account;
   resendVerificationCode: Scalars['Boolean'];
-  resetPassword: Scalars['Boolean'];
-  updatePassword: Account;
-  updateProfile: Profile;
-  uploadImage: Scalars['String'];
-  verifyAccount: Scalars['Boolean'];
+  resetPassword: Account;
+  setPrimaryImage: Scalars['String'];
+  uploadMultipleImages: Array<Scalars['String']>;
+  uploadSingleImage: Scalars['String'];
+  verifyAccountPasswordReset: Scalars['Boolean'];
+  verifyAccountRegistration: Scalars['Boolean'];
 };
 
 export type MutationCreateProfileArgs = {
   input: CreateProfileInput;
+};
+
+export type MutationForgotPasswordRequestArgs = {
+  input: ResetPasswordRequestInput;
 };
 
 export type MutationLoginArgs = {
@@ -92,19 +153,23 @@ export type MutationResetPasswordArgs = {
   input: ResetPasswordInput;
 };
 
-export type MutationUpdatePasswordArgs = {
-  input: UpdatePasswordInput;
+export type MutationSetPrimaryImageArgs = {
+  input: ImageInput;
 };
 
-export type MutationUpdateProfileArgs = {
-  input: UpdateProfileInput;
+export type MutationUploadMultipleImagesArgs = {
+  input: UploadMultpleImagesInput;
 };
 
-export type MutationUploadImageArgs = {
-  input: UploadImageInput;
+export type MutationUploadSingleImageArgs = {
+  input: UploadSingleImageInput;
 };
 
-export type MutationVerifyAccountArgs = {
+export type MutationVerifyAccountPasswordResetArgs = {
+  input: VerificationCodeInput;
+};
+
+export type MutationVerifyAccountRegistrationArgs = {
   input: VerificationCodeInput;
 };
 
@@ -117,15 +182,16 @@ export type Preference = {
 export type Profile = {
   __typename?: 'Profile';
   about: Scalars['String'];
-  dateOfBirth: Scalars['String'];
-  faculty: Scalars['String'];
+  dateOfBirth: Scalars['Date'];
+  faculty: Faculty;
   firstName: Scalars['String'];
   gender: Gender;
   id: Scalars['ObjectID'];
   instituteId: Scalars['ObjectID'];
+  interests: Array<Interest>;
   isActive: Scalars['Boolean'];
   lastName: Scalars['String'];
-  location: Scalars['String'];
+  onResidence: Scalars['Boolean'];
   tagline: Scalars['String'];
 };
 
@@ -134,7 +200,9 @@ export type Query = {
   accounts: Array<Account>;
   institutes: Array<Institute>;
   preference: Array<Preference>;
+  privacyPolicy: Scalars['String'];
   profiles: Array<Profile>;
+  termsOfUse: Scalars['String'];
 };
 
 export type RegisterAccountInput = {
@@ -143,29 +211,19 @@ export type RegisterAccountInput = {
 };
 
 export type ResetPasswordInput = {
-  email: Scalars['String'];
-};
-
-export type UpdatePasswordInput = {
-  code: Scalars['String'];
   confirmPassword: Scalars['String'];
-  email: Scalars['String'];
   password: Scalars['String'];
 };
 
-export type UpdateProfileInput = {
-  about?: InputMaybe<Scalars['String']>;
-  dateOfBirth?: InputMaybe<Scalars['String']>;
-  faculty?: InputMaybe<Scalars['String']>;
-  firstName?: InputMaybe<Scalars['String']>;
-  gender?: InputMaybe<Gender>;
-  isActive?: InputMaybe<Scalars['Boolean']>;
-  lastName?: InputMaybe<Scalars['String']>;
-  location?: InputMaybe<Scalars['String']>;
-  tagline?: InputMaybe<Scalars['String']>;
+export type ResetPasswordRequestInput = {
+  email: Scalars['String'];
 };
 
-export type UploadImageInput = {
+export type UploadMultpleImagesInput = {
+  imgSources: Array<Scalars['String']>;
+};
+
+export type UploadSingleImageInput = {
   imgSrc: Scalars['String'];
 };
 

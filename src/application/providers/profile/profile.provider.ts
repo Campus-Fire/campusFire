@@ -3,11 +3,11 @@ import { Collection, ObjectId } from 'mongodb';
 
 import { ProfileDocument, toProfileObject } from '../../../entities/profile.entity';
 import { validateEmailInput, validateNameInput, validateStringInputs } from '../../../helpers/validator';
-import { accountProvider, instituteProvider, preferenceProvider } from '../../indexes/provider';
-import { CreateProfileInput, Profile, UpdateProfileInput } from './profile.provider.types';
+import { accountProvider, instituteProvider } from '../../indexes/provider';
+import { CreateProfileInput, Profile } from './profile.provider.types';
 
 class ProfileProvider {
-  constructor(private collection: Collection<ProfileDocument>) {}
+  constructor(private collection: Collection<ProfileDocument>) { }
 
   public async getAllProfiles(id: any): Promise<Profile[]> {
     const userId = new ObjectId(id);
@@ -21,7 +21,7 @@ class ProfileProvider {
   }
 
   public async createProfile(input: CreateProfileInput): Promise<Profile> {
-    const { id, email, firstName, lastName, gender, dateOfBirth, tagline, about, faculty, location, preferredGender } =
+    const { id, email, firstName, lastName, dateOfBirth, gender, tagline, about, interests, faculty, onResidence } =
       input;
     const userId = new ObjectId(id);
 
@@ -30,41 +30,38 @@ class ProfileProvider {
       throw new Error('Can not create a duplicate profile');
     }
 
-    if (!id || !email || !firstName || !lastName || !gender || !dateOfBirth || !preferredGender) {
+    if (!firstName || !lastName || !dateOfBirth || !gender || !tagline || !about || !interests || !faculty) {
       throw new UserInputError('Incomplete information provided to create a profile');
     }
     validateEmailInput(email);
     validateNameInput(firstName);
     validateNameInput(lastName);
-    validateNameInput(gender);
     validateStringInputs(dateOfBirth);
-    validateNameInput(preferredGender);
     validateStringInputs(tagline);
     validateStringInputs(about);
-    validateStringInputs(faculty);
-    validateStringInputs(location);
 
     if (!(await accountProvider.isAccountVerified(userId))) {
       throw new Error('Please verify account before creating a profile');
     }
-    await preferenceProvider.createUserPreference(userId, preferredGender);
     const instituteId = await instituteProvider.getInstituteId(email);
+    const dBirth = new Date(dateOfBirth);
 
-    const data = await this.collection.insertOne({
+    const profileData = await this.collection.insertOne({
       _id: userId,
+      instituteId,
       firstName,
       lastName,
-      dateOfBirth,
+      dateOfBirth: dBirth,
       gender,
       tagline,
       about,
-      instituteId,
+      interests,
       faculty,
-      location,
+      onResidence,
       isActive: true,
     });
 
-    const profile = await this.collection.findOne({ _id: data.insertedId });
+    const profile = await this.collection.findOne({ _id: profileData.insertedId });
     if (!profile) {
       throw new Error(`Could not create ${firstName} ${lastName} user`);
     }
@@ -72,6 +69,7 @@ class ProfileProvider {
     return toProfileObject(profile);
   }
 
+  /*
   public async updateProfile(input: UpdateProfileInput): Promise<Profile> {
     const { id, firstName, lastName, dateOfBirth, gender, tagline, about, faculty, isActive } = input;
     if (!id) {
@@ -114,6 +112,7 @@ class ProfileProvider {
 
     return toProfileObject(profile);
   }
+  */
 
   public async isUserActive(id: ObjectId): Promise<boolean> {
     const profileData = await this.collection.findOne({ _id: id });

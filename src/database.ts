@@ -1,6 +1,6 @@
 import { Db, Document, MongoClient } from 'mongodb';
 
-import config from '../config.integration';
+import config from '../config';
 
 const setupDb = (): Db => {
   const uri = config.MONGO_CONNECTION_STRING;

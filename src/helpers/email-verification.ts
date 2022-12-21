@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-import config from '../../config.integration';
+import config from '../../config';
 
 const transport = nodemailer.createTransport({
   host: config.EMAIL_SERVICE_HOST,
@@ -17,9 +17,25 @@ const sendVerificationEmail = (email: string, code: string): void => {
     from: 'CampusFire',
     to: `${email}`,
     subject: 'Verification code for CampusFire',
-    text: `Please use the following verification code to confirm your registration on CampusFire.
-    
-    Code - ${code}`,
+    html: `
+    <table width="80%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td style="padding-right: 0px;padding-left: 0px;" align="center">
+          <div>
+            <img src="https://res.cloudinary.com/dt0duopxa/image/upload/v1670830815/Assets/logo_fc3pqa.png" alt="logo" align="center"/>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding-right: 0px;padding-left: 0px;" align="center">
+          <div>
+            <p>Please use the following verification code to confirm your registration on CampusFire.</p>
+            <h2>${code}</h2>
+          </div>
+        </td>
+      </tr>
+    </table>
+    `,
   };
 
   transport.sendMail(mailOptions, function (err, info) {
@@ -32,10 +48,33 @@ const sendPasswordResetEmail = (email: string, code: string): void => {
   const mailOptions = {
     from: 'CampusFire',
     to: `${email}`,
-    subject: 'Password Reset code',
-    text: `Please use the following code to reset your password.
-    
-    Code - ${code}`,
+    subject: 'Reset Password',
+    html: `
+     <table width="80%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td style="padding-right: 0px;padding-left: 0px;" align="center">
+          <div>
+            <img src="https://res.cloudinary.com/dt0duopxa/image/upload/v1670830815/Assets/logo_fc3pqa.png" alt="logo" align="center"/>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding-right: 0px;padding-left: 0px;" align="center">
+          <div>
+            <p>Your code for password reset is: </p>
+            <h2>${code}</h2>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding-right: 0px;padding-left: 0px;" align="center">
+          <div>
+            <p>If you didn't request for a password reset, you can ignore this!</p>
+          </div>
+        </td>
+      </tr>
+    </table>
+    `,
   };
 
   transport.sendMail(mailOptions, function (err, info) {

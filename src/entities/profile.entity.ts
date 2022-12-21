@@ -7,15 +7,16 @@ interface ProfileDocument extends Document, Omit<Profile, 'id'> {}
 const toProfileObject = (profile: ProfileDocument): Profile => {
   return {
     id: profile._id.toHexString(),
+    instituteId: profile.instituteId,
     firstName: profile.firstName,
     lastName: profile.lastName,
-    gender: profile.gender,
     dateOfBirth: profile.dateOfBirth,
+    gender: profile.gender,
     tagline: profile.tagline,
     about: profile.about,
-    instituteId: profile.instituteId,
     faculty: profile.faculty,
-    location: profile.location,
+    interests: profile.interests,
+    onResidence: profile.onResidence,
     isActive: profile.isActive,
   };
 };

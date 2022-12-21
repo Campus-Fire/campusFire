@@ -1,4 +1,4 @@
-import config from '../../config.integration';
+import config from '../../config';
 
 const cloudinary = require('cloudinary');
 

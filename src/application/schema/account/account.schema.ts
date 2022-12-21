@@ -5,32 +5,34 @@ const typeDefs = gql`
     id: ObjectID!
     email: String!
     isVerified: Boolean!
-    createdAt: String!
-    lastLogin: String
+    createdAt: Date!
+    expiresAt: Date!
+    lastLogin: Date
     token: String
   }
 
   type Query {
     accounts: [Account!]!
+    termsOfUse: String!
+    privacyPolicy: String!
   }
 
   type Mutation {
     registerAccount(input: RegisterAccountInput!): Account!
     login(input: LoginInput!): Account!
-    verifyAccount(input: VerificationCodeInput!): Boolean!
+    verifyAccountRegistration(input: VerificationCodeInput!): Boolean!
     resendVerificationCode: Boolean!
-    resetPassword(input: ResetPasswordInput!): Boolean!
-    updatePassword(input: UpdatePasswordInput!): Account!
+    forgotPasswordRequest(input: ResetPasswordRequestInput!): String!
+    verifyAccountPasswordReset(input: VerificationCodeInput!): Boolean!
+    resetPassword(input: ResetPasswordInput!): Account!
   }
 
-  input UpdatePasswordInput {
-    email: String!
-    code: String!
+  input ResetPasswordInput {
     password: String!
     confirmPassword: String!
   }
 
-  input ResetPasswordInput {
+  input ResetPasswordRequestInput {
     email: String!
   }
 
