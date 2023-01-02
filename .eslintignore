@@ -1,6 +1,7 @@
 **/build
 **/coverage
 **/node_modules
+**/scripts
 
 **/types.d.ts
 **/schema.d.ts

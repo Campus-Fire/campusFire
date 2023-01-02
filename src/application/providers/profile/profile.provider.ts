@@ -3,13 +3,35 @@ import { Collection, ObjectId } from 'mongodb';
 
 import { ProfileDocument, toProfileObject } from '../../../entities/profile.entity';
 import { validateEmailInput, validateNameInput, validateStringInputs } from '../../../helpers/validator';
-import { accountProvider, instituteProvider } from '../../indexes/provider';
+import { accountProvider, imageProvider, instituteProvider } from '../../indexes/provider';
 import { CreateProfileInput, Profile } from './profile.provider.types';
 
-class ProfileProvider {
-  constructor(private collection: Collection<ProfileDocument>) { }
+interface ProfileWithImages extends Profile {
+  images?: string[];
+}
 
-  public async getAllProfiles(id: any): Promise<Profile[]> {
+class ProfileProvider {
+  constructor(private collection: Collection<ProfileDocument>) {}
+
+  public async getProfile(id: string): Promise<ProfileWithImages> {
+    const userId = new ObjectId(id);
+    const profileData = await this.collection.findOne({
+      _id: userId,
+    });
+    if (!profileData) {
+      throw new Error('Could not find the profile');
+    }
+
+    const profile = toProfileObject(profileData);
+    const images = await imageProvider.getUserImages(userId);
+
+    return {
+      ...profile,
+      images,
+    };
+  }
+
+  public async getAllProfiles(id: string): Promise<Profile[]> {
     const userId = new ObjectId(id);
     const profilesData = await this.collection
       .find({
@@ -121,6 +143,17 @@ class ProfileProvider {
     }
 
     return profileData.isActive;
+  }
+
+  public async setMainImage(usrId: ObjectId, imgId: ObjectId): Promise<void> {
+    const profileData = await this.collection.findOneAndUpdate(
+      { _id: usrId },
+      { $set: { ...{ mainImage: imgId } } },
+      { returnDocument: 'after' }
+    );
+    if (!profileData.value) {
+      throw new Error('User not found!');
+    }
   }
 }
 

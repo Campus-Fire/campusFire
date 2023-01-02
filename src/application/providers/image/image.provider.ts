@@ -1,11 +1,12 @@
 import { Collection, ObjectId } from 'mongodb';
 
 import { validateStringInputs } from '../../../helpers/validator';
-import { ImageDocument } from '../../../entities/image.entity';
+import { ImageDocument, toImageObject } from '../../../entities/image.entity';
 import { ImageInput, UploadMultipleImageInput, UploadSingleImageInput } from './image.provider.types';
+import { profileProvider } from '../../../application/indexes/provider';
 
 class ImageProvider {
-  constructor(private collection: Collection<ImageDocument>) { }
+  constructor(private collection: Collection<ImageDocument>) {}
 
   public async uploadImage(input: UploadSingleImageInput): Promise<string> {
     const { id, imgSrc } = input;
@@ -36,7 +37,7 @@ class ImageProvider {
         await this.uploadImage({
           id,
           email,
-          imgSrc
+          imgSrc,
         })
       );
     }
@@ -44,7 +45,7 @@ class ImageProvider {
     return uploadedIds;
   }
 
-  async setPrimaryImage(input: ImageInput): Promise<string> {
+  public async setPrimaryImage(input: ImageInput): Promise<string> {
     const { id, imgId } = input;
 
     const imageId = new ObjectId(imgId);
@@ -53,14 +54,31 @@ class ImageProvider {
     const imageData = await this.collection.findOneAndUpdate(
       { _id: imageId, userId },
       {
-        $set: { ... { isPrimary: true } }
+        $set: { ...{ isPrimary: true } },
       }
     );
     if (!imageData.value) {
       throw new Error('Could not find the image with provided id.');
     }
 
-    return imageData.value._id.toString();
+    const selectedImageId = imageData.value._id;
+
+    profileProvider.setMainImage(userId, selectedImageId);
+
+    return selectedImageId.toHexString();
+  }
+
+  public async getUserImages(userId: ObjectId): Promise<string[]> {
+    const images = await this.collection
+      .find({
+        userId: userId,
+      })
+      .toArray();
+
+    const imageSources = images.map((img) => {return toImageObject(img).src});
+console.log(imageSources);
+
+    return imageSources;
   }
 }
 

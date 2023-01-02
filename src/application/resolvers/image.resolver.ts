@@ -2,7 +2,11 @@ import { ExpressContext } from 'apollo-server-express';
 
 import checkAuth from '../../helpers/check-auth';
 import { imageProvider } from '../indexes/provider';
-import { MutationUploadSingleImageArgs, MutationUploadMultipleImagesArgs, MutationSetPrimaryImageArgs } from '../schema/types/schema';
+import {
+  MutationUploadSingleImageArgs,
+  MutationUploadMultipleImagesArgs,
+  MutationSetPrimaryImageArgs,
+} from '../schema/types/schema';
 import { Root } from '../schema/types/types';
 
 const imageResolver = {
@@ -14,7 +18,11 @@ const imageResolver = {
       return imageProvider.uploadImage(input);
     },
 
-    async uploadMultipleImages(_: Root, args: MutationUploadMultipleImagesArgs, context: ExpressContext): Promise<string[]> {
+    async uploadMultipleImages(
+      _: Root,
+      args: MutationUploadMultipleImagesArgs,
+      context: ExpressContext
+    ): Promise<string[]> {
       const tokenAuth = checkAuth(context);
       const input = { ...tokenAuth, ...args.input };
 
@@ -26,7 +34,7 @@ const imageResolver = {
       const input = { ...tokenAuth, ...args.input };
 
       return imageProvider.setPrimaryImage(input);
-    }
+    },
   },
 };
 

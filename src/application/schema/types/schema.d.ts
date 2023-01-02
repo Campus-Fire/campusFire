@@ -187,10 +187,12 @@ export type Profile = {
   firstName: Scalars['String'];
   gender: Gender;
   id: Scalars['ObjectID'];
+  images?: Maybe<Array<Scalars['ObjectID']>>;
   instituteId: Scalars['ObjectID'];
   interests: Array<Interest>;
   isActive: Scalars['Boolean'];
   lastName: Scalars['String'];
+  mainImage?: Maybe<Scalars['ObjectID']>;
   onResidence: Scalars['Boolean'];
   tagline: Scalars['String'];
 };
@@ -198,11 +200,16 @@ export type Profile = {
 export type Query = {
   __typename?: 'Query';
   accounts: Array<Account>;
+  allProfiles: Array<Profile>;
+  getProfile: Profile;
   institutes: Array<Institute>;
   preference: Array<Preference>;
   privacyPolicy: Scalars['String'];
-  profiles: Array<Profile>;
   termsOfUse: Scalars['String'];
+};
+
+export type QueryGetProfileArgs = {
+  id: Scalars['String'];
 };
 
 export type RegisterAccountInput = {

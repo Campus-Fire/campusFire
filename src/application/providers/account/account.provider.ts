@@ -20,7 +20,7 @@ import {
 } from './account.provider.types';
 
 class AccountProvider {
-  constructor(private collection: Collection<AccountDocument>) { }
+  constructor(private collection: Collection<AccountDocument>) {}
 
   public async getAccounts(): Promise<SecureAccount[]> {
     const accounts = await this.collection.find().toArray();
@@ -137,7 +137,7 @@ class AccountProvider {
   public async isAccountVerified(id: ObjectId): Promise<boolean> {
     const accountData = await this.collection.findOne({ _id: id });
     if (!accountData) {
-      throw new Error('Corresponding account not found');
+      throw new Error('Account not found');
     }
 
     return accountData.isVerified;

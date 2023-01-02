@@ -23,7 +23,7 @@ const typeDefs = gql`
     imgSrc: String!
   }
 
-    input UploadMultpleImagesInput {
+  input UploadMultpleImagesInput {
     imgSources: [String!]!
   }
 `;
