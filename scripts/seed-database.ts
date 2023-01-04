@@ -87,6 +87,7 @@ const seedCollection = async (collectionName: string, data: any[]): Promise<void
         interests,
         faculty,
         onResidence: true,
+        conversations: [],
         isActive: true,
       });
     }

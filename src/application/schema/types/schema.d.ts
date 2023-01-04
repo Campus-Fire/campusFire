@@ -25,6 +25,21 @@ export type Account = {
   token?: Maybe<Scalars['String']>;
 };
 
+export type Conversation = {
+  __typename?: 'Conversation';
+  id: Scalars['ObjectID'];
+  latestMessageId?: Maybe<Scalars['ObjectID']>;
+  participantIds: Array<Scalars['ObjectID']>;
+  updatedAt: Scalars['Date'];
+};
+
+export type ConversationParticipant = {
+  __typename?: 'ConversationParticipant';
+  createdAt: Scalars['Date'];
+  id: Scalars['ObjectID'];
+  userId: Scalars['ObjectID'];
+};
+
 export type CreateProfileInput = {
   about: Scalars['String'];
   dateOfBirth: Scalars['String'];
@@ -118,6 +133,14 @@ export type LoginInput = {
   password: Scalars['String'];
 };
 
+export type Message = {
+  __typename?: 'Message';
+  body: Scalars['String'];
+  createdAt: Scalars['Date'];
+  id: Scalars['ObjectID'];
+  senderId: Scalars['ObjectID'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createProfile: Profile;
@@ -126,7 +149,9 @@ export type Mutation = {
   registerAccount: Account;
   resendVerificationCode: Scalars['Boolean'];
   resetPassword: Account;
+  sendMessage: Scalars['Boolean'];
   setPrimaryImage: Scalars['String'];
+  startConversation: Scalars['String'];
   uploadMultipleImages: Array<Scalars['String']>;
   uploadSingleImage: Scalars['String'];
   verifyAccountPasswordReset: Scalars['Boolean'];
@@ -153,8 +178,16 @@ export type MutationResetPasswordArgs = {
   input: ResetPasswordInput;
 };
 
+export type MutationSendMessageArgs = {
+  input: SendMessageInput;
+};
+
 export type MutationSetPrimaryImageArgs = {
   input: ImageInput;
+};
+
+export type MutationStartConversationArgs = {
+  input: StartConversationInput;
 };
 
 export type MutationUploadMultipleImagesArgs = {
@@ -201,8 +234,10 @@ export type Query = {
   __typename?: 'Query';
   accounts: Array<Account>;
   allProfiles: Array<Profile>;
+  conversations?: Maybe<Array<Maybe<Conversation>>>;
   getProfile: Profile;
   institutes: Array<Institute>;
+  messages?: Maybe<Array<Maybe<Message>>>;
   preference: Array<Preference>;
   privacyPolicy: Scalars['String'];
   termsOfUse: Scalars['String'];
@@ -224,6 +259,15 @@ export type ResetPasswordInput = {
 
 export type ResetPasswordRequestInput = {
   email: Scalars['String'];
+};
+
+export type SendMessageInput = {
+  body: Scalars['String'];
+  conversationId: Scalars['ObjectID'];
+};
+
+export type StartConversationInput = {
+  participantIds: Array<Scalars['ObjectID']>;
 };
 
 export type UploadMultpleImagesInput = {

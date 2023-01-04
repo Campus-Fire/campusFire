@@ -75,8 +75,10 @@ class ImageProvider {
       })
       .toArray();
 
-    const imageSources = images.map((img) => {return toImageObject(img).src});
-console.log(imageSources);
+    const imageSources = images.map((img) => {
+      return toImageObject(img).src;
+    });
+    console.log(imageSources);
 
     return imageSources;
   }

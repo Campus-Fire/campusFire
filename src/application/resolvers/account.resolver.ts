@@ -26,7 +26,7 @@ const accountResolver = {
     },
 
     async privacyPolicy(): Promise<string> {
-      return 'returnsPrivacyPolicy';
+      return 'returnsPrivacyPolicyPageURL';
     },
   },
 
