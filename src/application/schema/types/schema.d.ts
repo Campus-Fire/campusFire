@@ -136,6 +136,7 @@ export type LoginInput = {
 export type Message = {
   __typename?: 'Message';
   body: Scalars['String'];
+  conversationId: Scalars['ObjectID'];
   createdAt: Scalars['Date'];
   id: Scalars['ObjectID'];
   senderId: Scalars['ObjectID'];
@@ -268,6 +269,15 @@ export type SendMessageInput = {
 
 export type StartConversationInput = {
   participantIds: Array<Scalars['ObjectID']>;
+};
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  messageSent?: Maybe<Message>;
+};
+
+export type SubscriptionMessageSentArgs = {
+  conversationId: Scalars['String'];
 };
 
 export type UploadMultpleImagesInput = {

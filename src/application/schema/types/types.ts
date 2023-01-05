@@ -1,3 +1,9 @@
+import { Message } from './schema';
+
 interface Root {}
 
-export { Root };
+interface SendMessagePayload {
+  message: Message;
+}
+
+export { Root, SendMessagePayload };

@@ -13,7 +13,7 @@ class MessageProvider {
     return messages.map(toMessageObject);
   }
 
-  public async sendMessage(input: SendMessageInput): Promise<boolean> {
+  public async sendMessage(input: SendMessageInput): Promise<Message> {
     const { userId, conversationId: convoId, body } = input;
 
     const senderId = new ObjectId(userId);
@@ -35,7 +35,12 @@ class MessageProvider {
 
     await conversationProvider.updateConversation(conversationId, senderId, messageId);
 
-    return false;
+    const message = await this.collection.findOne({ _id: messageData.insertedId });
+    if (!message) {
+      throw new Error('Can not send message');
+    }
+
+    return toMessageObject(message);
   }
 }
 

@@ -28,11 +28,7 @@ class ConversationParticipantProvider {
     participantId: ObjectId
   ): Promise<void> {
     const userId = await this.getParticipantsUserId(participantId);
-    console.log(userId);
-    console.log(senderId);
     const hasSeenLastMessage = senderId.toHexString() === userId.toHexString();
-
-    console.log(hasSeenLastMessage);
 
     const participantData = await this.collection.findOneAndUpdate(
       { userId: userId, conversationId: conversationId },

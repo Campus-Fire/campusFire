@@ -17,6 +17,10 @@ const typeDefs = gql`
     sendMessage(input: SendMessageInput!): Boolean!
   }
 
+  type Subscription {
+    messageSent(conversationId: String!): Message
+  }
+
   input SendMessageInput {
     conversationId: ObjectID!
     body: String!
