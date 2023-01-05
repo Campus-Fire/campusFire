@@ -1,13 +1,9 @@
-import { ExpressContext } from 'apollo-server-express';
-
-import checkAuth from '../../helpers/check-auth';
 import { preferenceProvider } from '../indexes/provider';
 import { Preference } from '../schema/types/schema';
-import { Root } from '../schema/types/types';
 
 const preferenceResolver = {
   Query: {
-    async preference(): Promise<Preference[]> {
+    preference: async (): Promise<Preference[]> => {
       return preferenceProvider.getAllPreferences();
     },
   },

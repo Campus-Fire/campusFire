@@ -9,11 +9,8 @@ import { WebSocketServer } from 'ws';
 import config from '../config';
 import { resolvers } from './application/indexes/resolver';
 import { typeDefs } from './application/schema';
-
-export interface SubscriptionContext {
-  pubsub: PubSub;
-  req: ExpressContext['req'];
-}
+import { UserContext } from './application/schema/types/types';
+import { getSessionUser } from './helpers/token-helper';
 
 const createApp = async (): Promise<void> => {
   // Create an Express app and HTTP server.
@@ -32,16 +29,21 @@ const createApp = async (): Promise<void> => {
     path: '/graphql',
   });
 
-  // Context params
+  // User Context params
   const pubsub = new PubSub();
 
-  const getSubscriptionContext = async (ctx: ExpressContext): Promise<SubscriptionContext> => {
-    const { req } = ctx;
+  // Get User Context with each request
+  const getUserContext = async (ctx: ExpressContext): Promise<UserContext> => {
+    try {
+      const { id, email } = getSessionUser(ctx);
 
-    return {
-      pubsub: pubsub,
-      req,
-    };
+      return {
+        pubsub: pubsub,
+        session: { user: { id, email } },
+      };
+    } catch (err) {
+      return { pubsub: pubsub, session: null };
+    }
   };
 
   // Hand in the schema so WebSocketServer can start listening.
@@ -49,7 +51,7 @@ const createApp = async (): Promise<void> => {
     {
       schema,
       context: (ctx: ExpressContext) => {
-        return getSubscriptionContext(ctx);
+        return getUserContext(ctx);
       },
     },
     webSocketServer
@@ -76,7 +78,7 @@ const createApp = async (): Promise<void> => {
     ],
     introspection: true,
     context: (ctx) => {
-      return getSubscriptionContext(ctx);
+      return getUserContext(ctx);
     },
   });
 

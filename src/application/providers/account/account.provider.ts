@@ -6,7 +6,7 @@ import { addYears, isAfter } from 'date-fns';
 import { AccountDocument, toAccountObject } from '../../../entities/account.entity';
 import deterministicId from '../../../helpers/deterministic-id';
 import { sendVerificationEmail, sendPasswordResetEmail } from '../../../helpers/email-verification';
-import { generateToken, generateResetPasswortToken } from '../../../helpers/token-generator';
+import { generateToken, generateResetPasswortToken } from '../../../helpers/token-helper';
 import { validateEmailInput, validatePasswordInput } from '../../../helpers/validator';
 import getVerificationCode from '../../../helpers/verification-code';
 import { instituteProvider } from '../../indexes/provider';

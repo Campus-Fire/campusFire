@@ -1,51 +1,24 @@
-import { AuthenticationError, ExpressContext } from 'apollo-server-express';
-import jwt from 'jsonwebtoken';
+import { AuthenticationError } from 'apollo-server-express';
 import { ObjectId } from 'mongodb';
 
-import { SubscriptionContext } from 'src/server';
-import config from '../../config';
+import { Session, UserContext } from '../application/schema/types/types';
 import deterministicId from './deterministic-id';
 
-export interface TokenAuth {
-  id: any;
-  email: any;
-}
+const checkAuth = (context: UserContext): Session => {
+  const { session } = context;
 
-const verifyToken = (context: ExpressContext | SubscriptionContext): any => {
-  const authHeaders = context.req.headers.authorization;
-  if (authHeaders) {
-    // Bearer .....
-    const headerParts = authHeaders.split(' ');
-
-    const token = headerParts[1];
-    const bearer = headerParts[0];
-    if (bearer === 'Bearer') {
-      try {
-        const account = jwt.verify(token, config.SECRET_TOKEN_KEY);
-
-        return account;
-      } catch (err) {
-        throw new AuthenticationError('Invalid/Expired token');
-      }
-    }
-
-    throw new AuthenticationError('Authentication header must be in "Bearer <token>" format');
+  if (!session || !session.user) {
+    throw new Error('Invalid/Expired Session');
   }
 
-  throw new AuthenticationError('Authentication headers are not provided');
-};
-
-const checkAuth = (context: ExpressContext | SubscriptionContext): TokenAuth => {
-  const { id, email } = verifyToken(context);
-
-  const derivedId = deterministicId(email).toString();
-  const userId = new ObjectId(id).toString();
+  const derivedId = deterministicId(session.user.email).toString();
+  const userId = new ObjectId(session.user.id).toString();
 
   if (userId !== derivedId) {
     throw new AuthenticationError('Invalid/Expired token');
   }
 
-  return { id, email };
+  return session;
 };
 
 export default checkAuth;

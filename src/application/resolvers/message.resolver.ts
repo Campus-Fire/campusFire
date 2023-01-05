@@ -1,26 +1,22 @@
 import { withFilter } from 'graphql-subscriptions';
 import { ObjectId } from 'mongodb';
 import checkAuth from '../../helpers/check-auth';
-import { SubscriptionContext } from '../../server';
 import { messageProvider } from '../indexes/provider';
 import { Message, MutationSendMessageArgs, SubscriptionMessageSentArgs } from '../schema/types/schema';
-import { Root, SendMessagePayload } from '../schema/types/types';
+import { Root, SendMessagePayload, UserContext } from '../schema/types/types';
 
 const messageResolver = {
   Query: {
-    async messages(): Promise<Message[]> {
+    messages: async (): Promise<Message[]> => {
       return messageProvider.getAllMessages();
     },
   },
 
   Mutation: {
-    async sendMessage(_: Root, args: MutationSendMessageArgs, context: SubscriptionContext): Promise<boolean> {
+    sendMessage: async (_: Root, args: MutationSendMessageArgs, context: UserContext): Promise<boolean> => {
       const { pubsub } = context;
-
-      console.log(`resolver pubsub - ${pubsub}`);
-
-      const { id: userId } = checkAuth(context);
-
+      const { user } = checkAuth(context);
+      const userId = user.id;
       const input = { userId, ...args.input };
 
       const message = await messageProvider.sendMessage(input);
@@ -33,16 +29,12 @@ const messageResolver = {
   Subscription: {
     messageSent: {
       subscribe: withFilter(
-        (_: Root, args: any, context: SubscriptionContext) => {
+        (_: Root, _args: any, context: UserContext) => {
           const { pubsub } = context;
-          console.log('FIRST_FN');
+
           return pubsub.asyncIterator(['MESSAGE_SENT']);
         },
-        (payload: SendMessagePayload, args: SubscriptionMessageSentArgs, context: SubscriptionContext) => {
-          console.log('SECOND_FN');
-          console.log(payload.message.conversationId);
-          console.log(args.conversationId);
-
+        (payload: SendMessagePayload, args: SubscriptionMessageSentArgs) => {
           const payloadConversationId = new ObjectId(payload.message.conversationId);
           const argsConversationId = new ObjectId(args.conversationId);
 
@@ -50,7 +42,7 @@ const messageResolver = {
         }
       ),
 
-      resolve: async (payload: SendMessagePayload) => {
+      resolve: async (payload: SendMessagePayload, _args: any, context: UserContext): Promise<Message> => {
         return payload.message;
       },
     },
