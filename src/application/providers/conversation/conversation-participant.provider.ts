@@ -1,6 +1,10 @@
 import { Collection, ObjectId } from 'mongodb';
 import { profileProvider } from '../../../application/indexes/provider';
-import { ConversationParticipantDocument } from '../../../entities/conversation-participant.entity';
+import {
+  ConversationParticipantDocument,
+  toConversationParticipantObject,
+} from '../../../entities/conversation-participant.entity';
+import { ConversationParticipant } from './conversation-participant.provider.types';
 
 class ConversationParticipantProvider {
   constructor(private collection: Collection<ConversationParticipantDocument>) {}
@@ -50,12 +54,27 @@ class ConversationParticipantProvider {
   }
 
   public async isParticipant(userId: ObjectId, conversationId: ObjectId): Promise<boolean> {
-    const participantData = await this.collection.findOne({ userId, conversationId });
+    const participantData = await this.collection.findOne({ userId: userId, conversationId: conversationId });
     if (!participantData) {
       return false;
     }
 
     return true;
+  }
+
+  public async getParticipantsByIds(participantIds: ObjectId[]): Promise<ConversationParticipant[]> {
+    const participantObjIds = participantIds.map((participantId) => new ObjectId(participantId));
+
+    const participants = await this.collection
+      .find({
+        _id: { $in: participantObjIds },
+      })
+      .toArray();
+    if (!participants) {
+      throw new Error('No participants found');
+    }
+
+    return participants.map(toConversationParticipantObject);
   }
 }
 

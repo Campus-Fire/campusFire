@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb';
 interface Conversation {
   id: ObjectId;
   participantIds: ObjectId[];
-  latestMessageId?: ObjectId | null;
+  latestMessageId?: ObjectId;
   updatedAt: Date;
 }
 

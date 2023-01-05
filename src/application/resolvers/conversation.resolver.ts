@@ -1,12 +1,17 @@
 import { withFilter } from 'graphql-subscriptions';
 import checkAuth from '../../helpers/check-auth';
 import { conversationProvider } from '../indexes/provider';
-import { Conversation, MutationStartConversationArgs } from '../schema/types/schema';
-import { Root, SubscriptionConversationUpdatedPayload, UserContext } from '../schema/types/types';
+import { MutationStartConversationArgs } from '../schema/types/schema';
+import {
+  Root,
+  SubscriptionConversationUpdatedPayload,
+  UnresolvedConversation,
+  UserContext,
+} from '../schema/types/types';
 
 const conversationResolver = {
   Query: {
-    conversations: async (): Promise<Conversation[]> => {
+    conversations: async (): Promise<UnresolvedConversation[]> => {
       return conversationProvider.getAllConversations();
     },
   },
@@ -15,6 +20,7 @@ const conversationResolver = {
     startConversation: async (_: Root, args: MutationStartConversationArgs, context: UserContext): Promise<string> => {
       const session = checkAuth(context);
       const { id: userId } = session.user;
+      args.input.participantIds.push(userId);
 
       const input = { userId, ...args.input };
 
@@ -30,21 +36,26 @@ const conversationResolver = {
 
           return pubsub.asyncIterator(['CONVERSATION_UPDATED']);
         },
-        (payload: SubscriptionConversationUpdatedPayload, _args: any, context: UserContext) => {
+        async (payload: SubscriptionConversationUpdatedPayload, _args: any, context: UserContext): Promise<boolean> => {
           const session = checkAuth(context);
           const { id: userId } = session.user;
 
-          console.log(session);
+          console.log(payload.conversation);
 
-          return true;
+          const res = await conversationProvider.isConversationUpdated(userId, payload.conversation.id);
+
+          console.log('waiting');
+          console.log(res);
+
+          return res;
         }
       ),
 
-      resolve: async (payload: SubscriptionConversationUpdatedPayload, _args: any, context: UserContext) => {
-        checkAuth(context);
-
-        console.log('RESOLVER');
-
+      resolve: async (
+        payload: SubscriptionConversationUpdatedPayload,
+        _args: any,
+        context: UserContext
+      ): Promise<UnresolvedConversation> => {
         return payload.conversation;
       },
     },

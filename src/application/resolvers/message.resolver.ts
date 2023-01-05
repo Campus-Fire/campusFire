@@ -46,9 +46,15 @@ const messageResolver = {
         }
       ),
 
-      resolve: async (payload: SubscriptionMessageSentPayload, _args: any): Promise<Message> => {
+      resolve: async (payload: SubscriptionMessageSentPayload): Promise<Message> => {
         return payload.message;
       },
+    },
+  },
+
+  Conversation: {
+    latestMessage: async (conversation: any): Promise<Message> => {
+      return messageProvider.getMessageById(conversation.latestMessageId);
     },
   },
 };

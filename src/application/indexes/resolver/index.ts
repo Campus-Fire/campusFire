@@ -5,6 +5,7 @@ import { imageResolver } from '../../resolvers/image.resolver';
 import { instituteResolver } from '../../resolvers/institute.resolver';
 import { messageResolver } from '../../resolvers/message.resolver';
 import { profileResolver } from '../../resolvers/profile.resolver';
+import { conversationParticipantResolver } from '../../resolvers/conversation-participant.resolver';
 
 const resolvers = merge(
   profileResolver,
@@ -12,7 +13,8 @@ const resolvers = merge(
   accountResolver,
   imageResolver,
   conversationResolver,
-  messageResolver
+  messageResolver,
+  conversationParticipantResolver
 );
 
 export { resolvers };

@@ -28,14 +28,15 @@ export type Account = {
 export type Conversation = {
   __typename?: 'Conversation';
   id: Scalars['ObjectID'];
-  latestMessageId?: Maybe<Scalars['ObjectID']>;
-  participantIds: Array<Scalars['ObjectID']>;
+  latestMessage?: Maybe<Message>;
+  participants: Array<ConversationParticipant>;
   updatedAt: Scalars['Date'];
 };
 
 export type ConversationParticipant = {
   __typename?: 'ConversationParticipant';
   createdAt: Scalars['Date'];
+  hasSeenLatestMessage: Scalars['Boolean'];
   id: Scalars['ObjectID'];
   userId: Scalars['ObjectID'];
 };

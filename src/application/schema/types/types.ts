@@ -1,35 +1,32 @@
 import { PubSub } from 'graphql-subscriptions';
+import { ObjectId } from 'mongodb';
 import { Conversation, Message } from './schema';
 
-interface Root {}
+export interface Root {}
 
-interface SessionUser {
+export interface SessionUser {
   id: any;
   email: any;
 }
 
-interface Session {
+export interface Session {
   user: SessionUser;
 }
 
-interface UserContext {
+export interface UserContext {
   pubsub: PubSub;
   session: Session | null;
 }
 
-interface SubscriptionMessageSentPayload {
+export interface SubscriptionMessageSentPayload {
   message: Message;
 }
 
-interface SubscriptionConversationUpdatedPayload {
+export interface SubscriptionConversationUpdatedPayload {
   conversation: Conversation;
 }
 
-export {
-  Root,
-  Session,
-  SessionUser,
-  UserContext,
-  SubscriptionMessageSentPayload,
-  SubscriptionConversationUpdatedPayload,
-};
+export interface UnresolvedConversation extends Omit<Conversation, 'participants' | 'latestMessage'> {
+  participantIds?: ObjectId[];
+  latestMessageId?: ObjectId;
+}

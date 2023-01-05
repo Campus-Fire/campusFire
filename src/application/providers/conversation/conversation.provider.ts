@@ -30,7 +30,6 @@ class ConversationProvider {
     const conversationData = await this.collection.insertOne({
       _id: conversationId,
       participantIds: participants,
-      latestMessageId: null,
       updatedAt: new Date(),
     });
     if (!conversationData.insertedId) {
@@ -92,7 +91,7 @@ class ConversationProvider {
 
     const userSentLatestMessage = await messageProvider.isSender(userId, conversationData.latestMessageId);
 
-    return isUserConversationParticipant;
+    return isUserConversationParticipant && !userSentLatestMessage;
   }
 }
 

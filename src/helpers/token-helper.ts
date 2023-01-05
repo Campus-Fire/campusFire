@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { AuthenticationError, ExpressContext } from 'apollo-server-express';
+import { AuthenticationError } from 'apollo-server-express';
 import config from '../../config';
 import { SessionUser } from 'src/application/schema/types/types';
 
