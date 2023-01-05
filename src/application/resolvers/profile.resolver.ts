@@ -6,8 +6,8 @@ import { Root, UserContext } from '../schema/types/types';
 const profileResolver = {
   Query: {
     allProfiles: async (_: Root, _args: any, context: UserContext): Promise<Profile[]> => {
-      const { user } = checkAuth(context);
-      const userId = user.id;
+      const session = checkAuth(context);
+      const { id: userId } = session.user;
 
       return profileProvider.getAllProfiles(userId);
     },
@@ -21,8 +21,8 @@ const profileResolver = {
 
   Mutation: {
     createProfile: async (_: Root, args: MutationCreateProfileArgs, context: UserContext): Promise<Profile> => {
-      const { user } = checkAuth(context);
-      const input = { ...user, ...args.input };
+      const session = checkAuth(context);
+      const input = { ...session.user, ...args.input };
 
       return profileProvider.createProfile(input);
     },

@@ -1,6 +1,5 @@
-import { UserInputError } from 'apollo-server';
+import { UserInputError } from 'apollo-server-express';
 import { Collection, ObjectId } from 'mongodb';
-
 import { ProfileDocument, toProfileObject } from '../../../entities/profile.entity';
 import { validateEmailInput, validateNameInput, validateStringInputs } from '../../../helpers/validator';
 import { accountProvider, imageProvider, instituteProvider } from '../../indexes/provider';

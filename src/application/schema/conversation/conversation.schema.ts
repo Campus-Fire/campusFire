@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server';
+import { gql } from 'apollo-server-express';
 
 const typeDefs = gql`
   type ConversationParticipant {
@@ -20,10 +20,19 @@ const typeDefs = gql`
 
   type Mutation {
     startConversation(input: StartConversationInput!): String!
+    readConversation(input: ReadConversationInput!): Boolean!
   }
 
   input StartConversationInput {
     participantIds: [ObjectID!]!
+  }
+
+  input ReadConversationInput {
+    conversationId: ObjectID!
+  }
+
+  type Subscription {
+    conversationUpdated: Conversation
   }
 `;
 

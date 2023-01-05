@@ -1,4 +1,4 @@
-import { UserInputError } from 'apollo-server';
+import { UserInputError } from 'apollo-server-express';
 
 const validateStringInputs = (input: string | string[]): void => {
   if (Array.isArray(input)) {

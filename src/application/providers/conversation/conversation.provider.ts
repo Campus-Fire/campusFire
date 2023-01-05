@@ -1,6 +1,7 @@
 import { Collection, ObjectId } from 'mongodb';
-import { conversationParticipantProvider } from '../../indexes/provider';
 import { ConversationDocument, toConversationObject } from '../../../entities/conversation.entity';
+import { conversationParticipantProvider, messageProvider } from '../../indexes/provider';
+import { Message } from '../message/message.provider.type';
 import { Conversation, StartConversationInput } from './conversation.provider.types';
 
 class ConversationProvider {
@@ -47,7 +48,9 @@ class ConversationProvider {
     return conversationData.insertedId.toHexString();
   }
 
-  public async updateConversation(conversationId: ObjectId, senderId: ObjectId, messageId: ObjectId): Promise<void> {
+  public async updateLatestMessage(message: Message): Promise<Conversation> {
+    const { id: messageId, senderId, conversationId } = message;
+
     const convData = await this.collection.findOneAndUpdate(
       { _id: conversationId },
       {
@@ -65,6 +68,31 @@ class ConversationProvider {
     for (let participant of convData.value.participantIds) {
       await conversationParticipantProvider.setLatestMessageSeenStatus(convData.value._id, senderId, participant);
     }
+
+    return toConversationObject(convData.value);
+  }
+
+  public async isConversationUpdated(id: ObjectId, conversation: ObjectId): Promise<boolean> {
+    const userId = new ObjectId(id);
+    const conversationId = new ObjectId(conversation);
+
+    const conversationData = await this.collection.findOne({ _id: conversationId });
+    if (!conversationData) {
+      throw new Error('Could not find the conversation');
+    }
+
+    if (!conversationData.latestMessageId) {
+      return false;
+    }
+
+    const isUserConversationParticipant = await conversationParticipantProvider.isParticipant(
+      userId,
+      conversationData._id
+    );
+
+    const userSentLatestMessage = await messageProvider.isSender(userId, conversationData.latestMessageId);
+
+    return isUserConversationParticipant;
   }
 }
 

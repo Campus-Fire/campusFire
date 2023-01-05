@@ -147,6 +147,7 @@ export type Mutation = {
   createProfile: Profile;
   forgotPasswordRequest: Scalars['String'];
   login: Account;
+  readConversation: Scalars['Boolean'];
   registerAccount: Account;
   resendVerificationCode: Scalars['Boolean'];
   resetPassword: Account;
@@ -169,6 +170,10 @@ export type MutationForgotPasswordRequestArgs = {
 
 export type MutationLoginArgs = {
   input: LoginInput;
+};
+
+export type MutationReadConversationArgs = {
+  input: ReadConversationInput;
 };
 
 export type MutationRegisterAccountArgs = {
@@ -239,13 +244,16 @@ export type Query = {
   getProfile: Profile;
   institutes: Array<Institute>;
   messages?: Maybe<Array<Maybe<Message>>>;
-  preference: Array<Preference>;
   privacyPolicy: Scalars['String'];
   termsOfUse: Scalars['String'];
 };
 
 export type QueryGetProfileArgs = {
   id: Scalars['String'];
+};
+
+export type ReadConversationInput = {
+  conversationId: Scalars['ObjectID'];
 };
 
 export type RegisterAccountInput = {
@@ -273,6 +281,7 @@ export type StartConversationInput = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  conversationUpdated?: Maybe<Conversation>;
   messageSent?: Maybe<Message>;
 };
 

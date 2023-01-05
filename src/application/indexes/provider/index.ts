@@ -1,13 +1,12 @@
 import { setupDb } from '../../../database';
-
 import { AccountProvider } from '../../providers/account/account.provider';
+import { ConversationParticipantProvider } from '../../providers/conversation/conversation-participant.provider';
+import { ConversationProvider } from '../../providers/conversation/conversation.provider';
+import { ImageProvider } from '../../providers/image/image.provider';
 import { InstituteProvider } from '../../providers/institute/institute.provider';
+import { MessageProvider } from '../../providers/message/message.provider';
 import { PreferenceProvider } from '../../providers/preference/preference.provider';
 import { ProfileProvider } from '../../providers/profile/profile.provider';
-import { ImageProvider } from '../../providers/image/image.provider';
-import { ConversationProvider } from '../../providers/conversation/conversation.provider';
-import { ConversationParticipantProvider } from '../../providers/conversation/conversation-participant.provider';
-import { MessageProvider } from '../../providers/message/message.provider';
 
 const db = setupDb();
 

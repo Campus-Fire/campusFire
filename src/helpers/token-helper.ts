@@ -25,8 +25,7 @@ const generateResetPasswortToken = (account: SessionUser): string => {
   );
 };
 
-const getSessionUser = (context: ExpressContext): any => {
-  const authHeaders = context.req.headers.authorization;
+const getSessionUser = (authHeaders: any): any => {
   if (authHeaders) {
     // Bearer .....
     const headerParts = authHeaders.split(' ');

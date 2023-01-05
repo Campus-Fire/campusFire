@@ -1,9 +1,8 @@
 import { Collection, ObjectId } from 'mongodb';
-
-import { validateStringInputs } from '../../../helpers/validator';
-import { ImageDocument, toImageObject } from '../../../entities/image.entity';
-import { ImageInput, UploadMultipleImageInput, UploadSingleImageInput } from './image.provider.types';
 import { profileProvider } from '../../../application/indexes/provider';
+import { ImageDocument, toImageObject } from '../../../entities/image.entity';
+import { validateStringInputs } from '../../../helpers/validator';
+import { ImageInput, UploadMultipleImageInput, UploadSingleImageInput } from './image.provider.types';
 
 class ImageProvider {
   constructor(private collection: Collection<ImageDocument>) {}

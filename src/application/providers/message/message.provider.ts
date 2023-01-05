@@ -1,7 +1,7 @@
 import { Collection, ObjectId } from 'mongodb';
-import { conversationProvider } from '../../indexes/provider';
-import { validateStringInputs } from '../../../helpers/validator';
 import { MessageDocument, toMessageObject } from '../../../entities/message.entity';
+import { validateStringInputs } from '../../../helpers/validator';
+import { conversationProvider } from '../../indexes/provider';
 import { Message, SendMessageInput } from './message.provider.type';
 
 class MessageProvider {
@@ -33,14 +33,21 @@ class MessageProvider {
       throw new Error('Could not send message');
     }
 
-    await conversationProvider.updateConversation(conversationId, senderId, messageId);
-
     const message = await this.collection.findOne({ _id: messageData.insertedId });
     if (!message) {
       throw new Error('Can not send message');
     }
 
     return toMessageObject(message);
+  }
+
+  public async isSender(userId: ObjectId, messageId: ObjectId): Promise<boolean> {
+    const messageData = await this.collection.findOne({ _id: messageId });
+    if (!messageData) {
+      throw new Error('Unable to find the message');
+    }
+
+    return messageData.senderId.toHexString() === userId.toHexString();
   }
 }
 

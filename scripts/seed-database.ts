@@ -1,10 +1,9 @@
-import { MongoClient } from 'mongodb';
 import bcrypt from 'bcryptjs';
-
-import deterministicId from '../src/helpers/deterministic-id';
-import config from '../config';
-import { institutes } from './initial-data';
 import { addYears } from 'date-fns';
+import { MongoClient } from 'mongodb';
+import config from '../config';
+import deterministicId from '../src/helpers/deterministic-id';
+import { institutes } from './initial-data';
 
 const uri = config.MONGO_CONNECTION_STRING ?? '';
 const dbName = config.DB_NAME;

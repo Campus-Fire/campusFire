@@ -1,4 +1,4 @@
-import { UserInputError } from 'apollo-server';
+import { UserInputError } from 'apollo-server-express';
 import { Collection, ObjectId } from 'mongodb';
 
 import { Gender } from '../../../application/schema/types/schema';

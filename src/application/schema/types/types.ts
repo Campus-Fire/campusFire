@@ -1,5 +1,5 @@
 import { PubSub } from 'graphql-subscriptions';
-import { Message } from './schema';
+import { Conversation, Message } from './schema';
 
 interface Root {}
 
@@ -17,8 +17,19 @@ interface UserContext {
   session: Session | null;
 }
 
-interface SendMessagePayload {
+interface SubscriptionMessageSentPayload {
   message: Message;
 }
 
-export { Root, Session, SessionUser, UserContext, SendMessagePayload };
+interface SubscriptionConversationUpdatedPayload {
+  conversation: Conversation;
+}
+
+export {
+  Root,
+  Session,
+  SessionUser,
+  UserContext,
+  SubscriptionMessageSentPayload,
+  SubscriptionConversationUpdatedPayload,
+};

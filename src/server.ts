@@ -33,15 +33,35 @@ const createApp = async (): Promise<void> => {
   const pubsub = new PubSub();
 
   // Get User Context with each request
-  const getUserContext = async (ctx: ExpressContext): Promise<UserContext> => {
+  const getGraphQLContext = async (ctx: ExpressContext): Promise<UserContext> => {
     try {
-      const { id, email } = getSessionUser(ctx);
+      const { req } = ctx;
+      const { id, email } = getSessionUser(req.headers.authorization);
 
       return {
         pubsub: pubsub,
         session: { user: { id, email } },
       };
     } catch (err) {
+      console.error(err);
+
+      return { pubsub: pubsub, session: null };
+    }
+  };
+
+  // Get Subscription Context with each request
+  const getSubscriptionContext = async (ctx: any): Promise<UserContext> => {
+    try {
+      const { connectionParams } = ctx;
+      const { id, email } = getSessionUser(connectionParams.Authorization);
+
+      return {
+        pubsub: pubsub,
+        session: { user: { id, email } },
+      };
+    } catch (err) {
+      console.error(err);
+
       return { pubsub: pubsub, session: null };
     }
   };
@@ -50,8 +70,8 @@ const createApp = async (): Promise<void> => {
   const serverCleanup = useServer(
     {
       schema,
-      context: (ctx: ExpressContext) => {
-        return getUserContext(ctx);
+      context: (ctx) => {
+        return getSubscriptionContext(ctx);
       },
     },
     webSocketServer
@@ -78,7 +98,7 @@ const createApp = async (): Promise<void> => {
     ],
     introspection: true,
     context: (ctx) => {
-      return getUserContext(ctx);
+      return getGraphQLContext(ctx);
     },
   });
 

@@ -48,6 +48,15 @@ class ConversationParticipantProvider {
 
     return data.userId;
   }
+
+  public async isParticipant(userId: ObjectId, conversationId: ObjectId): Promise<boolean> {
+    const participantData = await this.collection.findOne({ userId, conversationId });
+    if (!participantData) {
+      return false;
+    }
+
+    return true;
+  }
 }
 
 export { ConversationParticipantProvider };
