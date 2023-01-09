@@ -1,4 +1,5 @@
 import { withFilter } from 'graphql-subscriptions';
+import { ObjectId } from 'mongodb';
 import checkAuth from '../../helpers/check-auth';
 import { conversationParticipantProvider, conversationProvider } from '../indexes/provider';
 import { MutationReadConversationArgs, MutationStartConversationArgs } from '../schema/types/schema';
@@ -49,9 +50,12 @@ const conversationResolver = {
           const session = checkAuth(context);
           const { id: userId } = session.user;
 
-          const res = await conversationProvider.isConversationUpdated(userId, payload.conversation.id);
+          const isConversationUpdated = await conversationProvider.isConversationUpdated(
+            userId,
+            payload.conversation.id
+          );
 
-          return res;
+          return isConversationUpdated;
         }
       ),
 
@@ -60,6 +64,21 @@ const conversationResolver = {
         _args: any,
         context: UserContext
       ): Promise<UnresolvedConversation> => {
+        const session = checkAuth(context);
+        const { id } = session.user;
+
+        const userId = new ObjectId(id);
+        const payloadConversationId = new ObjectId(payload.conversation.id);
+
+        const isUserPartOfConversation = await conversationParticipantProvider.isParticipant(
+          userId,
+          payloadConversationId
+        );
+
+        if (!isUserPartOfConversation) {
+          throw new Error('You are not part of this conversation');
+        }
+
         return payload.conversation;
       },
     },

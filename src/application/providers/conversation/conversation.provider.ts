@@ -2,7 +2,7 @@ import { Collection, ObjectId } from 'mongodb';
 import { ConversationDocument, toConversationObject } from '../../../entities/conversation.entity';
 import { conversationParticipantProvider, messageProvider } from '../../indexes/provider';
 import { Message } from '../message/message.provider.type';
-import { Conversation, ReadConversationInput, StartConversationInput } from './conversation.provider.types';
+import { Conversation, StartConversationInput } from './conversation.provider.types';
 
 class ConversationProvider {
   constructor(private collection: Collection<ConversationDocument>) {}

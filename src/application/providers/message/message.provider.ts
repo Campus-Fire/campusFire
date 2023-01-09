@@ -58,10 +58,7 @@ class MessageProvider {
       throw new Error('Unable to find the message');
     }
 
-    const res = messageData.senderId.toHexString() === userId.toHexString();
-    console.log(`in messageprovider res ${res}`);
-
-    return res;
+    return messageData.senderId.toHexString() === userId.toHexString();
   }
 }
 
