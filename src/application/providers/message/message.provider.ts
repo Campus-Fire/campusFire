@@ -52,12 +52,16 @@ class MessageProvider {
   }
 
   public async isSender(userId: ObjectId, messageId: ObjectId): Promise<boolean> {
-    const messageData = await this.collection.findOne({ _id: messageId });
+    const id = new ObjectId(messageId);
+    const messageData = await this.collection.findOne({ _id: id });
     if (!messageData) {
       throw new Error('Unable to find the message');
     }
 
-    return messageData.senderId.toHexString() === userId.toHexString();
+    const res = messageData.senderId.toHexString() === userId.toHexString();
+    console.log(`in messageprovider res ${res}`);
+
+    return res;
   }
 }
 

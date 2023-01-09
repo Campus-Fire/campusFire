@@ -4,7 +4,7 @@ import {
   ConversationParticipantDocument,
   toConversationParticipantObject,
 } from '../../../entities/conversation-participant.entity';
-import { ConversationParticipant } from './conversation-participant.provider.types';
+import { ConversationParticipant, ReadConversationInput } from './conversation.provider.types';
 
 class ConversationParticipantProvider {
   constructor(private collection: Collection<ConversationParticipantDocument>) {}
@@ -75,6 +75,24 @@ class ConversationParticipantProvider {
     }
 
     return participants.map(toConversationParticipantObject);
+  }
+
+  public async readConversation(input: ReadConversationInput): Promise<boolean> {
+    const { userId: id, conversationId: convoId } = input;
+
+    const userId = new ObjectId(id);
+    const conversationId = new ObjectId(convoId);
+
+    const conversationParticipant = await this.collection.findOneAndUpdate(
+      { userId, conversationId },
+      { $set: { ...{ hasSeenLastestMessage: true } } },
+      { returnDocument: 'after' }
+    );
+    if (!conversationParticipant) {
+      throw new Error('Can not find a conversation participant');
+    }
+
+    return true;
   }
 }
 

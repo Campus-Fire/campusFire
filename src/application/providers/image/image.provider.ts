@@ -77,7 +77,6 @@ class ImageProvider {
     const imageSources = images.map((img) => {
       return toImageObject(img).src;
     });
-    console.log(imageSources);
 
     return imageSources;
   }

@@ -16,11 +16,8 @@ const upload = async (image: string, user: string): Promise<string> => {
       folder: `${user}`,
     });
 
-    console.log(result.url);
-
     return `${result.url}`;
   } catch (err) {
-    console.log(err);
     throw new Error('err');
   }
 };

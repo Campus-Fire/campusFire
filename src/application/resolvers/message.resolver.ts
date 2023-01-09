@@ -1,7 +1,7 @@
 import { withFilter } from 'graphql-subscriptions';
 import { ObjectId } from 'mongodb';
 import checkAuth from '../../helpers/check-auth';
-import { conversationProvider, messageProvider } from '../indexes/provider';
+import { conversationParticipantProvider, conversationProvider, messageProvider } from '../indexes/provider';
 import { Message, MutationSendMessageArgs, SubscriptionMessageSentArgs } from '../schema/types/schema';
 import { Root, SubscriptionMessageSentPayload, UserContext } from '../schema/types/types';
 
@@ -38,15 +38,39 @@ const messageResolver = {
 
           return pubsub.asyncIterator(['MESSAGE_SENT']);
         },
-        (payload: SubscriptionMessageSentPayload, args: SubscriptionMessageSentArgs) => {
-          const payloadConversationId = new ObjectId(payload.message.conversationId);
-          const argsConversationId = new ObjectId(args.conversationId);
+        async (payload: SubscriptionMessageSentPayload, args: SubscriptionMessageSentArgs, context: UserContext) => {
+          const session = checkAuth(context);
+          const { id } = session.user;
 
-          return payloadConversationId.toHexString() === argsConversationId.toHexString();
+          const userId = new ObjectId(id);
+          const payloadConversationId = new ObjectId(payload.message.conversationId);
+          const isUserPartOfConversation = await conversationParticipantProvider.isParticipant(
+            userId,
+            payloadConversationId
+          );
+
+          const argsConversationId = new ObjectId(args.conversationId).toHexString();
+          const isCorrectConversation = argsConversationId === payloadConversationId.toHexString();
+
+          return isUserPartOfConversation && isCorrectConversation;
         }
       ),
 
-      resolve: async (payload: SubscriptionMessageSentPayload): Promise<Message> => {
+      resolve: async (payload: SubscriptionMessageSentPayload, _args: any, context: UserContext): Promise<Message> => {
+        const session = checkAuth(context);
+        const { id } = session.user;
+
+        const userId = new ObjectId(id);
+        const payloadConversationId = new ObjectId(payload.message.conversationId);
+        const isUserPartOfConversation = await conversationParticipantProvider.isParticipant(
+          userId,
+          payloadConversationId
+        );
+
+        if (!isUserPartOfConversation) {
+          throw new Error('You can not view this message');
+        }
+
         return payload.message;
       },
     },

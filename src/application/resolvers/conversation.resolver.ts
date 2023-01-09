@@ -1,7 +1,7 @@
 import { withFilter } from 'graphql-subscriptions';
 import checkAuth from '../../helpers/check-auth';
-import { conversationProvider } from '../indexes/provider';
-import { MutationStartConversationArgs } from '../schema/types/schema';
+import { conversationParticipantProvider, conversationProvider } from '../indexes/provider';
+import { MutationReadConversationArgs, MutationStartConversationArgs } from '../schema/types/schema';
 import {
   Root,
   SubscriptionConversationUpdatedPayload,
@@ -26,6 +26,15 @@ const conversationResolver = {
 
       return conversationProvider.startConversation(input);
     },
+
+    readConversation: async (_: Root, args: MutationReadConversationArgs, context: UserContext): Promise<boolean> => {
+      const session = checkAuth(context);
+      const { id: userId } = session.user;
+
+      const input = { userId, ...args.input };
+
+      return conversationParticipantProvider.readConversation(input);
+    },
   },
 
   Subscription: {
@@ -40,12 +49,7 @@ const conversationResolver = {
           const session = checkAuth(context);
           const { id: userId } = session.user;
 
-          console.log(payload.conversation);
-
           const res = await conversationProvider.isConversationUpdated(userId, payload.conversation.id);
-
-          console.log('waiting');
-          console.log(res);
 
           return res;
         }

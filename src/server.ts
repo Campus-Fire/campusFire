@@ -43,8 +43,6 @@ const createApp = async (): Promise<void> => {
         session: { user: { id, email } },
       };
     } catch (err) {
-      console.error(err);
-
       return { pubsub: pubsub, session: null };
     }
   };
