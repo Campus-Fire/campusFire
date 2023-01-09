@@ -4,13 +4,14 @@ const typeDefs = gql`
   type ConversationParticipant {
     id: ObjectID!
     userId: ObjectID!
+    hasSeenLatestMessage: Boolean!
     createdAt: Date!
   }
 
   type Conversation {
     id: ObjectID!
-    participantIds: [ObjectID!]!
-    latestMessageId: ObjectID
+    participants: [ConversationParticipant!]!
+    latestMessage: Message
     updatedAt: Date!
   }
 

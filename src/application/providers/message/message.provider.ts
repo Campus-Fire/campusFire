@@ -1,7 +1,6 @@
 import { Collection, ObjectId } from 'mongodb';
 import { MessageDocument, toMessageObject } from '../../../entities/message.entity';
 import { validateStringInputs } from '../../../helpers/validator';
-import { conversationProvider } from '../../indexes/provider';
 import { Message, SendMessageInput } from './message.provider.type';
 
 class MessageProvider {
@@ -11,6 +10,17 @@ class MessageProvider {
     const messages = await this.collection.find().toArray();
 
     return messages.map(toMessageObject);
+  }
+
+  public async getMessageById(messageId: ObjectId): Promise<Message> {
+    const id = new ObjectId(messageId);
+
+    const messageData = await this.collection.findOne({ _id: id });
+    if (!messageData) {
+      throw new Error('Message not found!');
+    }
+
+    return toMessageObject(messageData);
   }
 
   public async sendMessage(input: SendMessageInput): Promise<Message> {
@@ -42,7 +52,8 @@ class MessageProvider {
   }
 
   public async isSender(userId: ObjectId, messageId: ObjectId): Promise<boolean> {
-    const messageData = await this.collection.findOne({ _id: messageId });
+    const id = new ObjectId(messageId);
+    const messageData = await this.collection.findOne({ _id: id });
     if (!messageData) {
       throw new Error('Unable to find the message');
     }

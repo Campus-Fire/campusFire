@@ -1,6 +1,10 @@
 import { Collection, ObjectId } from 'mongodb';
 import { profileProvider } from '../../../application/indexes/provider';
-import { ConversationParticipantDocument } from '../../../entities/conversation-participant.entity';
+import {
+  ConversationParticipantDocument,
+  toConversationParticipantObject,
+} from '../../../entities/conversation-participant.entity';
+import { ConversationParticipant, ReadConversationInput } from './conversation.provider.types';
 
 class ConversationParticipantProvider {
   constructor(private collection: Collection<ConversationParticipantDocument>) {}
@@ -50,9 +54,42 @@ class ConversationParticipantProvider {
   }
 
   public async isParticipant(userId: ObjectId, conversationId: ObjectId): Promise<boolean> {
-    const participantData = await this.collection.findOne({ userId, conversationId });
+    const participantData = await this.collection.findOne({ userId: userId, conversationId: conversationId });
     if (!participantData) {
       return false;
+    }
+
+    return true;
+  }
+
+  public async getParticipantsByIds(participantIds: ObjectId[]): Promise<ConversationParticipant[]> {
+    const participantObjIds = participantIds.map((participantId) => new ObjectId(participantId));
+
+    const participants = await this.collection
+      .find({
+        _id: { $in: participantObjIds },
+      })
+      .toArray();
+    if (!participants) {
+      throw new Error('No participants found');
+    }
+
+    return participants.map(toConversationParticipantObject);
+  }
+
+  public async readConversation(input: ReadConversationInput): Promise<boolean> {
+    const { userId: id, conversationId: convoId } = input;
+
+    const userId = new ObjectId(id);
+    const conversationId = new ObjectId(convoId);
+
+    const conversationParticipant = await this.collection.findOneAndUpdate(
+      { userId, conversationId },
+      { $set: { ...{ hasSeenLastestMessage: true } } },
+      { returnDocument: 'after' }
+    );
+    if (!conversationParticipant) {
+      throw new Error('Can not find a conversation participant');
     }
 
     return true;

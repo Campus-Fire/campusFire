@@ -19,7 +19,6 @@ class ConversationProvider {
 
     const conversationId = new ObjectId();
     const senderId = new ObjectId(userId);
-    participants.push(await conversationParticipantProvider.createParticipant(conversationId, senderId));
 
     for (let participantId of participantIds) {
       participants.push(
@@ -30,7 +29,6 @@ class ConversationProvider {
     const conversationData = await this.collection.insertOne({
       _id: conversationId,
       participantIds: participants,
-      latestMessageId: null,
       updatedAt: new Date(),
     });
     if (!conversationData.insertedId) {
@@ -80,7 +78,6 @@ class ConversationProvider {
     if (!conversationData) {
       throw new Error('Could not find the conversation');
     }
-
     if (!conversationData.latestMessageId) {
       return false;
     }
@@ -89,10 +86,9 @@ class ConversationProvider {
       userId,
       conversationData._id
     );
-
     const userSentLatestMessage = await messageProvider.isSender(userId, conversationData.latestMessageId);
 
-    return isUserConversationParticipant;
+    return isUserConversationParticipant && !userSentLatestMessage;
   }
 }
 

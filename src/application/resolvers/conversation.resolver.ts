@@ -1,12 +1,18 @@
 import { withFilter } from 'graphql-subscriptions';
+import { ObjectId } from 'mongodb';
 import checkAuth from '../../helpers/check-auth';
-import { conversationProvider } from '../indexes/provider';
-import { Conversation, MutationStartConversationArgs } from '../schema/types/schema';
-import { Root, SubscriptionConversationUpdatedPayload, UserContext } from '../schema/types/types';
+import { conversationParticipantProvider, conversationProvider } from '../indexes/provider';
+import { MutationReadConversationArgs, MutationStartConversationArgs } from '../schema/types/schema';
+import {
+  Root,
+  SubscriptionConversationUpdatedPayload,
+  UnresolvedConversation,
+  UserContext,
+} from '../schema/types/types';
 
 const conversationResolver = {
   Query: {
-    conversations: async (): Promise<Conversation[]> => {
+    conversations: async (): Promise<UnresolvedConversation[]> => {
       return conversationProvider.getAllConversations();
     },
   },
@@ -15,10 +21,20 @@ const conversationResolver = {
     startConversation: async (_: Root, args: MutationStartConversationArgs, context: UserContext): Promise<string> => {
       const session = checkAuth(context);
       const { id: userId } = session.user;
+      args.input.participantIds.push(userId);
 
       const input = { userId, ...args.input };
 
       return conversationProvider.startConversation(input);
+    },
+
+    readConversation: async (_: Root, args: MutationReadConversationArgs, context: UserContext): Promise<boolean> => {
+      const session = checkAuth(context);
+      const { id: userId } = session.user;
+
+      const input = { userId, ...args.input };
+
+      return conversationParticipantProvider.readConversation(input);
     },
   },
 
@@ -30,20 +46,38 @@ const conversationResolver = {
 
           return pubsub.asyncIterator(['CONVERSATION_UPDATED']);
         },
-        (payload: SubscriptionConversationUpdatedPayload, _args: any, context: UserContext) => {
+        async (payload: SubscriptionConversationUpdatedPayload, _args: any, context: UserContext): Promise<boolean> => {
           const session = checkAuth(context);
           const { id: userId } = session.user;
 
-          console.log(session);
+          const isConversationUpdated = await conversationProvider.isConversationUpdated(
+            userId,
+            payload.conversation.id
+          );
 
-          return true;
+          return isConversationUpdated;
         }
       ),
 
-      resolve: async (payload: SubscriptionConversationUpdatedPayload, _args: any, context: UserContext) => {
-        checkAuth(context);
+      resolve: async (
+        payload: SubscriptionConversationUpdatedPayload,
+        _args: any,
+        context: UserContext
+      ): Promise<UnresolvedConversation> => {
+        const session = checkAuth(context);
+        const { id } = session.user;
 
-        console.log('RESOLVER');
+        const userId = new ObjectId(id);
+        const payloadConversationId = new ObjectId(payload.conversation.id);
+
+        const isUserPartOfConversation = await conversationParticipantProvider.isParticipant(
+          userId,
+          payloadConversationId
+        );
+
+        if (!isUserPartOfConversation) {
+          throw new Error('You are not part of this conversation');
+        }
 
         return payload.conversation;
       },
