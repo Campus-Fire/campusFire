@@ -25,5 +25,4 @@ interface ImageInput {
   imgId: ObjectId;
 }
 
-
 export { Image, UploadSingleImageInput, UploadMultipleImageInput, ImageInput };

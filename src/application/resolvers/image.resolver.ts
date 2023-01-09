@@ -1,32 +1,38 @@
-import { ExpressContext } from 'apollo-server-express';
-
 import checkAuth from '../../helpers/check-auth';
 import { imageProvider } from '../indexes/provider';
-import { MutationUploadSingleImageArgs, MutationUploadMultipleImagesArgs, MutationSetPrimaryImageArgs } from '../schema/types/schema';
-import { Root } from '../schema/types/types';
+import {
+  MutationSetPrimaryImageArgs,
+  MutationUploadMultipleImagesArgs,
+  MutationUploadSingleImageArgs,
+} from '../schema/types/schema';
+import { Root, UserContext } from '../schema/types/types';
 
 const imageResolver = {
   Mutation: {
-    async uploadSingleImage(_: Root, args: MutationUploadSingleImageArgs, context: ExpressContext): Promise<string> {
-      const tokenAuth = checkAuth(context);
-      const input = { ...tokenAuth, ...args.input };
+    uploadSingleImage: async (_: Root, args: MutationUploadSingleImageArgs, context: UserContext): Promise<string> => {
+      const session = checkAuth(context);
+      const input = { ...session.user, ...args.input };
 
       return imageProvider.uploadImage(input);
     },
 
-    async uploadMultipleImages(_: Root, args: MutationUploadMultipleImagesArgs, context: ExpressContext): Promise<string[]> {
-      const tokenAuth = checkAuth(context);
-      const input = { ...tokenAuth, ...args.input };
+    uploadMultipleImages: async (
+      _: Root,
+      args: MutationUploadMultipleImagesArgs,
+      context: UserContext
+    ): Promise<string[]> => {
+      const session = checkAuth(context);
+      const input = { ...session.user, ...args.input };
 
       return imageProvider.uploadMultipleImages(input);
     },
 
-    async setPrimaryImage(_: Root, args: MutationSetPrimaryImageArgs, context: ExpressContext): Promise<string> {
-      const tokenAuth = checkAuth(context);
-      const input = { ...tokenAuth, ...args.input };
+    setPrimaryImage: async (_: Root, args: MutationSetPrimaryImageArgs, context: UserContext): Promise<string> => {
+      const session = checkAuth(context);
+      const input = { ...session.user, ...args.input };
 
       return imageProvider.setPrimaryImage(input);
-    }
+    },
   },
 };
 

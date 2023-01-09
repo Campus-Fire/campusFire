@@ -1,13 +1,9 @@
-import { gql } from 'apollo-server';
+import { gql } from 'apollo-server-express';
 
 const typeDefs = gql`
   type Preference {
     id: ObjectID!
     gender: Gender!
-  }
-
-  type Query {
-    preference: [Preference!]!
   }
 `;
 

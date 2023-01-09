@@ -1,5 +1,3 @@
-import { ExpressContext } from 'apollo-server-express';
-
 import checkAuth from '../../helpers/check-auth';
 import { accountProvider } from '../indexes/provider';
 import {
@@ -11,69 +9,69 @@ import {
   MutationVerifyAccountPasswordResetArgs,
   MutationVerifyAccountRegistrationArgs,
 } from '../schema/types/schema';
-import { Root } from '../schema/types/types';
+import { Root, UserContext } from '../schema/types/types';
 
 interface UntokenizedAccount extends Omit<Account, 'token'> {}
 
 const accountResolver = {
   Query: {
-    async accounts(): Promise<UntokenizedAccount[]> {
+    accounts: async (): Promise<UntokenizedAccount[]> => {
       return accountProvider.getAccounts();
     },
 
-    async termsOfUse(): Promise<string> {
+    termsOfUse: async (): Promise<string> => {
       return 'returnsTermsOfUsePageURL';
     },
 
-    async privacyPolicy(): Promise<string> {
-      return 'returnsPrivacyPolicy';
+    privacyPolicy: async (): Promise<string> => {
+      return 'returnsPrivacyPolicyPageURL';
     },
   },
 
   Mutation: {
-    async login(_: Root, args: MutationLoginArgs): Promise<Account> {
+    login: async (_: Root, args: MutationLoginArgs): Promise<Account> => {
       return accountProvider.login(args.input);
     },
 
-    async registerAccount(_: Root, args: MutationRegisterAccountArgs): Promise<Account> {
+    registerAccount: async (_: Root, args: MutationRegisterAccountArgs): Promise<Account> => {
       return accountProvider.registerAccount(args.input);
     },
 
-    async verifyAccountRegistration(
+    verifyAccountRegistration: async (
       _: Root,
       args: MutationVerifyAccountRegistrationArgs,
-      context: ExpressContext
-    ): Promise<boolean> {
-      const tokenAuth = checkAuth(context);
-      const input = { ...tokenAuth, ...args.input };
+      context: UserContext
+    ): Promise<boolean> => {
+      const session = checkAuth(context);
+      const input = { ...session.user, ...args.input };
 
       return accountProvider.verifyAccountRegistration(input);
     },
 
-    async resendVerificationCode(_: Root, args: any, context: ExpressContext): Promise<boolean> {
-      const { email } = checkAuth(context);
+    resendVerificationCode: async (_: Root, _args: any, context: UserContext): Promise<boolean> => {
+      const session = checkAuth(context);
 
-      return accountProvider.resendVerificationCode(email);
+      return accountProvider.resendVerificationCode(session.user.email);
     },
 
-    async forgotPasswordRequest(_: Root, args: MutationForgotPasswordRequestArgs): Promise<string> {
+    forgotPasswordRequest: async (_: Root, args: MutationForgotPasswordRequestArgs): Promise<string> => {
       return accountProvider.sendForgotPasswordRequest(args.input.email);
     },
 
-    async verifyAccountPasswordReset(
+    verifyAccountPasswordReset: async (
       _: Root,
       args: MutationVerifyAccountPasswordResetArgs,
-      context: ExpressContext
-    ): Promise<boolean> {
-      const passwordResetToken = checkAuth(context);
-      const input = { ...passwordResetToken, ...args.input };
+      context: UserContext
+    ): Promise<boolean> => {
+      const session = checkAuth(context);
+      const input = { ...session.user, ...args.input };
 
       return accountProvider.verifyAccountPasswordReset(input);
     },
 
-    async resetPassword(_: Root, args: MutationResetPasswordArgs, context: ExpressContext): Promise<Account> {
-      const tokenAuth = checkAuth(context);
-      const input = { ...tokenAuth, ...args.input };
+    resetPassword: async (_: Root, args: MutationResetPasswordArgs, context: UserContext): Promise<Account> => {
+      const session = checkAuth(context);
+      const input = { ...session.user, ...args.input };
 
       return accountProvider.resetPassword(input);
     },

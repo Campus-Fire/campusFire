@@ -17,6 +17,7 @@ const toProfileObject = (profile: ProfileDocument): Profile => {
     faculty: profile.faculty,
     interests: profile.interests,
     onResidence: profile.onResidence,
+    mainImage: profile.mainImage,
     isActive: profile.isActive,
   };
 };

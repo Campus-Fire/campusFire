@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server';
+import { gql } from 'apollo-server-express';
 
 const typeDefs = gql`
   type Image {
@@ -23,7 +23,7 @@ const typeDefs = gql`
     imgSrc: String!
   }
 
-    input UploadMultpleImagesInput {
+  input UploadMultpleImagesInput {
     imgSources: [String!]!
   }
 `;

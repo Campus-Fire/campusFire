@@ -1,12 +1,11 @@
-import { UserInputError } from 'apollo-server';
+import { UserInputError } from 'apollo-server-express';
 import bcrypt from 'bcryptjs';
-import { Collection, ObjectId } from 'mongodb';
 import { addYears, isAfter } from 'date-fns';
-
+import { Collection, ObjectId } from 'mongodb';
 import { AccountDocument, toAccountObject } from '../../../entities/account.entity';
 import deterministicId from '../../../helpers/deterministic-id';
-import { sendVerificationEmail, sendPasswordResetEmail } from '../../../helpers/email-verification';
-import { generateToken, generateResetPasswortToken } from '../../../helpers/token-generator';
+import { sendPasswordResetEmail, sendVerificationEmail } from '../../../helpers/email-verification';
+import { generateResetPasswortToken, generateToken } from '../../../helpers/token-helper';
 import { validateEmailInput, validatePasswordInput } from '../../../helpers/validator';
 import getVerificationCode from '../../../helpers/verification-code';
 import { instituteProvider } from '../../indexes/provider';
@@ -20,7 +19,7 @@ import {
 } from './account.provider.types';
 
 class AccountProvider {
-  constructor(private collection: Collection<AccountDocument>) { }
+  constructor(private collection: Collection<AccountDocument>) {}
 
   public async getAccounts(): Promise<SecureAccount[]> {
     const accounts = await this.collection.find().toArray();
@@ -137,7 +136,7 @@ class AccountProvider {
   public async isAccountVerified(id: ObjectId): Promise<boolean> {
     const accountData = await this.collection.findOne({ _id: id });
     if (!accountData) {
-      throw new Error('Corresponding account not found');
+      throw new Error('Account not found');
     }
 
     return accountData.isVerified;

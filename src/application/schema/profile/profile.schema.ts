@@ -1,23 +1,26 @@
-import { gql } from 'apollo-server';
+import { gql } from 'apollo-server-express';
 
 const typeDefs = gql`
   type Profile {
     id: ObjectID!
-    instituteId: ObjectID!
     firstName: String!
     lastName: String!
     dateOfBirth: Date!
     gender: Gender!
     tagline: String!
     about: String!
-    faculty: Faculty!
     interests: [Interest!]!
+    instituteId: ObjectID!
+    faculty: Faculty!
     onResidence: Boolean!
+    mainImage: ObjectID
+    images: [ObjectID!]
     isActive: Boolean!
   }
 
   type Query {
-    profiles: [Profile!]!
+    allProfiles: [Profile!]!
+    getProfile(id: String!): Profile!
   }
 
   type Mutation {

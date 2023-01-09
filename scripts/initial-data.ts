@@ -34,14 +34,6 @@ const institutes: Institutes[] = [
     province: 'AB',
     country: 'Canada',
   },
-  {
-    _id: UniID.SAIT,
-    name: 'SAIT',
-    emailExt: 'edu.sait.ca',
-    city: 'Calgary',
-    province: 'AB',
-    country: 'Canada',
-  },
 ];
 
 export { Institutes, institutes };
