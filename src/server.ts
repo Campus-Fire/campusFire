@@ -7,8 +7,8 @@ import { useServer } from 'graphql-ws/lib/use/ws';
 import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
 import config from '../config';
-import { resolvers } from './application/indexes/resolver';
-import { typeDefs } from './application/schema';
+import { resolvers } from './application/indexes/resolvers.index';
+import { typeDefs } from './application/schema/index';
 import { UserContext } from './application/schema/types/types';
 import { getSessionUser } from './helpers/token-helper';
 

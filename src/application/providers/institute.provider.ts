@@ -1,7 +1,7 @@
 import { ApolloError } from 'apollo-server-express';
 import { Collection, ObjectId } from 'mongodb';
-import { InstituteDocument, toInstituteObject } from '../../../entities/institute.entity';
-import { Institute } from './institute.provider.types';
+import { InstituteDocument, toInstituteObject } from '../repositories/institute.repository';
+import { Institute } from '../models/institute.model';
 
 class InstituteProvider {
   constructor(private collection: Collection<InstituteDocument>) {}

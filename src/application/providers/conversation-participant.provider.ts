@@ -1,10 +1,10 @@
 import { Collection, ObjectId } from 'mongodb';
-import { profileProvider } from '../../../application/indexes/provider';
+import { profileProvider } from '../indexes/providers.index';
 import {
   ConversationParticipantDocument,
   toConversationParticipantObject,
-} from '../../../entities/conversation-participant.entity';
-import { ConversationParticipant, ReadConversationInput } from './conversation.provider.types';
+} from '../repositories/conversation-participant.repository';
+import { ConversationParticipant, ReadConversationInput } from '../models/conversation.model';
 
 class ConversationParticipantProvider {
   constructor(private collection: Collection<ConversationParticipantDocument>) {}

@@ -1,5 +1,5 @@
 import checkAuth from '../../helpers/check-auth';
-import { accountProvider } from '../indexes/provider';
+import { accountProvider } from '../indexes/providers.index';
 import {
   Account,
   MutationForgotPasswordRequestArgs,

@@ -1,9 +1,9 @@
 import { UserInputError } from 'apollo-server-express';
 import { Collection, ObjectId } from 'mongodb';
-import { ProfileDocument, toProfileObject } from '../../../entities/profile.entity';
-import { validateEmailInput, validateNameInput, validateStringInputs } from '../../../helpers/validator';
-import { accountProvider, imageProvider, instituteProvider } from '../../indexes/provider';
-import { CreateProfileInput, Profile } from './profile.provider.types';
+import { ProfileDocument, toProfileObject } from '../repositories/profile.repository';
+import { validateEmailInput, validateNameInput, validateStringInputs } from '../../helpers/validator';
+import { accountProvider, imageProvider, instituteProvider } from '../indexes/providers.index';
+import { CreateProfileInput, Profile } from '../models/profile.model';
 
 interface ProfileWithImages extends Profile {
   images?: string[];

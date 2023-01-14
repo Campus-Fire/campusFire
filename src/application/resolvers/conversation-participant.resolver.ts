@@ -1,4 +1,4 @@
-import { conversationParticipantProvider } from '../indexes/provider';
+import { conversationParticipantProvider } from '../indexes/providers.index';
 import { ConversationParticipant } from '../schema/types/schema';
 
 const conversationParticipantResolver = {

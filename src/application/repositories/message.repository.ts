@@ -1,5 +1,5 @@
 import { Document } from 'mongodb';
-import { Message } from '../application/providers/message/message.provider.type';
+import { Message } from '../models/message.model';
 
 interface MessageDocument extends Document, Omit<Message, 'id'> {}
 

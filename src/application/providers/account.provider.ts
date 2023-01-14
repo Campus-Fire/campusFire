@@ -2,13 +2,13 @@ import { UserInputError } from 'apollo-server-express';
 import bcrypt from 'bcryptjs';
 import { addYears, isAfter } from 'date-fns';
 import { Collection, ObjectId } from 'mongodb';
-import { AccountDocument, toAccountObject } from '../../../entities/account.entity';
-import deterministicId from '../../../helpers/deterministic-id';
-import { sendPasswordResetEmail, sendVerificationEmail } from '../../../helpers/email-verification';
-import { generateResetPasswortToken, generateToken } from '../../../helpers/token-helper';
-import { validateEmailInput, validatePasswordInput } from '../../../helpers/validator';
-import getVerificationCode from '../../../helpers/verification-code';
-import { instituteProvider } from '../../indexes/provider';
+import { AccountDocument, toAccountObject } from '../repositories/account.repository';
+import deterministicId from '../../helpers/deterministic-id';
+import { sendPasswordResetEmail, sendVerificationEmail } from '../../helpers/email-verification';
+import { generateResetPasswortToken, generateToken } from '../../helpers/token-helper';
+import { validateEmailInput, validatePasswordInput } from '../../helpers/validator';
+import getVerificationCode from '../../helpers/verification-code';
+import { instituteProvider } from '../indexes/providers.index';
 import {
   LoginInput,
   RegisterAccountInput,
@@ -16,7 +16,7 @@ import {
   SecureAccount,
   TokenizedAccount,
   VerificationCodeInput,
-} from './account.provider.types';
+} from '../models/account.model';
 
 class AccountProvider {
   constructor(private collection: Collection<AccountDocument>) {}

@@ -1,5 +1,5 @@
 import checkAuth from '../../helpers/check-auth';
-import { imageProvider } from '../indexes/provider';
+import { imageProvider } from '../indexes/providers.index';
 import {
   MutationSetPrimaryImageArgs,
   MutationUploadMultipleImagesArgs,

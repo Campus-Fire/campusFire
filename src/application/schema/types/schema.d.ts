@@ -213,12 +213,6 @@ export type MutationVerifyAccountRegistrationArgs = {
   input: VerificationCodeInput;
 };
 
-export type Preference = {
-  __typename?: 'Preference';
-  gender: Gender;
-  id: Scalars['ObjectID'];
-};
-
 export type Profile = {
   __typename?: 'Profile';
   about: Scalars['String'];

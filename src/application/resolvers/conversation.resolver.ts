@@ -1,7 +1,7 @@
 import { withFilter } from 'graphql-subscriptions';
 import { ObjectId } from 'mongodb';
 import checkAuth from '../../helpers/check-auth';
-import { conversationParticipantProvider, conversationProvider } from '../indexes/provider';
+import { conversationParticipantProvider, conversationProvider } from '../indexes/providers.index';
 import { MutationReadConversationArgs, MutationStartConversationArgs } from '../schema/types/schema';
 import {
   Root,

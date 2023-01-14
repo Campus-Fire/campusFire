@@ -1,8 +1,8 @@
 import { Collection, ObjectId } from 'mongodb';
-import { ConversationDocument, toConversationObject } from '../../../entities/conversation.entity';
-import { conversationParticipantProvider, messageProvider } from '../../indexes/provider';
-import { Message } from '../message/message.provider.type';
-import { Conversation, StartConversationInput } from './conversation.provider.types';
+import { ConversationDocument, toConversationObject } from '../repositories/conversation.repository';
+import { conversationParticipantProvider, messageProvider } from '../indexes/providers.index';
+import { Message } from '../models/message.model';
+import { Conversation, StartConversationInput } from '../models/conversation.model';
 
 class ConversationProvider {
   constructor(private collection: Collection<ConversationDocument>) {}
