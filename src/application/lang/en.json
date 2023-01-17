@@ -1,0 +1,30 @@
+{
+  "INVALID_SESSION": "Session Expired.",
+  "INVALID_TOKEN": "Invalid/Expired token.",
+  "INVALID_CREDENTIALS": "Invalid Credentials.",
+  "INVALID_USER_INPUT": "Invalid inputs. Try again please.",
+  "INVALID_VERIFICATION_CODE": "You have entered a incorrect verification code.",
+  "INVALID_REQUEST": "Invalid request, please try again.",
+
+  "INVALID_EMAIL": "Invalid Email. Ensure it is valid University/College email.",
+  "ACCOUNT_EXPIRED": "Your account has been expired.",
+  "ACCOUNT_ALREADY_EXISTS": "There is an existing account with the provided email. Try logging in.",
+  "ACCOUNT_UNVERIFIED": "The account is unverified. Please verify your account first.",
+  "ACCOUNT_NOT_FOUND": "Can not find an account associated with the email.",
+
+  "PROFILE_NOT_FOUND": "Unable to find the user profile.",
+  "PROFILE_ALREADY_EXISTS": "The user has an existing profile.",
+
+  "IMAGE_UPLOAD_FAILED": "Unable to upload the image.",
+  "IMAGE_NOT_FOUND": "Could not find the image.",
+
+  "MESSAGE_NOT_FOUND": "Unable to retrieve a message.",
+  "MESSAGE_NOT_SENT": "Unable to send the message.",
+
+  "CONVERSATION_NOT_FOUND": "Failed to find any such conversation.",
+  "CONVERSATION_NOT_STARTED": "Failed to start a conversation with one or more users.",
+  "CONVERSATION_NOTIFICATION_FAILED": "Failed to notify other users.",
+  "WRONG_CONVERSATION": "You are not part of this conversation and can not view its messages.",
+
+  "CONVERSATION_PARTICIPANT_NOT_FOUND": "Unable to find a conversation participant."
+}

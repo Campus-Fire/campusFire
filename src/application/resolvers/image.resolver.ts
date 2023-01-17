@@ -11,7 +11,10 @@ const imageResolver = {
   Mutation: {
     uploadSingleImage: async (_: Root, args: MutationUploadSingleImageArgs, context: UserContext): Promise<string> => {
       const session = checkAuth(context);
-      const input = { ...session.user, ...args.input };
+      const input = {
+        ...session.user,
+        ...args.input,
+      };
 
       return imageProvider.uploadImage(input);
     },
@@ -22,14 +25,20 @@ const imageResolver = {
       context: UserContext
     ): Promise<string[]> => {
       const session = checkAuth(context);
-      const input = { ...session.user, ...args.input };
+      const input = {
+        ...session.user,
+        ...args.input,
+      };
 
       return imageProvider.uploadMultipleImages(input);
     },
 
     setPrimaryImage: async (_: Root, args: MutationSetPrimaryImageArgs, context: UserContext): Promise<string> => {
       const session = checkAuth(context);
-      const input = { ...session.user, ...args.input };
+      const input = {
+        ...session.user,
+        ...args.input,
+      };
 
       return imageProvider.setPrimaryImage(input);
     },

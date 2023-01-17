@@ -1,15 +1,15 @@
-import { UserInputError } from 'apollo-server-express';
+import { CFError } from 'src/lib/errors-handler';
 
 const validateStringInputs = (input: string | string[]): void => {
   if (Array.isArray(input)) {
     input.forEach((elem: string) => {
       if (!elem.trim()) {
-        throw new Error('Inputs cannot be empty strings');
+        throw new CFError('INVALID_USER_INPUT');
       }
     });
   } else {
     if (!input.trim()) {
-      throw new Error('Inputs cannot be empty strings');
+      throw new CFError('INVALID_USER_INPUT');
     }
   }
 };
@@ -20,7 +20,7 @@ const validateEmailInput = (email: string): void => {
   validateStringInputs(email);
 
   if (!email.match(regEx)) {
-    throw new UserInputError(' Email must be a valid email address');
+    throw new CFError('INVALID_EMAIL');
   }
 };
 
@@ -30,7 +30,7 @@ const validatePasswordInput = (password: string): void => {
   validateStringInputs(password);
 
   if (password.match(regEx)) {
-    throw new UserInputError('Invalid character in input');
+    throw new CFError('INVALID_USER_INPUT');
   }
 };
 
@@ -40,7 +40,7 @@ const validateNameInput = (name: string): void => {
   validateStringInputs(name);
 
   if (!name.match(regEx)) {
-    throw new UserInputError('Invalid charater in input');
+    throw new CFError('INVALID_USER_INPUT');
   }
 };
 

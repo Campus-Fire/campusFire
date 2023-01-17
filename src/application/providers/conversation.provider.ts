@@ -3,6 +3,7 @@ import { ConversationDocument, toConversationObject } from '../repositories/conv
 import { conversationParticipantProvider, messageProvider } from '../indexes/providers.index';
 import { Message } from '../models/message.model';
 import { Conversation, StartConversationInput } from '../models/conversation.model';
+import { CFError } from '../../lib/errors-handler';
 
 class ConversationProvider {
   constructor(private collection: Collection<ConversationDocument>) {}
@@ -32,7 +33,7 @@ class ConversationProvider {
       updatedAt: new Date(),
     });
     if (!conversationData.insertedId) {
-      throw new Error('Could not start a conversation');
+      throw new CFError('CONVERSATION_NOT_STARTED');
     }
 
     participants.forEach(async (participant) => {
@@ -60,7 +61,7 @@ class ConversationProvider {
       { returnDocument: 'after' }
     );
     if (!convData.value) {
-      throw new Error('Could not notify other users');
+      throw new CFError('CONVERSATION_NOTIFICATION_FAILED');
     }
 
     for (let participant of convData.value.participantIds) {
@@ -74,9 +75,11 @@ class ConversationProvider {
     const userId = new ObjectId(id);
     const conversationId = new ObjectId(conversation);
 
-    const conversationData = await this.collection.findOne({ _id: conversationId });
+    const conversationData = await this.collection.findOne({
+      _id: conversationId,
+    });
     if (!conversationData) {
-      throw new Error('Could not find the conversation');
+      throw new CFError('CONVERSATION_NOT_FOUND');
     }
     if (!conversationData.latestMessageId) {
       return false;

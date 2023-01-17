@@ -80,7 +80,9 @@ const createApp = async (): Promise<void> => {
     schema,
     plugins: [
       // Proper shutdown for the HTTP server.
-      ApolloServerPluginDrainHttpServer({ httpServer }),
+      ApolloServerPluginDrainHttpServer({
+        httpServer,
+      }),
 
       // Proper shutdown for the WebSocket server.
       {
@@ -92,7 +94,9 @@ const createApp = async (): Promise<void> => {
           };
         },
       },
-      ApolloServerPluginLandingPageLocalDefault({ embed: true }),
+      ApolloServerPluginLandingPageLocalDefault({
+        embed: true,
+      }),
     ],
     introspection: true,
     context: (ctx) => {

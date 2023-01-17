@@ -3,6 +3,7 @@ import { profileProvider } from '../indexes/providers.index';
 import { ImageDocument, toImageObject } from '../repositories/image.repository';
 import { validateStringInputs } from '../../helpers/validator';
 import { ImageInput, UploadMultipleImageInput, UploadSingleImageInput } from '../models/image.model';
+import { CFError } from '../../lib/errors-handler';
 
 class ImageProvider {
   constructor(private collection: Collection<ImageDocument>) {}
@@ -20,7 +21,7 @@ class ImageProvider {
       addedAt: new Date(),
     });
     if (!data) {
-      throw new Error('Failed to upload the image');
+      throw new CFError('IMAGE_UPLOAD_FAILED');
     }
 
     return data.insertedId.toString();
@@ -57,7 +58,7 @@ class ImageProvider {
       }
     );
     if (!imageData.value) {
-      throw new Error('Could not find the image with provided id.');
+      throw new CFError('IMAGE_NOT_FOUND');
     }
 
     const selectedImageId = imageData.value._id;

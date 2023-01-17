@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { AuthenticationError } from 'apollo-server-express';
 import config from '../../config';
 import { SessionUser } from 'src/application/schema/types/types';
+import { CFError } from '../lib/errors-handler';
 
 const generateToken = (account: SessionUser): string => {
   return jwt.sign(
@@ -38,14 +38,14 @@ const getSessionUser = (authHeaders: any): any => {
 
         return user;
       } catch (err) {
-        throw new AuthenticationError('Invalid/Expired token');
+        throw new CFError('INVALID_TOKEN');
       }
     }
 
-    throw new AuthenticationError('Authentication header must be in "Bearer <token>" format');
+    throw new CFError('INVALID_TOKEN');
   }
 
-  throw new AuthenticationError('Authentication headers are not provided');
+  throw new CFError('INVALID_SESSION');
 };
 
 export { generateToken, generateResetPasswortToken, getSessionUser };

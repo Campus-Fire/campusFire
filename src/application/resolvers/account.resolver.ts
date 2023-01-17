@@ -43,7 +43,10 @@ const accountResolver = {
       context: UserContext
     ): Promise<boolean> => {
       const session = checkAuth(context);
-      const input = { ...session.user, ...args.input };
+      const input = {
+        ...session.user,
+        ...args.input,
+      };
 
       return accountProvider.verifyAccountRegistration(input);
     },
@@ -64,14 +67,20 @@ const accountResolver = {
       context: UserContext
     ): Promise<boolean> => {
       const session = checkAuth(context);
-      const input = { ...session.user, ...args.input };
+      const input = {
+        ...session.user,
+        ...args.input,
+      };
 
       return accountProvider.verifyAccountPasswordReset(input);
     },
 
     resetPassword: async (_: Root, args: MutationResetPasswordArgs, context: UserContext): Promise<Account> => {
       const session = checkAuth(context);
-      const input = { ...session.user, ...args.input };
+      const input = {
+        ...session.user,
+        ...args.input,
+      };
 
       return accountProvider.resetPassword(input);
     },

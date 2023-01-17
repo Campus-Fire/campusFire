@@ -1,5 +1,6 @@
 import { withFilter } from 'graphql-subscriptions';
 import { ObjectId } from 'mongodb';
+import { CFError } from '../../lib/errors-handler';
 import checkAuth from '../../helpers/check-auth';
 import { conversationParticipantProvider, conversationProvider, messageProvider } from '../indexes/providers.index';
 import { Message, MutationSendMessageArgs, SubscriptionMessageSentArgs } from '../schema/types/schema';
@@ -24,7 +25,9 @@ const messageResolver = {
       pubsub.publish('MESSAGE_SENT', { message });
 
       const conversation = await conversationProvider.updateLatestMessage(message);
-      pubsub.publish('CONVERSATION_UPDATED', { conversation });
+      pubsub.publish('CONVERSATION_UPDATED', {
+        conversation,
+      });
 
       return message.conversationId.toHexString() === input.conversationId;
     },
@@ -68,7 +71,7 @@ const messageResolver = {
         );
 
         if (!isUserPartOfConversation) {
-          throw new Error('You can not view this message');
+          throw new CFError('WRONG_CONVERSATION');
         }
 
         return payload.message;

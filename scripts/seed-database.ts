@@ -67,7 +67,11 @@ const seedCollection = async (collectionName: string, data: any[]): Promise<void
       const instId = deterministicId('@example.com');
       const firstName = faker.name.firstName();
       const lastName = faker.name.lastName();
-      const dateOfBirth = faker.date.birthdate({ min: 18, max: 65, mode: 'age' });
+      const dateOfBirth = faker.date.birthdate({
+        min: 18,
+        max: 65,
+        mode: 'age',
+      });
       const gender = ['MALE', 'FEMALE'];
       const tagline = 'a testing tagline for profiles';
       const about = faker.lorem.lines();

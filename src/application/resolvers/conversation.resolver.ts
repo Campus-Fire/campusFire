@@ -1,5 +1,6 @@
 import { withFilter } from 'graphql-subscriptions';
 import { ObjectId } from 'mongodb';
+import { CFError } from '../../lib/errors-handler';
 import checkAuth from '../../helpers/check-auth';
 import { conversationParticipantProvider, conversationProvider } from '../indexes/providers.index';
 import { MutationReadConversationArgs, MutationStartConversationArgs } from '../schema/types/schema';
@@ -76,7 +77,7 @@ const conversationResolver = {
         );
 
         if (!isUserPartOfConversation) {
-          throw new Error('You are not part of this conversation');
+          throw new CFError('WRONG_CONVERSATION');
         }
 
         return payload.conversation;

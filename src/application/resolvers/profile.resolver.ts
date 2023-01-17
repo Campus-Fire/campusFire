@@ -22,7 +22,10 @@ const profileResolver = {
   Mutation: {
     createProfile: async (_: Root, args: MutationCreateProfileArgs, context: UserContext): Promise<Profile> => {
       const session = checkAuth(context);
-      const input = { ...session.user, ...args.input };
+      const input = {
+        ...session.user,
+        ...args.input,
+      };
 
       return profileProvider.createProfile(input);
     },
