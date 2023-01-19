@@ -1,4 +1,4 @@
-import { CFError } from 'src/lib/errors-handler';
+import { CFError } from '../lib/errors-handler';
 
 const validateStringInputs = (input: string | string[]): void => {
   if (Array.isArray(input)) {

@@ -7,8 +7,9 @@ import { CFError } from '../../lib/errors-handler';
 class MessageProvider {
   constructor(private collection: Collection<MessageDocument>) {}
 
-  public async getAllMessages(): Promise<Message[]> {
-    const messages = await this.collection.find().toArray();
+  public async getConversationMessages(conversationId: ObjectId): Promise<Message[]> {
+    const convoId = new ObjectId(conversationId);
+    const messages = await this.collection.find({ conversationId: convoId }).toArray();
 
     return messages.map(toMessageObject);
   }

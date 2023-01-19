@@ -13,8 +13,11 @@ import {
 
 const conversationResolver = {
   Query: {
-    conversations: async (): Promise<UnresolvedConversation[]> => {
-      return conversationProvider.getAllConversations();
+    userConversations: async (_: Root, __: any, context: UserContext): Promise<UnresolvedConversation[]> => {
+      const session = checkAuth(context);
+      const { id: userId } = session.user;
+
+      return conversationProvider.getUserConversations(userId);
     },
   },
 

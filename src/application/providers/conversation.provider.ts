@@ -8,8 +8,14 @@ import { CFError } from '../../lib/errors-handler';
 class ConversationProvider {
   constructor(private collection: Collection<ConversationDocument>) {}
 
-  public async getAllConversations(): Promise<Conversation[]> {
-    const conversations = await this.collection.find().toArray();
+  public async getUserConversations(id: ObjectId): Promise<Conversation[]> {
+    const userId = new ObjectId(id);
+    const userConversationsIds = await conversationParticipantProvider.getConversationsIds(userId);
+
+    const conversations = await this.collection.find({ _id: { $in: userConversationsIds } }).toArray();
+    if (!conversations) {
+      throw new CFError('CONVERSATION_NOT_FOUND');
+    }
 
     return conversations.map(toConversationObject);
   }

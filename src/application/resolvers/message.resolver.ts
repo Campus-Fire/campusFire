@@ -3,13 +3,24 @@ import { ObjectId } from 'mongodb';
 import { CFError } from '../../lib/errors-handler';
 import checkAuth from '../../helpers/check-auth';
 import { conversationParticipantProvider, conversationProvider, messageProvider } from '../indexes/providers.index';
-import { Message, MutationSendMessageArgs, SubscriptionMessageSentArgs } from '../schema/types/schema';
+import {
+  Message,
+  MutationSendMessageArgs,
+  QueryConversationMessagesArgs,
+  SubscriptionMessageSentArgs,
+} from '../schema/types/schema';
 import { Root, SubscriptionMessageSentPayload, UserContext } from '../schema/types/types';
 
 const messageResolver = {
   Query: {
-    messages: async (): Promise<Message[]> => {
-      return messageProvider.getAllMessages();
+    conversationMessages: async (
+      _: Root,
+      args: QueryConversationMessagesArgs,
+      context: UserContext
+    ): Promise<Message[]> => {
+      checkAuth(context);
+
+      return messageProvider.getConversationMessages(args.conversationId);
     },
   },
 

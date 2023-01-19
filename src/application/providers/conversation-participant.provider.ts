@@ -113,6 +113,20 @@ class ConversationParticipantProvider {
 
     return true;
   }
+
+  public async getConversationsIds(usrId: ObjectId): Promise<ObjectId[]> {
+    const userId = new ObjectId(usrId);
+    const conversationParticipantData = await this.collection.find({ userId: userId }).toArray();
+    if (!conversationParticipantData) {
+      throw new CFError('CONVERSATION_NOT_FOUND');
+    }
+
+    const conversationIds = conversationParticipantData.map((conversationParticipant) => {
+      return conversationParticipant.conversationId;
+    });
+
+    return conversationIds;
+  }
 }
 
 export { ConversationParticipantProvider };
