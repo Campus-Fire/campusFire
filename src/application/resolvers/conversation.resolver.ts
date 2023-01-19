@@ -1,7 +1,8 @@
 import { withFilter } from 'graphql-subscriptions';
 import { ObjectId } from 'mongodb';
+import { CFError } from '../../lib/errors-handler';
 import checkAuth from '../../helpers/check-auth';
-import { conversationParticipantProvider, conversationProvider } from '../indexes/provider';
+import { conversationParticipantProvider, conversationProvider } from '../indexes/providers.index';
 import { MutationReadConversationArgs, MutationStartConversationArgs } from '../schema/types/schema';
 import {
   Root,
@@ -12,8 +13,11 @@ import {
 
 const conversationResolver = {
   Query: {
-    conversations: async (): Promise<UnresolvedConversation[]> => {
-      return conversationProvider.getAllConversations();
+    userConversations: async (_: Root, __: any, context: UserContext): Promise<UnresolvedConversation[]> => {
+      const session = checkAuth(context);
+      const { id: userId } = session.user;
+
+      return conversationProvider.getUserConversations(userId);
     },
   },
 
@@ -76,7 +80,7 @@ const conversationResolver = {
         );
 
         if (!isUserPartOfConversation) {
-          throw new Error('You are not part of this conversation');
+          throw new CFError('WRONG_CONVERSATION');
         }
 
         return payload.conversation;

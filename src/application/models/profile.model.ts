@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 
-import { Faculty, Gender, Interest } from '../../../application/schema/types/schema';
+import { Faculty, Gender, Interest } from '../schema/types/schema';
 
 interface Profile {
   id: ObjectId;

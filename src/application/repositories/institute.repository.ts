@@ -1,6 +1,6 @@
 import { Document } from 'mongodb';
 
-import { Institute } from '../application/providers/institute/institute.provider.types';
+import { Institute } from '../models/institute.model';
 
 interface InstituteDocument extends Document, Omit<Institute, 'id'> {}
 

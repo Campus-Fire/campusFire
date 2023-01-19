@@ -1,7 +1,7 @@
-import { ApolloError } from 'apollo-server-express';
 import { Collection, ObjectId } from 'mongodb';
-import { InstituteDocument, toInstituteObject } from '../../../entities/institute.entity';
-import { Institute } from './institute.provider.types';
+import { InstituteDocument, toInstituteObject } from '../repositories/institute.repository';
+import { Institute } from '../models/institute.model';
+import { CFError } from '../../lib/errors-handler';
 
 class InstituteProvider {
   constructor(private collection: Collection<InstituteDocument>) {}
@@ -15,18 +15,22 @@ class InstituteProvider {
   public async isValidEmailExtension(email: string): Promise<void> {
     const emailParts = email.split('@');
 
-    const data = await this.collection.findOne({ emailExt: emailParts[1] });
+    const data = await this.collection.findOne({
+      emailExt: emailParts[1],
+    });
     if (!data) {
-      throw new ApolloError('Invalid Email. Ensure it is valid University/College email');
+      throw new CFError('INVALID_EMAIL');
     }
   }
 
   public async getInstituteId(email: string): Promise<ObjectId> {
     const emailParts = email.split('@');
 
-    const data = await this.collection.findOne({ emailExt: emailParts[1] });
+    const data = await this.collection.findOne({
+      emailExt: emailParts[1],
+    });
     if (!data) {
-      throw new ApolloError('Invalid Email. Ensure it is University/College email');
+      throw new CFError('INVALID_EMAIL');
     }
 
     return data._id;

@@ -1,5 +1,5 @@
 import checkAuth from '../../helpers/check-auth';
-import { profileProvider } from '../indexes/provider';
+import { profileProvider } from '../indexes/providers.index';
 import { MutationCreateProfileArgs, Profile, QueryGetProfileArgs } from '../schema/types/schema';
 import { Root, UserContext } from '../schema/types/types';
 
@@ -22,7 +22,10 @@ const profileResolver = {
   Mutation: {
     createProfile: async (_: Root, args: MutationCreateProfileArgs, context: UserContext): Promise<Profile> => {
       const session = checkAuth(context);
-      const input = { ...session.user, ...args.input };
+      const input = {
+        ...session.user,
+        ...args.input,
+      };
 
       return profileProvider.createProfile(input);
     },

@@ -1,9 +1,9 @@
-import { UserInputError } from 'apollo-server-express';
 import { Collection, ObjectId } from 'mongodb';
-import { ProfileDocument, toProfileObject } from '../../../entities/profile.entity';
-import { validateEmailInput, validateNameInput, validateStringInputs } from '../../../helpers/validator';
-import { accountProvider, imageProvider, instituteProvider } from '../../indexes/provider';
-import { CreateProfileInput, Profile } from './profile.provider.types';
+import { ProfileDocument, toProfileObject } from '../repositories/profile.repository';
+import { validateEmailInput, validateNameInput, validateStringInputs } from '../../helpers/validator';
+import { accountProvider, imageProvider, instituteProvider } from '../indexes/providers.index';
+import { CreateProfileInput, Profile } from '../models/profile.model';
+import { CFError } from '../../lib/errors-handler';
 
 interface ProfileWithImages extends Profile {
   images?: string[];
@@ -18,7 +18,7 @@ class ProfileProvider {
       _id: userId,
     });
     if (!profileData) {
-      throw new Error('Could not find the profile');
+      throw new CFError('PROFILE_NOT_FOUND');
     }
 
     const profile = toProfileObject(profileData);
@@ -46,13 +46,15 @@ class ProfileProvider {
       input;
     const userId = new ObjectId(id);
 
-    const profileCount = await this.collection.countDocuments({ _id: userId });
+    const profileCount = await this.collection.countDocuments({
+      _id: userId,
+    });
     if (profileCount > 0) {
-      throw new Error('Can not create a duplicate profile');
+      throw new CFError('PROFILE_ALREADY_EXISTS');
     }
 
     if (!firstName || !lastName || !dateOfBirth || !gender || !tagline || !about || !interests || !faculty) {
-      throw new UserInputError('Incomplete information provided to create a profile');
+      throw new CFError('INVALID_USER_INPUT');
     }
     validateEmailInput(email);
     validateNameInput(firstName);
@@ -62,7 +64,7 @@ class ProfileProvider {
     validateStringInputs(about);
 
     if (!(await accountProvider.isAccountVerified(userId))) {
-      throw new Error('Please verify account before creating a profile');
+      throw new CFError('ACCOUNT_UNVERIFIED');
     }
     const instituteId = await instituteProvider.getInstituteId(email);
     const dBirth = new Date(dateOfBirth);
@@ -138,7 +140,7 @@ class ProfileProvider {
   public async isUserActive(id: ObjectId): Promise<boolean> {
     const profileData = await this.collection.findOne({ _id: id });
     if (!profileData) {
-      throw new Error('User not found!');
+      throw new CFError('PROFILE_NOT_FOUND');
     }
 
     return profileData.isActive;
@@ -151,7 +153,7 @@ class ProfileProvider {
       { returnDocument: 'after' }
     );
     if (!profileData.value) {
-      throw new Error('User not found!');
+      throw new CFError('PROFILE_NOT_FOUND');
     }
   }
 }

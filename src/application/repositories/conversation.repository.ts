@@ -1,5 +1,5 @@
 import { Document } from 'mongodb';
-import { Conversation } from '../application/providers/conversation/conversation.provider.types';
+import { Conversation } from '../models/conversation.model';
 
 interface ConversationDocument extends Document, Omit<Conversation, 'id'> {}
 

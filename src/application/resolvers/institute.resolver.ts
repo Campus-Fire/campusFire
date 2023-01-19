@@ -1,4 +1,4 @@
-import { instituteProvider } from '../indexes/provider';
+import { instituteProvider } from '../indexes/providers.index';
 import { Institute } from '../schema/types/schema';
 
 const instituteResolver = {

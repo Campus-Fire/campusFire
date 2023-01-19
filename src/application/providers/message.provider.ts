@@ -1,13 +1,15 @@
 import { Collection, ObjectId } from 'mongodb';
-import { MessageDocument, toMessageObject } from '../../../entities/message.entity';
-import { validateStringInputs } from '../../../helpers/validator';
-import { Message, SendMessageInput } from './message.provider.type';
+import { MessageDocument, toMessageObject } from '../repositories/message.repository';
+import { validateStringInputs } from '../../helpers/validator';
+import { Message, SendMessageInput } from '../models/message.model';
+import { CFError } from '../../lib/errors-handler';
 
 class MessageProvider {
   constructor(private collection: Collection<MessageDocument>) {}
 
-  public async getAllMessages(): Promise<Message[]> {
-    const messages = await this.collection.find().toArray();
+  public async getConversationMessages(conversationId: ObjectId): Promise<Message[]> {
+    const convoId = new ObjectId(conversationId);
+    const messages = await this.collection.find({ conversationId: convoId }).toArray();
 
     return messages.map(toMessageObject);
   }
@@ -17,7 +19,7 @@ class MessageProvider {
 
     const messageData = await this.collection.findOne({ _id: id });
     if (!messageData) {
-      throw new Error('Message not found!');
+      throw new CFError('MESSAGE_NOT_FOUND');
     }
 
     return toMessageObject(messageData);
@@ -40,12 +42,12 @@ class MessageProvider {
       createdAt: new Date(),
     });
     if (!messageData.insertedId) {
-      throw new Error('Could not send message');
+      throw new CFError('MESSAGE_NOT_SENT');
     }
 
     const message = await this.collection.findOne({ _id: messageData.insertedId });
     if (!message) {
-      throw new Error('Can not send message');
+      throw new CFError('MESSAGE_NOT_SENT');
     }
 
     return toMessageObject(message);
@@ -55,7 +57,7 @@ class MessageProvider {
     const id = new ObjectId(messageId);
     const messageData = await this.collection.findOne({ _id: id });
     if (!messageData) {
-      throw new Error('Unable to find the message');
+      throw new CFError('MESSAGE_NOT_FOUND');
     }
 
     return messageData.senderId.toHexString() === userId.toHexString();

@@ -2,13 +2,13 @@ import { UserInputError } from 'apollo-server-express';
 import bcrypt from 'bcryptjs';
 import { addYears, isAfter } from 'date-fns';
 import { Collection, ObjectId } from 'mongodb';
-import { AccountDocument, toAccountObject } from '../../../entities/account.entity';
-import deterministicId from '../../../helpers/deterministic-id';
-import { sendPasswordResetEmail, sendVerificationEmail } from '../../../helpers/email-verification';
-import { generateResetPasswortToken, generateToken } from '../../../helpers/token-helper';
-import { validateEmailInput, validatePasswordInput } from '../../../helpers/validator';
-import getVerificationCode from '../../../helpers/verification-code';
-import { instituteProvider } from '../../indexes/provider';
+import { AccountDocument, toAccountObject } from '../repositories/account.repository';
+import deterministicId from '../../helpers/deterministic-id';
+import { sendPasswordResetEmail, sendVerificationEmail } from '../../helpers/email-verification';
+import { generateResetPasswortToken, generateToken } from '../../helpers/token-helper';
+import { validateEmailInput, validatePasswordInput } from '../../helpers/validator';
+import getVerificationCode from '../../helpers/verification-code';
+import { instituteProvider } from '../indexes/providers.index';
 import {
   LoginInput,
   RegisterAccountInput,
@@ -16,7 +16,8 @@ import {
   SecureAccount,
   TokenizedAccount,
   VerificationCodeInput,
-} from './account.provider.types';
+} from '../models/account.model';
+import { CFError } from '../../lib/errors-handler';
 
 class AccountProvider {
   constructor(private collection: Collection<AccountDocument>) {}
@@ -37,29 +38,34 @@ class AccountProvider {
 
     const now = new Date();
 
-    // Could set wrong last login in case of wrong passwords or disabled account
+    const account = await this.collection.findOne({ email: userEmail });
+    if (!account) {
+      throw new CFError('INVALID_CREDENTIALS');
+    }
+
+    if (isAfter(now, account.expiresAt)) {
+      throw new CFError('ACCOUNT_EXPIRED');
+    }
+
+    const passwordMatch = await bcrypt.compare(password, account.password);
+    if (!passwordMatch) {
+      throw new CFError('INVALID_CREDENTIALS');
+    }
+
     const accountData = await this.collection.findOneAndUpdate(
       { email: userEmail },
       { $set: { ...{ lastLogin: now } } },
       { returnDocument: 'after' }
     );
-
-    const account = accountData.value;
-    if (!account) {
-      throw new UserInputError('Unable to retrieve an user with provided email.');
-    }
-
-    if (isAfter(now, account.expiresAt)) {
-      throw new Error('Your account has been disable. Please contact us to re-enable it');
-    }
-
-    const passwordMatch = await bcrypt.compare(password, account.password);
-    if (!passwordMatch) {
-      throw new UserInputError('Wrong Credentials!');
+    if (!accountData.value) {
+      throw new Error('Unable to update account after login');
     }
 
     const document = toAccountObject(account);
-    const token = generateToken({ id: account._id, email: account.email });
+    const token = generateToken({
+      id: account._id,
+      email: account.email,
+    });
 
     return {
       token,
@@ -77,7 +83,7 @@ class AccountProvider {
 
     const userId = deterministicId(userEmail);
     if (await this.isExistingUser(userId)) {
-      throw new UserInputError('User already exists. Please try logging in.');
+      throw new CFError('ACCOUNT_ALREADY_EXISTS');
     }
 
     await instituteProvider.isValidEmailExtension(userEmail);
@@ -105,7 +111,10 @@ class AccountProvider {
     sendVerificationEmail(userEmail, verificationCode);
 
     const document = toAccountObject(account);
-    const token = generateToken({ id: account._id, email: account.email });
+    const token = generateToken({
+      id: account._id,
+      email: account.email,
+    });
 
     return {
       token,
@@ -118,7 +127,7 @@ class AccountProvider {
 
     const userId = new ObjectId(id);
     if (!(await this.isExistingUser(userId))) {
-      throw new UserInputError('User does not exists');
+      throw new CFError('ACCOUNT_NOT_FOUND');
     }
 
     const data = await this.collection.findOneAndUpdate(
@@ -127,7 +136,7 @@ class AccountProvider {
       { returnDocument: 'after' }
     );
     if (!data.value) {
-      throw new Error('Unable to verify the account');
+      throw new CFError('INVALID_VERIFICATION_CODE');
     }
 
     return data.value.isVerified;
@@ -136,14 +145,16 @@ class AccountProvider {
   public async isAccountVerified(id: ObjectId): Promise<boolean> {
     const accountData = await this.collection.findOne({ _id: id });
     if (!accountData) {
-      throw new Error('Account not found');
+      throw new CFError('ACCOUNT_NOT_FOUND');
     }
 
     return accountData.isVerified;
   }
 
   public async isExistingUser(id: ObjectId): Promise<boolean> {
-    const data = await this.collection.countDocuments({ _id: id });
+    const data = await this.collection.countDocuments({
+      _id: id,
+    });
 
     return data > 0;
   }
@@ -173,15 +184,22 @@ class AccountProvider {
     const userId = deterministicId(email);
 
     if (!(await this.isExistingUser(userId))) {
-      throw new UserInputError('Can not find a user with that email.');
+      throw new CFError('ACCOUNT_NOT_FOUND');
     }
 
     const code = getVerificationCode();
-    const token = generateResetPasswortToken({ id: userId, email: userEmail });
+    const token = generateResetPasswortToken({
+      id: userId,
+      email: userEmail,
+    });
 
     const accountData = await this.collection.findOneAndUpdate(
       { _id: userId },
-      { $set: { ...{ passwordResetCode: code } } },
+      {
+        $set: {
+          ...{ passwordResetCode: code },
+        },
+      },
       { returnDocument: 'after' }
     );
 
@@ -200,10 +218,13 @@ class AccountProvider {
 
     const userId = new ObjectId(id);
     if (!(await this.isExistingUser(userId))) {
-      throw new UserInputError('User does not exists');
+      throw new CFError('ACCOUNT_NOT_FOUND');
     }
 
-    const data = await this.collection.findOne({ _id: userId, passwordResetCode: code });
+    const data = await this.collection.findOne({
+      _id: userId,
+      passwordResetCode: code,
+    });
 
     return data?.email === email;
   }
@@ -212,7 +233,7 @@ class AccountProvider {
     const { id, email, password, confirmPassword } = input;
 
     if (password !== confirmPassword) {
-      throw new UserInputError('Passwords do not match.');
+      throw new CFError('INVALID_USER_INPUT');
     }
     validatePasswordInput(password);
     validatePasswordInput(confirmPassword);
@@ -223,7 +244,11 @@ class AccountProvider {
     const hashedPassword = await bcrypt.hash(password, 12);
     const accountData = await this.collection.findOneAndUpdate(
       { _id: userId, email },
-      { $set: { ...{ password: hashedPassword } } },
+      {
+        $set: {
+          ...{ password: hashedPassword },
+        },
+      },
       { returnDocument: 'after' }
     );
 
@@ -232,7 +257,10 @@ class AccountProvider {
       throw new UserInputError('Unable to update your password. Please try again!');
     }
 
-    const token = generateToken({ id: account._id, email: account.email });
+    const token = generateToken({
+      id: account._id,
+      email: account.email,
+    });
     const document = toAccountObject(account);
 
     return {

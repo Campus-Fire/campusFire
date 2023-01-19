@@ -1,14 +1,21 @@
 import { Collection, ObjectId } from 'mongodb';
-import { ConversationDocument, toConversationObject } from '../../../entities/conversation.entity';
-import { conversationParticipantProvider, messageProvider } from '../../indexes/provider';
-import { Message } from '../message/message.provider.type';
-import { Conversation, StartConversationInput } from './conversation.provider.types';
+import { ConversationDocument, toConversationObject } from '../repositories/conversation.repository';
+import { conversationParticipantProvider, messageProvider } from '../indexes/providers.index';
+import { Message } from '../models/message.model';
+import { Conversation, StartConversationInput } from '../models/conversation.model';
+import { CFError } from '../../lib/errors-handler';
 
 class ConversationProvider {
   constructor(private collection: Collection<ConversationDocument>) {}
 
-  public async getAllConversations(): Promise<Conversation[]> {
-    const conversations = await this.collection.find().toArray();
+  public async getUserConversations(id: ObjectId): Promise<Conversation[]> {
+    const userId = new ObjectId(id);
+    const userConversationsIds = await conversationParticipantProvider.getConversationsIds(userId);
+
+    const conversations = await this.collection.find({ _id: { $in: userConversationsIds } }).toArray();
+    if (!conversations) {
+      throw new CFError('CONVERSATION_NOT_FOUND');
+    }
 
     return conversations.map(toConversationObject);
   }
@@ -32,7 +39,7 @@ class ConversationProvider {
       updatedAt: new Date(),
     });
     if (!conversationData.insertedId) {
-      throw new Error('Could not start a conversation');
+      throw new CFError('CONVERSATION_NOT_STARTED');
     }
 
     participants.forEach(async (participant) => {
@@ -60,7 +67,7 @@ class ConversationProvider {
       { returnDocument: 'after' }
     );
     if (!convData.value) {
-      throw new Error('Could not notify other users');
+      throw new CFError('CONVERSATION_NOTIFICATION_FAILED');
     }
 
     for (let participant of convData.value.participantIds) {
@@ -74,9 +81,11 @@ class ConversationProvider {
     const userId = new ObjectId(id);
     const conversationId = new ObjectId(conversation);
 
-    const conversationData = await this.collection.findOne({ _id: conversationId });
+    const conversationData = await this.collection.findOne({
+      _id: conversationId,
+    });
     if (!conversationData) {
-      throw new Error('Could not find the conversation');
+      throw new CFError('CONVERSATION_NOT_FOUND');
     }
     if (!conversationData.latestMessageId) {
       return false;

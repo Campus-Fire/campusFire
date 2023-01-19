@@ -213,12 +213,6 @@ export type MutationVerifyAccountRegistrationArgs = {
   input: VerificationCodeInput;
 };
 
-export type Preference = {
-  __typename?: 'Preference';
-  gender: Gender;
-  id: Scalars['ObjectID'];
-};
-
 export type Profile = {
   __typename?: 'Profile';
   about: Scalars['String'];
@@ -241,12 +235,16 @@ export type Query = {
   __typename?: 'Query';
   accounts: Array<Account>;
   allProfiles: Array<Profile>;
-  conversations?: Maybe<Array<Maybe<Conversation>>>;
+  conversationMessages?: Maybe<Array<Message>>;
   getProfile: Profile;
   institutes: Array<Institute>;
-  messages?: Maybe<Array<Maybe<Message>>>;
   privacyPolicy: Scalars['String'];
   termsOfUse: Scalars['String'];
+  userConversations?: Maybe<Array<Conversation>>;
+};
+
+export type QueryConversationMessagesArgs = {
+  conversationId: Scalars['ObjectID'];
 };
 
 export type QueryGetProfileArgs = {

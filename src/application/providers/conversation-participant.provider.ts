@@ -1,10 +1,11 @@
 import { Collection, ObjectId } from 'mongodb';
-import { profileProvider } from '../../../application/indexes/provider';
+import { profileProvider } from '../indexes/providers.index';
 import {
   ConversationParticipantDocument,
   toConversationParticipantObject,
-} from '../../../entities/conversation-participant.entity';
-import { ConversationParticipant, ReadConversationInput } from './conversation.provider.types';
+} from '../repositories/conversation-participant.repository';
+import { ConversationParticipant, ReadConversationInput } from '../models/conversation.model';
+import { CFError } from '../../lib/errors-handler';
 
 class ConversationParticipantProvider {
   constructor(private collection: Collection<ConversationParticipantDocument>) {}
@@ -20,7 +21,7 @@ class ConversationParticipantProvider {
       createdAt: new Date(),
     });
     if (!participantData.insertedId) {
-      throw new Error('Unable to add the user to conversation');
+      throw new CFError('CONVERSATION_NOT_STARTED');
     }
 
     return participantData.insertedId;
@@ -35,26 +36,40 @@ class ConversationParticipantProvider {
     const hasSeenLastMessage = senderId.toHexString() === userId.toHexString();
 
     const participantData = await this.collection.findOneAndUpdate(
-      { userId: userId, conversationId: conversationId },
-      { $set: { ...{ hasSeenLatestMessage: hasSeenLastMessage } } },
+      {
+        userId: userId,
+        conversationId: conversationId,
+      },
+      {
+        $set: {
+          ...{
+            hasSeenLatestMessage: hasSeenLastMessage,
+          },
+        },
+      },
       { returnDocument: 'after' }
     );
     if (!participantData) {
-      throw new Error('Unable to deliver message in conversation');
+      throw new CFError('MESSAGE_NOT_SENT');
     }
   }
 
   public async getParticipantsUserId(participantId: ObjectId): Promise<ObjectId> {
-    const data = await this.collection.findOne({ _id: participantId });
+    const data = await this.collection.findOne({
+      _id: participantId,
+    });
     if (!data) {
-      throw new Error('Unable to find user');
+      throw new CFError('CONVERSATION_PARTICIPANT_NOT_FOUND');
     }
 
     return data.userId;
   }
 
   public async isParticipant(userId: ObjectId, conversationId: ObjectId): Promise<boolean> {
-    const participantData = await this.collection.findOne({ userId: userId, conversationId: conversationId });
+    const participantData = await this.collection.findOne({
+      userId: userId,
+      conversationId: conversationId,
+    });
     if (!participantData) {
       return false;
     }
@@ -71,7 +86,7 @@ class ConversationParticipantProvider {
       })
       .toArray();
     if (!participants) {
-      throw new Error('No participants found');
+      throw new CFError('CONVERSATION_PARTICIPANT_NOT_FOUND');
     }
 
     return participants.map(toConversationParticipantObject);
@@ -85,14 +100,32 @@ class ConversationParticipantProvider {
 
     const conversationParticipant = await this.collection.findOneAndUpdate(
       { userId, conversationId },
-      { $set: { ...{ hasSeenLastestMessage: true } } },
+      {
+        $set: {
+          ...{ hasSeenLastestMessage: true },
+        },
+      },
       { returnDocument: 'after' }
     );
     if (!conversationParticipant) {
-      throw new Error('Can not find a conversation participant');
+      throw new CFError('CONVERSATION_PARTICIPANT_NOT_FOUND');
     }
 
     return true;
+  }
+
+  public async getConversationsIds(usrId: ObjectId): Promise<ObjectId[]> {
+    const userId = new ObjectId(usrId);
+    const conversationParticipantData = await this.collection.find({ userId: userId }).toArray();
+    if (!conversationParticipantData) {
+      throw new CFError('CONVERSATION_NOT_FOUND');
+    }
+
+    const conversationIds = conversationParticipantData.map((conversationParticipant) => {
+      return conversationParticipant.conversationId;
+    });
+
+    return conversationIds;
   }
 }
 
