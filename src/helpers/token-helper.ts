@@ -10,7 +10,7 @@ const generateToken = (account: SessionUser): string => {
       email: account.email,
     },
     config.SECRET_TOKEN_KEY,
-    { expiresIn: '168h' } // can be bumped to 6h, once development starts on apps
+    { expiresIn: '168h' } // can be bumped to 6d, once development starts on apps
   );
 };
 
@@ -48,4 +48,14 @@ const getSessionUser = (authHeaders: any): any => {
   throw new CFError('INVALID_SESSION');
 };
 
-export { generateToken, generateResetPasswortToken, getSessionUser };
+const verifyJWToken = (token: string): any => {
+  try {
+    const user = jwt.verify(token, config.SECRET_TOKEN_KEY);
+
+    return user;
+  } catch (err) {
+    throw new CFError('INVALID_TOKEN');
+  }
+};
+
+export { generateToken, generateResetPasswortToken, getSessionUser, verifyJWToken };

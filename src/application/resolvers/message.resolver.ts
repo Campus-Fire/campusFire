@@ -36,9 +36,7 @@ const messageResolver = {
       pubsub.publish('MESSAGE_SENT', { message });
 
       const conversation = await conversationProvider.updateLatestMessage(message);
-      pubsub.publish('CONVERSATION_UPDATED', {
-        conversation,
-      });
+      pubsub.publish('CONVERSATION_UPDATED', { conversation });
 
       return message.conversationId.toHexString() === input.conversationId;
     },

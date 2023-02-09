@@ -6,8 +6,10 @@ interface ConversationDocument extends Document, Omit<Conversation, 'id'> {}
 const toConversationObject = (conversation: ConversationDocument): Conversation => {
   return {
     id: conversation._id.toHexString(),
-    participantIds: conversation.participantIds,
-    latestMessageId: conversation.latestMessageId,
+    startedBy: conversation.startedBy,
+    participant: conversation.participant,
+    latestMessage: conversation.latestMessage,
+    isConversationRequest: conversation.isConversationRequest,
     updatedAt: conversation.updatedAt,
   };
 };

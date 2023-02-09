@@ -14,6 +14,10 @@ export type Scalars = {
   ObjectID: any;
 };
 
+export type AcceptConversationRequestInput = {
+  conversationId: Scalars['ObjectID'];
+};
+
 export type Account = {
   __typename?: 'Account';
   createdAt: Scalars['Date'];
@@ -27,9 +31,11 @@ export type Account = {
 
 export type Conversation = {
   __typename?: 'Conversation';
+  acceptingParticipant: ConversationParticipant;
   id: Scalars['ObjectID'];
-  latestMessage?: Maybe<Message>;
-  participants: Array<ConversationParticipant>;
+  isConversationRequest: Scalars['Boolean'];
+  latestMessage: Message;
+  startingParticipant: ConversationParticipant;
   updatedAt: Scalars['Date'];
 };
 
@@ -145,6 +151,7 @@ export type Message = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  acceptConversationRequest: Scalars['Boolean'];
   createProfile: Profile;
   forgotPasswordRequest: Scalars['String'];
   login: Account;
@@ -152,13 +159,17 @@ export type Mutation = {
   registerAccount: Account;
   resendVerificationCode: Scalars['Boolean'];
   resetPassword: Account;
+  sendConversationRequest: Scalars['String'];
   sendMessage: Scalars['Boolean'];
   setPrimaryImage: Scalars['String'];
-  startConversation: Scalars['String'];
   uploadMultipleImages: Array<Scalars['String']>;
   uploadSingleImage: Scalars['String'];
   verifyAccountPasswordReset: Scalars['Boolean'];
   verifyAccountRegistration: Scalars['Boolean'];
+};
+
+export type MutationAcceptConversationRequestArgs = {
+  input: AcceptConversationRequestInput;
 };
 
 export type MutationCreateProfileArgs = {
@@ -185,16 +196,16 @@ export type MutationResetPasswordArgs = {
   input: ResetPasswordInput;
 };
 
+export type MutationSendConversationRequestArgs = {
+  input: SendConversationRequestInput;
+};
+
 export type MutationSendMessageArgs = {
   input: SendMessageInput;
 };
 
 export type MutationSetPrimaryImageArgs = {
   input: ImageInput;
-};
-
-export type MutationStartConversationArgs = {
-  input: StartConversationInput;
 };
 
 export type MutationUploadMultipleImagesArgs = {
@@ -221,24 +232,26 @@ export type Profile = {
   firstName: Scalars['String'];
   gender: Gender;
   id: Scalars['ObjectID'];
-  images?: Maybe<Array<Scalars['ObjectID']>>;
   instituteId: Scalars['ObjectID'];
   interests: Array<Interest>;
   isActive: Scalars['Boolean'];
   lastName: Scalars['String'];
-  mainImage?: Maybe<Scalars['ObjectID']>;
+  mainImage?: Maybe<Image>;
   onResidence: Scalars['Boolean'];
+  otherImages?: Maybe<Array<Maybe<Image>>>;
   tagline: Scalars['String'];
 };
 
 export type Query = {
   __typename?: 'Query';
   accounts: Array<Account>;
-  allProfiles: Array<Profile>;
+  availableProfiles: Array<Profile>;
   conversationMessages?: Maybe<Array<Message>>;
-  getProfile: Profile;
+  getConversationRequests?: Maybe<Array<Conversation>>;
+  getUserProfile: Profile;
   institutes: Array<Institute>;
   privacyPolicy: Scalars['String'];
+  refreshToken: Account;
   termsOfUse: Scalars['String'];
   userConversations?: Maybe<Array<Conversation>>;
 };
@@ -247,8 +260,12 @@ export type QueryConversationMessagesArgs = {
   conversationId: Scalars['ObjectID'];
 };
 
-export type QueryGetProfileArgs = {
+export type QueryGetUserProfileArgs = {
   id: Scalars['String'];
+};
+
+export type QueryRefreshTokenArgs = {
+  token: Scalars['String'];
 };
 
 export type ReadConversationInput = {
@@ -269,13 +286,14 @@ export type ResetPasswordRequestInput = {
   email: Scalars['String'];
 };
 
+export type SendConversationRequestInput = {
+  participantId: Scalars['ObjectID'];
+  requestMessage: Scalars['String'];
+};
+
 export type SendMessageInput = {
   body: Scalars['String'];
   conversationId: Scalars['ObjectID'];
-};
-
-export type StartConversationInput = {
-  participantIds: Array<Scalars['ObjectID']>;
 };
 
 export type Subscription = {

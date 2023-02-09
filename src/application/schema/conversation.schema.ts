@@ -10,26 +10,35 @@ const typeDefs = gql`
 
   type Conversation {
     id: ObjectID!
-    participants: [ConversationParticipant!]!
-    latestMessage: Message
+    startingParticipant: ConversationParticipant!
+    acceptingParticipant: ConversationParticipant!
+    latestMessage: Message!
+    isConversationRequest: Boolean!
     updatedAt: Date!
   }
 
   type Query {
+    getConversationRequests: [Conversation!]
     userConversations: [Conversation!]
   }
 
   type Mutation {
-    startConversation(input: StartConversationInput!): String!
+    sendConversationRequest(input: SendConversationRequestInput!): String!
+    acceptConversationRequest(input: AcceptConversationRequestInput!): Boolean!
     readConversation(input: ReadConversationInput!): Boolean!
   }
 
-  input StartConversationInput {
-    participantIds: [ObjectID!]!
+  input AcceptConversationRequestInput {
+    conversationId: ObjectID!
   }
 
   input ReadConversationInput {
     conversationId: ObjectID!
+  }
+
+  input SendConversationRequestInput {
+    participantId: ObjectID!
+    requestMessage: String!
   }
 
   type Subscription {

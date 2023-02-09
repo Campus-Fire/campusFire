@@ -13,14 +13,14 @@ const typeDefs = gql`
     instituteId: ObjectID!
     faculty: Faculty!
     onResidence: Boolean!
-    mainImage: ObjectID
-    images: [ObjectID!]
+    mainImage: Image
+    otherImages: [Image]
     isActive: Boolean!
   }
 
   type Query {
-    allProfiles: [Profile!]!
-    getProfile(id: String!): Profile!
+    availableProfiles: [Profile!]!
+    getUserProfile(id: String!): Profile!
   }
 
   type Mutation {

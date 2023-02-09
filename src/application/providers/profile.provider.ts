@@ -1,18 +1,14 @@
 import { Collection, ObjectId } from 'mongodb';
-import { ProfileDocument, toProfileObject } from '../repositories/profile.repository';
 import { validateEmailInput, validateNameInput, validateStringInputs } from '../../helpers/validator';
-import { accountProvider, imageProvider, instituteProvider } from '../indexes/providers.index';
-import { CreateProfileInput, Profile } from '../models/profile.model';
 import { CFError } from '../../lib/errors-handler';
-
-interface ProfileWithImages extends Profile {
-  images?: string[];
-}
+import { accountProvider, instituteProvider } from '../indexes/providers.index';
+import { CreateProfileInput, Profile } from '../models/profile.model';
+import { ProfileDocument, toProfileObject } from '../repositories/profile.repository';
 
 class ProfileProvider {
   constructor(private collection: Collection<ProfileDocument>) {}
 
-  public async getProfile(id: string): Promise<ProfileWithImages> {
+  public async getProfile(id: string): Promise<Profile> {
     const userId = new ObjectId(id);
     const profileData = await this.collection.findOne({
       _id: userId,
@@ -22,11 +18,9 @@ class ProfileProvider {
     }
 
     const profile = toProfileObject(profileData);
-    const images = await imageProvider.getUserImages(userId);
 
     return {
       ...profile,
-      images,
     };
   }
 

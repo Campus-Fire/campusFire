@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 
-interface Institute {
+export interface Institute {
   id: ObjectId;
   name: string;
   emailExt: string;
@@ -8,5 +8,3 @@ interface Institute {
   province: string;
   country: string;
 }
-
-export { Institute };

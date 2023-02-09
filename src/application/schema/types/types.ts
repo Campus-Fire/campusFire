@@ -26,7 +26,9 @@ export interface SubscriptionConversationUpdatedPayload {
   conversation: Conversation;
 }
 
-export interface UnresolvedConversation extends Omit<Conversation, 'participants' | 'latestMessage'> {
-  participantIds?: ObjectId[];
+export interface UnresolvedConversation
+  extends Omit<Conversation, 'startingParticipant' | 'acceptingParticipant' | 'latestMessage'> {
+  startedBy: ObjectId;
+  participant: ObjectId;
   latestMessageId?: ObjectId;
 }

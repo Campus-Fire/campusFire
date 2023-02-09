@@ -1,5 +1,4 @@
 import { Document } from 'mongodb';
-
 import { Account, SecureAccount } from '../models/account.model';
 
 interface AccountDocument extends Document, Omit<Account, 'id'> {}

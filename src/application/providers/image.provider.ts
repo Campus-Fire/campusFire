@@ -1,9 +1,9 @@
 import { Collection, ObjectId } from 'mongodb';
-import { profileProvider } from '../indexes/providers.index';
-import { ImageDocument, toImageObject } from '../repositories/image.repository';
 import { validateStringInputs } from '../../helpers/validator';
-import { ImageInput, UploadMultipleImageInput, UploadSingleImageInput } from '../models/image.model';
 import { CFError } from '../../lib/errors-handler';
+import { profileProvider } from '../indexes/providers.index';
+import { Image, ImageInput, UploadMultipleImageInput, UploadSingleImageInput } from '../models/image.model';
+import { ImageDocument, toImageObject } from '../repositories/image.repository';
 
 class ImageProvider {
   constructor(private collection: Collection<ImageDocument>) {}
@@ -68,18 +68,24 @@ class ImageProvider {
     return selectedImageId.toHexString();
   }
 
-  public async getUserImages(userId: ObjectId): Promise<string[]> {
-    const images = await this.collection
-      .find({
-        userId: userId,
-      })
-      .toArray();
+  public async getMainImage(id: ObjectId): Promise<Image> {
+    const userId = new ObjectId(id);
+    const mainImage = await this.collection.findOne({ userId, isPrimary: true });
+    if (!mainImage) {
+      throw new CFError('IMAGE_NOT_FOUND');
+    }
 
-    const imageSources = images.map((img) => {
-      return toImageObject(img).src;
-    });
+    return toImageObject(mainImage);
+  }
 
-    return imageSources;
+  public async getOtherImages(id: ObjectId): Promise<Image[]> {
+    const userId = new ObjectId(id);
+    const otherImages = await this.collection.find({ userId, isPrimary: false }).toArray();
+    if (!otherImages) {
+      throw new CFError('IMAGE_NOT_FOUND');
+    }
+
+    return otherImages.map(toImageObject);
   }
 }
 

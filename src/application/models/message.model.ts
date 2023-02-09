@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 
-interface Message {
+export interface Message {
   id: ObjectId;
   senderId: ObjectId;
   body: string;
@@ -8,10 +8,8 @@ interface Message {
   createdAt: Date;
 }
 
-interface SendMessageInput {
+export interface SendMessageInput {
   userId: ObjectId;
   conversationId: ObjectId;
   body: string;
 }
-
-export { Message, SendMessageInput };

@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 
-interface Account {
+export interface Account {
   id: ObjectId;
   email: string;
   password: string;
@@ -12,41 +12,31 @@ interface Account {
   passwordResetCode?: string;
 }
 
-interface SecureAccount extends Omit<Account, 'password'> {}
+export interface SecureAccount extends Omit<Account, 'password'> {}
 
-interface TokenizedAccount extends SecureAccount {
+export interface TokenizedAccount extends SecureAccount {
   token: string;
 }
 
-interface LoginInput {
+export interface LoginInput {
   email: string;
   password: string;
 }
 
-interface RegisterAccountInput {
+export interface RegisterAccountInput {
   email: string;
   password: string;
 }
 
-interface VerificationCodeInput {
+export interface VerificationCodeInput {
   id: ObjectId;
   email: string;
   code: string;
 }
 
-interface ResetPasswordInput {
+export interface ResetPasswordInput {
   id: ObjectId;
   email: string;
   password: string;
   confirmPassword: string;
 }
-
-export {
-  Account,
-  SecureAccount,
-  TokenizedAccount,
-  LoginInput,
-  RegisterAccountInput,
-  VerificationCodeInput,
-  ResetPasswordInput,
-};

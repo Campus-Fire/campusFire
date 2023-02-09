@@ -2,12 +2,12 @@ import { UserInputError } from 'apollo-server-express';
 import bcrypt from 'bcryptjs';
 import { addYears, isAfter } from 'date-fns';
 import { Collection, ObjectId } from 'mongodb';
-import { AccountDocument, toAccountObject } from '../repositories/account.repository';
 import deterministicId from '../../helpers/deterministic-id';
 import { sendPasswordResetEmail, sendVerificationEmail } from '../../helpers/email-verification';
 import { generateResetPasswortToken, generateToken } from '../../helpers/token-helper';
 import { validateEmailInput, validatePasswordInput } from '../../helpers/validator';
 import getVerificationCode from '../../helpers/verification-code';
+import { CFError } from '../../lib/errors-handler';
 import { instituteProvider } from '../indexes/providers.index';
 import {
   LoginInput,
@@ -17,7 +17,7 @@ import {
   TokenizedAccount,
   VerificationCodeInput,
 } from '../models/account.model';
-import { CFError } from '../../lib/errors-handler';
+import { AccountDocument, toAccountObject } from '../repositories/account.repository';
 
 class AccountProvider {
   constructor(private collection: Collection<AccountDocument>) {}
@@ -26,6 +26,27 @@ class AccountProvider {
     const accounts = await this.collection.find().toArray();
 
     return accounts.map(toAccountObject);
+  }
+
+  public async getAccountById(userId: string): Promise<TokenizedAccount> {
+    const id = new ObjectId(userId);
+
+    const accountData = await this.collection.findOne({ _id: id });
+    if (!accountData) {
+      throw new CFError('INVALID_CREDENTIALS');
+    }
+
+    const token = generateToken({
+      id: accountData._id,
+      email: accountData.email,
+    });
+
+    const document = toAccountObject(accountData);
+
+    return {
+      token,
+      ...document,
+    };
   }
 
   public async login(input: LoginInput): Promise<TokenizedAccount> {
@@ -181,7 +202,7 @@ class AccountProvider {
 
   public async sendForgotPasswordRequest(email: string): Promise<string> {
     const userEmail = email.toLowerCase();
-    const userId = deterministicId(email);
+    const userId = deterministicId(userEmail);
 
     if (!(await this.isExistingUser(userId))) {
       throw new CFError('ACCOUNT_NOT_FOUND');
@@ -236,7 +257,6 @@ class AccountProvider {
       throw new CFError('INVALID_USER_INPUT');
     }
     validatePasswordInput(password);
-    validatePasswordInput(confirmPassword);
 
     const userId = new ObjectId(id);
 

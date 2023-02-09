@@ -1,5 +1,4 @@
 import { Document } from 'mongodb';
-
 import { Image } from '../models/image.model';
 
 interface ImageDocument extends Document, Omit<Image, 'id'> {}

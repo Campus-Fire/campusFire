@@ -1,7 +1,7 @@
 import { Collection, ObjectId } from 'mongodb';
-import { InstituteDocument, toInstituteObject } from '../repositories/institute.repository';
-import { Institute } from '../models/institute.model';
 import { CFError } from '../../lib/errors-handler';
+import { Institute } from '../models/institute.model';
+import { InstituteDocument, toInstituteObject } from '../repositories/institute.repository';
 
 class InstituteProvider {
   constructor(private collection: Collection<InstituteDocument>) {}

@@ -1,6 +1,8 @@
+import { profile } from 'console';
 import checkAuth from '../../helpers/check-auth';
 import { imageProvider } from '../indexes/providers.index';
 import {
+  Image,
   MutationSetPrimaryImageArgs,
   MutationUploadMultipleImagesArgs,
   MutationUploadSingleImageArgs,
@@ -41,6 +43,16 @@ const imageResolver = {
       };
 
       return imageProvider.setPrimaryImage(input);
+    },
+  },
+
+  Profile: {
+    mainImage: async (profile: any): Promise<Image> => {
+      return imageProvider.getMainImage(profile.id);
+    },
+
+    otherImages: async (profile: any): Promise<Image[]> => {
+      return imageProvider.getOtherImages(profile.id);
     },
   },
 };
