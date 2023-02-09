@@ -1,8 +1,7 @@
 import { ObjectId } from 'mongodb';
-
 import { Faculty, Gender, Interest } from '../schema/types/schema';
 
-interface Profile {
+export interface Profile {
   id: ObjectId;
   instituteId: ObjectId;
   firstName: string;
@@ -18,7 +17,7 @@ interface Profile {
   isActive: boolean;
 }
 
-interface CreateProfileInput {
+export interface CreateProfileInput {
   id: ObjectId;
   email: string;
   firstName: string;
@@ -31,5 +30,3 @@ interface CreateProfileInput {
   interests: Interest[];
   onResidence: boolean;
 }
-
-export { Profile, CreateProfileInput };

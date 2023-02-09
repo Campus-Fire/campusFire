@@ -1,18 +1,25 @@
 import { Collection, ObjectId } from 'mongodb';
-import { ConversationDocument, toConversationObject } from '../repositories/conversation.repository';
-import { conversationParticipantProvider, messageProvider } from '../indexes/providers.index';
-import { Message } from '../models/message.model';
-import { Conversation, StartConversationInput } from '../models/conversation.model';
 import { CFError } from '../../lib/errors-handler';
+import { conversationParticipantProvider, messageProvider } from '../indexes/providers.index';
+import {
+  AcceptConversationRequestInput,
+  Conversation,
+  SendConversationRequestInput,
+} from '../models/conversation.model';
+import { Message } from '../models/message.model';
+import { ConversationDocument, toConversationObject } from '../repositories/conversation.repository';
 
 class ConversationProvider {
   constructor(private collection: Collection<ConversationDocument>) {}
 
   public async getUserConversations(id: ObjectId): Promise<Conversation[]> {
     const userId = new ObjectId(id);
-    const userConversationsIds = await conversationParticipantProvider.getConversationsIds(userId);
+    const conversationIds = await conversationParticipantProvider.getConversationIds(userId);
 
-    const conversations = await this.collection.find({ _id: { $in: userConversationsIds } }).toArray();
+    const conversations = await this.collection
+      .find({ _id: { $in: conversationIds }, isConversationRequest: false })
+      .sort({ updatedAt: -1 })
+      .toArray();
     if (!conversations) {
       throw new CFError('CONVERSATION_NOT_FOUND');
     }
@@ -20,41 +27,92 @@ class ConversationProvider {
     return conversations.map(toConversationObject);
   }
 
-  public async startConversation(input: StartConversationInput): Promise<string> {
-    const { userId, participantIds } = input;
-    let participants: ObjectId[] = [];
+  public async getUserConversationRequests(id: ObjectId): Promise<Conversation[]> {
+    const userId = new ObjectId(id);
+    const conversationIds = await conversationParticipantProvider.getConversationIds(userId);
 
-    const conversationId = new ObjectId();
-    const senderId = new ObjectId(userId);
-
-    for (let participantId of participantIds) {
-      participants.push(
-        await conversationParticipantProvider.createParticipant(conversationId, new ObjectId(participantId))
-      );
+    const conversations = await this.collection
+      .find({ _id: { $in: conversationIds }, isConversationRequest: true })
+      .sort({ updatedAt: -1 })
+      .toArray();
+    if (!conversations) {
+      throw new CFError('CONVERSATION_NOT_FOUND');
     }
 
-    const conversationData = await this.collection.insertOne({
+    return conversations.map(toConversationObject);
+  }
+
+  public async sendConversationRequest(input: SendConversationRequestInput): Promise<string> {
+    const { userId, participantId, requestMessage } = input;
+
+    const conversationId = new ObjectId();
+
+    const foundExisitingConversation = await this.hasExisitingConversation(userId, participantId);
+    if (foundExisitingConversation !== '') {
+      return foundExisitingConversation;
+    }
+
+    const startedBy = await conversationParticipantProvider.createParticipant(conversationId, userId);
+    const participant = await conversationParticipantProvider.createParticipant(conversationId, participantId);
+
+    const latestMessage = await messageProvider.sendMessage({
+      userId,
+      conversationId,
+      body: requestMessage,
+    });
+
+    const conversationRequestData = await this.collection.insertOne({
       _id: conversationId,
-      participantIds: participants,
+      startedBy,
+      participant,
+      latestMessage: latestMessage.id,
+      isConversationRequest: true,
       updatedAt: new Date(),
     });
-    if (!conversationData.insertedId) {
+    if (!conversationRequestData.acknowledged) {
       throw new CFError('CONVERSATION_NOT_STARTED');
     }
 
-    participants.forEach(async (participant) => {
-      await conversationParticipantProvider.setLatestMessageSeenStatus(
-        conversationData.insertedId,
-        senderId,
-        participant
-      );
-    });
+    return conversationRequestData.insertedId.toHexString();
+  }
 
-    return conversationData.insertedId.toHexString();
+  public async hasExisitingConversation(userId: ObjectId, participantId: ObjectId): Promise<string> {
+    const userConversations = await conversationParticipantProvider.getConversationIds(userId);
+    const participantConversations = await conversationParticipantProvider.getConversationIds(participantId);
+
+    const userConversationsSet = new Set(userConversations);
+
+    for (const conversation of participantConversations) {
+      if (userConversationsSet.has(conversation)) {
+        return conversation.toHexString();
+      }
+    }
+
+    return '';
+  }
+
+  public async acceptConversationRequest(input: AcceptConversationRequestInput): Promise<boolean> {
+    const { userId, conversationId } = input;
+
+    const usrId = new ObjectId(userId);
+    const convoId = new ObjectId(conversationId);
+
+    const participant = await conversationParticipantProvider.getParticipantByUserId(usrId, convoId);
+
+    const conversationData = await this.collection.findOneAndUpdate(
+      { _id: convoId, participant },
+      { $set: { ...{ isConversationRequest: false } } },
+      { returnDocument: 'after' }
+    );
+    if (!conversationData.value) {
+      throw new CFError('CONVERSATION_NOT_FOUND');
+    }
+
+    return conversationData.value.isConversationRequest;
   }
 
   public async updateLatestMessage(message: Message): Promise<Conversation> {
-    const { id: messageId, senderId, conversationId } = message;
+    const { id: messageId, conversationId } = message;
 
     const convData = await this.collection.findOneAndUpdate(
       { _id: conversationId },
@@ -70,9 +128,16 @@ class ConversationProvider {
       throw new CFError('CONVERSATION_NOTIFICATION_FAILED');
     }
 
-    for (let participant of convData.value.participantIds) {
-      await conversationParticipantProvider.setLatestMessageSeenStatus(convData.value._id, senderId, participant);
-    }
+    await conversationParticipantProvider.setLatestMessageSeenStatus(
+      convData.value._id,
+      message.senderId,
+      convData.value.startedBy
+    );
+    await conversationParticipantProvider.setLatestMessageSeenStatus(
+      convData.value._id,
+      message.senderId,
+      convData.value.participant
+    );
 
     return toConversationObject(convData.value);
   }
@@ -95,9 +160,8 @@ class ConversationProvider {
       userId,
       conversationData._id
     );
-    const userSentLatestMessage = await messageProvider.isSender(userId, conversationData.latestMessageId);
 
-    return isUserConversationParticipant && !userSentLatestMessage;
+    return isUserConversationParticipant;
   }
 }
 

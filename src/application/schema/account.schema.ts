@@ -15,6 +15,7 @@ const typeDefs = gql`
     accounts: [Account!]!
     termsOfUse: String!
     privacyPolicy: String!
+    refreshToken(token: String!): Account!
   }
 
   type Mutation {

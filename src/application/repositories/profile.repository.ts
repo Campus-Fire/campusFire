@@ -1,5 +1,4 @@
 import { Document } from 'mongodb';
-
 import { Profile } from '../models/profile.model';
 
 interface ProfileDocument extends Document, Omit<Profile, 'id'> {}

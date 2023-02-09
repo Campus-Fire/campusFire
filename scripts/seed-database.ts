@@ -92,14 +92,14 @@ const seedCollection = async (collectionName: string, data: any[]): Promise<void
         interests,
         faculty,
         onResidence: true,
-        mainImage: 'https://res.cloudinary.com/dt0duopxa/image/upload/v1673306657/nch1vc87xky825jt623j.jpg',
+        mainImage: 'https://res.cloudinary.com/dt0duopxa/image/upload/v1674686372/te27zfmsatgymhr1ecx2.jpg',
         isActive: true,
       });
 
       images.push({
         _id: new ObjectId(),
         userId: id,
-        src: 'https://res.cloudinary.com/dt0duopxa/image/upload/v1673306657/nch1vc87xky825jt623j.jpg',
+        src: 'https://res.cloudinary.com/dt0duopxa/image/upload/v1674686372/te27zfmsatgymhr1ecx2.jpg',
         isPrimary: true,
         addedAt: faker.date.recent(),
       });
@@ -107,7 +107,7 @@ const seedCollection = async (collectionName: string, data: any[]): Promise<void
       images.push({
         _id: new ObjectId(),
         userId: id,
-        src: 'https://res.cloudinary.com/dt0duopxa/image/upload/v1672475847/test/logo2_egbxgh.png',
+        src: 'https://res.cloudinary.com/dt0duopxa/image/upload/v1674686370/vbt6iodgej2w2h8neips.jpg',
         isPrimary: false,
         addedAt: faker.date.recent(),
       });

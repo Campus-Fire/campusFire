@@ -1,4 +1,5 @@
 import checkAuth from '../../helpers/check-auth';
+import { verifyJWToken } from '../../helpers/token-helper';
 import { accountProvider } from '../indexes/providers.index';
 import {
   Account,
@@ -8,6 +9,7 @@ import {
   MutationResetPasswordArgs,
   MutationVerifyAccountPasswordResetArgs,
   MutationVerifyAccountRegistrationArgs,
+  QueryRefreshTokenArgs,
 } from '../schema/types/schema';
 import { Root, UserContext } from '../schema/types/types';
 
@@ -25,6 +27,17 @@ const accountResolver = {
 
     privacyPolicy: async (): Promise<string> => {
       return 'returnsPrivacyPolicyPageURL';
+    },
+
+    refreshToken: async (_: Root, args: QueryRefreshTokenArgs, context: UserContext): Promise<Account | null> => {
+      const session = checkAuth(context);
+
+      const { id, email } = verifyJWToken(args.token);
+      if (session.user.id !== id || session.user.email !== email) {
+        return null;
+      }
+
+      return accountProvider.getAccountById(session.user.id);
     },
   },
 

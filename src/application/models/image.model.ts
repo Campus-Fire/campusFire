@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 
-interface Image {
+export interface Image {
   id: ObjectId;
   userId: ObjectId;
   src: string;
@@ -8,21 +8,19 @@ interface Image {
   addedAt: Date;
 }
 
-interface UploadSingleImageInput {
+export interface UploadSingleImageInput {
   id: ObjectId;
   email: string;
   imgSrc: string;
 }
 
-interface UploadMultipleImageInput {
+export interface UploadMultipleImageInput {
   id: ObjectId;
   email: string;
   imgSources: string[];
 }
 
-interface ImageInput {
+export interface ImageInput {
   id: ObjectId;
   imgId: ObjectId;
 }
-
-export { Image, UploadSingleImageInput, UploadMultipleImageInput, ImageInput };

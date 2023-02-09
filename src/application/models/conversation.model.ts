@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 
-interface ConversationParticipant {
+export interface ConversationParticipant {
   id: ObjectId;
   userId: ObjectId;
   conversationId: ObjectId;
@@ -8,21 +8,27 @@ interface ConversationParticipant {
   createdAt: Date;
 }
 
-interface Conversation {
+export interface Conversation {
   id: ObjectId;
-  participantIds: ObjectId[];
-  latestMessageId?: ObjectId;
+  startedBy: ObjectId;
+  participant: ObjectId;
+  latestMessage: ObjectId;
+  isConversationRequest: boolean;
   updatedAt: Date;
 }
 
-interface StartConversationInput {
-  userId: ObjectId;
-  participantIds: ObjectId[];
-}
-
-interface ReadConversationInput {
+export interface AcceptConversationRequestInput {
   userId: ObjectId;
   conversationId: ObjectId;
 }
 
-export { Conversation, ConversationParticipant, StartConversationInput, ReadConversationInput };
+export interface ReadConversationInput {
+  userId: ObjectId;
+  conversationId: ObjectId;
+}
+
+export interface SendConversationRequestInput {
+  userId: ObjectId;
+  participantId: ObjectId;
+  requestMessage: string;
+}

@@ -1,11 +1,11 @@
 import { Collection, ObjectId } from 'mongodb';
+import { CFError } from '../../lib/errors-handler';
 import { profileProvider } from '../indexes/providers.index';
+import { ConversationParticipant, ReadConversationInput } from '../models/conversation.model';
 import {
   ConversationParticipantDocument,
   toConversationParticipantObject,
 } from '../repositories/conversation-participant.repository';
-import { ConversationParticipant, ReadConversationInput } from '../models/conversation.model';
-import { CFError } from '../../lib/errors-handler';
 
 class ConversationParticipantProvider {
   constructor(private collection: Collection<ConversationParticipantDocument>) {}
@@ -32,21 +32,12 @@ class ConversationParticipantProvider {
     senderId: ObjectId,
     participantId: ObjectId
   ): Promise<void> {
-    const userId = await this.getParticipantsUserId(participantId);
+    const userId = await this.getUserIdByParticipant(participantId);
     const hasSeenLastMessage = senderId.toHexString() === userId.toHexString();
 
     const participantData = await this.collection.findOneAndUpdate(
-      {
-        userId: userId,
-        conversationId: conversationId,
-      },
-      {
-        $set: {
-          ...{
-            hasSeenLatestMessage: hasSeenLastMessage,
-          },
-        },
-      },
+      { userId, conversationId },
+      { $set: { ...{ hasSeenLatestMessage: hasSeenLastMessage } } },
       { returnDocument: 'after' }
     );
     if (!participantData) {
@@ -54,7 +45,7 @@ class ConversationParticipantProvider {
     }
   }
 
-  public async getParticipantsUserId(participantId: ObjectId): Promise<ObjectId> {
+  public async getUserIdByParticipant(participantId: ObjectId): Promise<ObjectId> {
     const data = await this.collection.findOne({
       _id: participantId,
     });
@@ -65,31 +56,27 @@ class ConversationParticipantProvider {
     return data.userId;
   }
 
-  public async isParticipant(userId: ObjectId, conversationId: ObjectId): Promise<boolean> {
+  public async getParticipantById(participantId: ObjectId): Promise<ConversationParticipant> {
+    const id = new ObjectId(participantId);
+
+    const participantData = await this.collection.findOne({ _id: id });
+    if (!participantData) {
+      throw new CFError('CONVERSATION_PARTICIPANT_NOT_FOUND');
+    }
+
+    return toConversationParticipantObject(participantData);
+  }
+
+  public async getParticipantByUserId(userId: ObjectId, conversationId: ObjectId): Promise<ObjectId> {
     const participantData = await this.collection.findOne({
       userId: userId,
       conversationId: conversationId,
     });
     if (!participantData) {
-      return false;
-    }
-
-    return true;
-  }
-
-  public async getParticipantsByIds(participantIds: ObjectId[]): Promise<ConversationParticipant[]> {
-    const participantObjIds = participantIds.map((participantId) => new ObjectId(participantId));
-
-    const participants = await this.collection
-      .find({
-        _id: { $in: participantObjIds },
-      })
-      .toArray();
-    if (!participants) {
       throw new CFError('CONVERSATION_PARTICIPANT_NOT_FOUND');
     }
 
-    return participants.map(toConversationParticipantObject);
+    return participantData._id;
   }
 
   public async readConversation(input: ReadConversationInput): Promise<boolean> {
@@ -114,7 +101,7 @@ class ConversationParticipantProvider {
     return true;
   }
 
-  public async getConversationsIds(usrId: ObjectId): Promise<ObjectId[]> {
+  public async getConversationIds(usrId: ObjectId): Promise<ObjectId[]> {
     const userId = new ObjectId(usrId);
     const conversationParticipantData = await this.collection.find({ userId: userId }).toArray();
     if (!conversationParticipantData) {
@@ -126,6 +113,15 @@ class ConversationParticipantProvider {
     });
 
     return conversationIds;
+  }
+
+  public async isParticipant(userId: ObjectId, conversationId: ObjectId): Promise<boolean> {
+    const participantData = await this.collection.findOne({ userId, conversationId });
+    if (!participantData) {
+      return false;
+    }
+
+    return true;
   }
 }
 

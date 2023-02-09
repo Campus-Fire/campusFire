@@ -1,8 +1,8 @@
 import { Collection, ObjectId } from 'mongodb';
-import { MessageDocument, toMessageObject } from '../repositories/message.repository';
 import { validateStringInputs } from '../../helpers/validator';
-import { Message, SendMessageInput } from '../models/message.model';
 import { CFError } from '../../lib/errors-handler';
+import { Message, SendMessageInput } from '../models/message.model';
+import { MessageDocument, toMessageObject } from '../repositories/message.repository';
 
 class MessageProvider {
   constructor(private collection: Collection<MessageDocument>) {}
