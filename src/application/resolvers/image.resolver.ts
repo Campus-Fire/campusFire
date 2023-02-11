@@ -47,12 +47,24 @@ const imageResolver = {
   },
 
   Profile: {
-    mainImage: async (profile: any): Promise<Image> => {
-      return imageProvider.getMainImage(profile.id);
+    mainImage: async (profile: any): Promise<Image | null> => {
+      try {
+        const mainImg = await imageProvider.getMainImage(profile.id);
+      
+        return mainImg
+      } catch (err) {
+        return null;
+      }      
     },
 
-    otherImages: async (profile: any): Promise<Image[]> => {
-      return imageProvider.getOtherImages(profile.id);
+    otherImages: async (profile: any): Promise<Image[] | null> => {
+      try {
+        const imgs =await imageProvider.getOtherImages(profile.id);
+
+        return imgs;
+      } catch (err) {
+        return null;
+      }
     },
   },
 };
