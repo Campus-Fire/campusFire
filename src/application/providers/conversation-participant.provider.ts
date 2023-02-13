@@ -10,13 +10,16 @@ import {
 class ConversationParticipantProvider {
   constructor(private collection: Collection<ConversationParticipantDocument>) {}
 
-  public async createParticipant(convoId: ObjectId, userId: ObjectId): Promise<ObjectId> {
+  public async createParticipant(convoId: ObjectId, usrId: ObjectId): Promise<ObjectId> {
+    const userId = new ObjectId(usrId);
+    const conversationId = new ObjectId(convoId);
+
     await profileProvider.isUserActive(userId);
 
     const participantData = await this.collection.insertOne({
       _id: new ObjectId(),
       userId,
-      conversationId: convoId,
+      conversationId,
       hasSeenLatestMessage: false,
       createdAt: new Date(),
     });
@@ -28,11 +31,12 @@ class ConversationParticipantProvider {
   }
 
   public async setLatestMessageSeenStatus(
-    conversationId: ObjectId,
+    convoId: ObjectId,
     senderId: ObjectId,
     participantId: ObjectId
   ): Promise<void> {
     const userId = await this.getUserIdByParticipant(participantId);
+    const conversationId = new ObjectId(convoId);
     const hasSeenLastMessage = senderId.toHexString() === userId.toHexString();
 
     const participantData = await this.collection.findOneAndUpdate(
@@ -46,9 +50,9 @@ class ConversationParticipantProvider {
   }
 
   public async getUserIdByParticipant(participantId: ObjectId): Promise<ObjectId> {
-    const data = await this.collection.findOne({
-      _id: participantId,
-    });
+    const id = new ObjectId(participantId);
+
+    const data = await this.collection.findOne({ _id: id });
     if (!data) {
       throw new CFError('CONVERSATION_PARTICIPANT_NOT_FOUND');
     }
@@ -67,11 +71,11 @@ class ConversationParticipantProvider {
     return toConversationParticipantObject(participantData);
   }
 
-  public async getParticipantByUserId(userId: ObjectId, conversationId: ObjectId): Promise<ObjectId> {
-    const participantData = await this.collection.findOne({
-      userId: userId,
-      conversationId: conversationId,
-    });
+  public async getParticipantByUserId(usrId: ObjectId, convoId: ObjectId): Promise<ObjectId> {
+    const userId = new ObjectId(usrId);
+    const conversationId = new ObjectId(convoId);
+
+    const participantData = await this.collection.findOne({ userId, conversationId });
     if (!participantData) {
       throw new CFError('CONVERSATION_PARTICIPANT_NOT_FOUND');
     }
@@ -87,11 +91,7 @@ class ConversationParticipantProvider {
 
     const conversationParticipant = await this.collection.findOneAndUpdate(
       { userId, conversationId },
-      {
-        $set: {
-          ...{ hasSeenLastestMessage: true },
-        },
-      },
+      { $set: { ...{ hasSeenLastestMessage: true } } },
       { returnDocument: 'after' }
     );
     if (!conversationParticipant) {
@@ -103,6 +103,7 @@ class ConversationParticipantProvider {
 
   public async getConversationIds(usrId: ObjectId): Promise<ObjectId[]> {
     const userId = new ObjectId(usrId);
+
     const conversationParticipantData = await this.collection.find({ userId: userId }).toArray();
     if (!conversationParticipantData) {
       throw new CFError('CONVERSATION_NOT_FOUND');
@@ -115,7 +116,10 @@ class ConversationParticipantProvider {
     return conversationIds;
   }
 
-  public async isParticipant(userId: ObjectId, conversationId: ObjectId): Promise<boolean> {
+  public async isParticipant(usrId: ObjectId, convoId: ObjectId): Promise<boolean> {
+    const userId = new ObjectId(usrId);
+    const conversationId = new ObjectId(convoId);
+
     const participantData = await this.collection.findOne({ userId, conversationId });
     if (!participantData) {
       return false;

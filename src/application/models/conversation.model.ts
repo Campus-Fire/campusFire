@@ -12,7 +12,7 @@ export interface Conversation {
   id: ObjectId;
   startedBy: ObjectId;
   participant: ObjectId;
-  latestMessage: ObjectId;
+  latestMessageId: ObjectId;
   isConversationRequest: boolean;
   updatedAt: Date;
 }

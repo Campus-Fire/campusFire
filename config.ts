@@ -7,8 +7,9 @@ const config = {
 
   SECRET_TOKEN_KEY: 'C@mpu$_F1r3_$3cr3t_k3y_f0r_J$0N_w3b_t0k3n$',
 
-  USER_EMAIL: 'unitryst@gmail.com',
-  USER_PASSWORD: 'bdpwodqwgwfempfa',
+  USER_EMAIL: 'info@campusfire.ca',
+  USER_PASSWORD: '!campus@fire7879',
+  EMAIL_SERVICE_NAME: 'gmail',
   EMAIL_SERVICE_HOST: 'smtp.gmail.com',
   EMAIL_SERVICE_PORT: 465,
 

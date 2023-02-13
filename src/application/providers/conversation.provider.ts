@@ -65,7 +65,7 @@ class ConversationProvider {
       _id: conversationId,
       startedBy,
       participant,
-      latestMessage: latestMessage.id,
+      latestMessageId: latestMessage.id,
       isConversationRequest: true,
       updatedAt: new Date(),
     });
@@ -114,14 +114,12 @@ class ConversationProvider {
   public async updateLatestMessage(message: Message): Promise<Conversation> {
     const { id: messageId, conversationId } = message;
 
+    const convoId = new ObjectId(conversationId);
+    const latestMessageId = new ObjectId(messageId);
+
     const convData = await this.collection.findOneAndUpdate(
-      { _id: conversationId },
-      {
-        $set: {
-          ...{ latestMessageId: messageId },
-          ...{ updatedAt: new Date() },
-        },
-      },
+      { _id: convoId },
+      { $set: { ...{ latestMessageId: latestMessageId }, ...{ updatedAt: new Date() } } },
       { returnDocument: 'after' }
     );
     if (!convData.value) {

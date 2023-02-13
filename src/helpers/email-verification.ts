@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer';
 import config from '../../config';
 
 const transport = nodemailer.createTransport({
+  service: config.EMAIL_SERVICE_NAME,
   host: config.EMAIL_SERVICE_HOST,
   port: config.EMAIL_SERVICE_PORT,
   secure: true,
@@ -14,7 +15,7 @@ const transport = nodemailer.createTransport({
 
 const sendVerificationEmail = (email: string, code: string): void => {
   const mailOptions = {
-    from: 'CampusFire',
+    from: `"CampusFire Support" <${config.USER_EMAIL}`,
     to: `${email}`,
     subject: 'Verification code for CampusFire',
     html: `
@@ -46,7 +47,7 @@ const sendVerificationEmail = (email: string, code: string): void => {
 
 const sendPasswordResetEmail = (email: string, code: string): void => {
   const mailOptions = {
-    from: 'CampusFire',
+    from: `"CampusFire Support" <${config.USER_EMAIL}`,
     to: `${email}`,
     subject: 'Reset Password',
     html: `

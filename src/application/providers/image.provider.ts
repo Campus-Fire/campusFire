@@ -53,9 +53,8 @@ class ImageProvider {
 
     const imageData = await this.collection.findOneAndUpdate(
       { _id: imageId, userId },
-      {
-        $set: { ...{ isPrimary: true } },
-      }
+      { $set: { ...{ isPrimary: true } } },
+      { returnDocument: 'after' }
     );
     if (!imageData.value) {
       throw new CFError('IMAGE_NOT_FOUND');
@@ -63,13 +62,14 @@ class ImageProvider {
 
     const selectedImageId = imageData.value._id;
 
-    profileProvider.setMainImage(userId, selectedImageId);
+    await profileProvider.setMainImage(userId, selectedImageId);
 
     return selectedImageId.toHexString();
   }
 
   public async getMainImage(id: ObjectId): Promise<Image> {
     const userId = new ObjectId(id);
+
     const mainImage = await this.collection.findOne({ userId, isPrimary: true });
     if (!mainImage) {
       throw new CFError('IMAGE_NOT_FOUND');
@@ -80,6 +80,7 @@ class ImageProvider {
 
   public async getOtherImages(id: ObjectId): Promise<Image[]> {
     const userId = new ObjectId(id);
+
     const otherImages = await this.collection.find({ userId, isPrimary: false }).toArray();
     if (!otherImages) {
       throw new CFError('IMAGE_NOT_FOUND');

@@ -19,7 +19,7 @@ const conversationResolver = {
   Query: {
     getConversationRequests: async (_: Root, __: any, context: UserContext): Promise<UnresolvedConversation[]> => {
       const session = checkAuth(context);
-      const { id: userId } = session.user.id;
+      const { id: userId } = session.user;
 
       return conversationProvider.getUserConversationRequests(userId);
     },

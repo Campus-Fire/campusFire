@@ -55,6 +55,7 @@ class MessageProvider {
 
   public async isSender(userId: ObjectId, messageId: ObjectId): Promise<boolean> {
     const id = new ObjectId(messageId);
+
     const messageData = await this.collection.findOne({ _id: id });
     if (!messageData) {
       throw new CFError('MESSAGE_NOT_FOUND');

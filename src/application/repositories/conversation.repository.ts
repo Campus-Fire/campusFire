@@ -8,7 +8,7 @@ const toConversationObject = (conversation: ConversationDocument): Conversation 
     id: conversation._id.toHexString(),
     startedBy: conversation.startedBy,
     participant: conversation.participant,
-    latestMessage: conversation.latestMessage,
+    latestMessageId: conversation.latestMessageId,
     isConversationRequest: conversation.isConversationRequest,
     updatedAt: conversation.updatedAt,
   };
