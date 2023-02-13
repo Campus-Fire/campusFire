@@ -1,4 +1,3 @@
-import { profile } from 'console';
 import checkAuth from '../../helpers/check-auth';
 import { imageProvider } from '../indexes/providers.index';
 import {
@@ -50,16 +49,16 @@ const imageResolver = {
     mainImage: async (profile: any): Promise<Image | null> => {
       try {
         const mainImg = await imageProvider.getMainImage(profile.id);
-      
-        return mainImg
+
+        return mainImg;
       } catch (err) {
         return null;
-      }      
+      }
     },
 
     otherImages: async (profile: any): Promise<Image[] | null> => {
       try {
-        const imgs =await imageProvider.getOtherImages(profile.id);
+        const imgs = await imageProvider.getOtherImages(profile.id);
 
         return imgs;
       } catch (err) {

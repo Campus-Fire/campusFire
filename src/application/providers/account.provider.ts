@@ -164,7 +164,8 @@ class AccountProvider {
   }
 
   public async isAccountVerified(id: ObjectId): Promise<boolean> {
-    const accountData = await this.collection.findOne({ _id: id });
+    const userId = new ObjectId(id);
+    const accountData = await this.collection.findOne({ _id: userId });
     if (!accountData) {
       throw new CFError('ACCOUNT_NOT_FOUND');
     }
@@ -173,9 +174,8 @@ class AccountProvider {
   }
 
   public async isExistingUser(id: ObjectId): Promise<boolean> {
-    const data = await this.collection.countDocuments({
-      _id: id,
-    });
+    const userId = new ObjectId(id);
+    const data = await this.collection.countDocuments({ _id: userId });
 
     return data > 0;
   }
@@ -216,11 +216,7 @@ class AccountProvider {
 
     const accountData = await this.collection.findOneAndUpdate(
       { _id: userId },
-      {
-        $set: {
-          ...{ passwordResetCode: code },
-        },
-      },
+      { $set: { ...{ passwordResetCode: code } } },
       { returnDocument: 'after' }
     );
 
@@ -264,11 +260,7 @@ class AccountProvider {
     const hashedPassword = await bcrypt.hash(password, 12);
     const accountData = await this.collection.findOneAndUpdate(
       { _id: userId, email },
-      {
-        $set: {
-          ...{ password: hashedPassword },
-        },
-      },
+      { $set: { ...{ password: hashedPassword } } },
       { returnDocument: 'after' }
     );
 

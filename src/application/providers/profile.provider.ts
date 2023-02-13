@@ -26,6 +26,7 @@ class ProfileProvider {
 
   public async getAllProfiles(id: string): Promise<Profile[]> {
     const userId = new ObjectId(id);
+
     const profilesData = await this.collection
       .find({
         _id: { $ne: userId },
