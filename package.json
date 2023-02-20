@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/neo-punit-patel/uniTryst#readme",
   "dependencies": {
-    "@apollo/client": "^3.6.9",
+    "@apollo/client": "^3.7.9",
     "@graphql-tools/schema": "^9.0.12",
     "@types/mongodb": "^4.0.7",
     "apollo": "^2.32.5",
