@@ -27,11 +27,7 @@ class ProfileProvider {
   public async getAllProfiles(id: string): Promise<Profile[]> {
     const userId = new ObjectId(id);
 
-    const profilesData = await this.collection
-      .find({
-        _id: { $ne: userId },
-      })
-      .toArray();
+    const profilesData = await this.collection.find({ _id: { $ne: userId }, isActive: true }).toArray();
 
     return profilesData.map(toProfileObject);
   }
@@ -76,7 +72,7 @@ class ProfileProvider {
       interests,
       faculty,
       onResidence,
-      isActive: true,
+      isActive: false,
     });
 
     const profile = await this.collection.findOne({ _id: profileData.insertedId });
@@ -85,6 +81,18 @@ class ProfileProvider {
     }
 
     return toProfileObject(profile);
+  }
+
+  public async setProfileActive(userId: ObjectId): Promise<void> {
+    const usrId = new ObjectId(userId);
+    const profileData = await this.collection.findOneAndUpdate(
+      { _id: usrId },
+      { $set: { ...{ isActive: true } } },
+      { returnDocument: 'after' }
+    );
+    if (!profileData.value) {
+      throw new CFError('PROFILE_NOT_FOUND');
+    }
   }
 
   /*
@@ -141,16 +149,16 @@ class ProfileProvider {
     return profileData.isActive;
   }
 
-  public async setMainImage(usrId: ObjectId, imgId: ObjectId): Promise<void> {
-    const profileData = await this.collection.findOneAndUpdate(
-      { _id: usrId },
-      { $set: { ...{ mainImage: imgId } } },
-      { returnDocument: 'after' }
-    );
-    if (!profileData.value) {
-      throw new CFError('PROFILE_NOT_FOUND');
-    }
-  }
+  // public async setMainImage(usrId: ObjectId, imgId: ObjectId): Promise<void> {
+  //   const profileData = await this.collection.findOneAndUpdate(
+  //     { _id: usrId },
+  //     { $set: { ...{ mainImage: imgId } } },
+  //     { returnDocument: 'after' }
+  //   );
+  //   if (!profileData.value) {
+  //     throw new CFError('PROFILE_NOT_FOUND');
+  //   }
+  // }
 }
 
 export { ProfileProvider };

@@ -62,7 +62,8 @@ class ImageProvider {
 
     const selectedImageId = imageData.value._id;
 
-    await profileProvider.setMainImage(userId, selectedImageId);
+    // await profileProvider.setMainImage(userId, selectedImageId);
+    await profileProvider.setProfileActive(userId);
 
     return selectedImageId.toHexString();
   }

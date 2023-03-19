@@ -13,7 +13,6 @@ export interface Profile {
   faculty: Faculty;
   interests: Interest[];
   onResidence: boolean;
-  mainImage?: string;
   isActive: boolean;
 }
 
