@@ -77,14 +77,18 @@ class ConversationProvider {
   }
 
   public async hasExisitingConversation(userId: ObjectId, participantId: ObjectId): Promise<string> {
-    const userConversations = await conversationParticipantProvider.getConversationIds(userId);
-    const participantConversations = await conversationParticipantProvider.getConversationIds(participantId);
+    const userConversations = (await conversationParticipantProvider.getConversationIds(userId)).map((uConvo) =>
+      uConvo.toHexString()
+    );
+    const participantConversations = (await conversationParticipantProvider.getConversationIds(participantId)).map(
+      (pConvo) => pConvo.toHexString()
+    );
 
     const userConversationsSet = new Set(userConversations);
 
     for (const conversation of participantConversations) {
       if (userConversationsSet.has(conversation)) {
-        return conversation.toHexString();
+        return conversation;
       }
     }
 
