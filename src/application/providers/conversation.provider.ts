@@ -48,7 +48,7 @@ class ConversationProvider {
     const conversationId = new ObjectId();
 
     const foundExisitingConversation = await this.hasExisitingConversation(userId, participantId);
-    if (foundExisitingConversation !== '') {
+    if (foundExisitingConversation !== null) {
       return foundExisitingConversation;
     }
 
@@ -76,7 +76,7 @@ class ConversationProvider {
     return conversationRequestData.insertedId.toHexString();
   }
 
-  public async hasExisitingConversation(userId: ObjectId, participantId: ObjectId): Promise<string> {
+  public async hasExisitingConversation(userId: ObjectId, participantId: ObjectId): Promise<string | null> {
     const userConversations = (await conversationParticipantProvider.getConversationIds(userId)).map((uConvo) =>
       uConvo.toHexString()
     );
@@ -92,7 +92,7 @@ class ConversationProvider {
       }
     }
 
-    return '';
+    return null;
   }
 
   public async acceptConversationRequest(input: AcceptConversationRequestInput): Promise<boolean> {

@@ -29,3 +29,16 @@ export interface CreateProfileInput {
   interests: Interest[];
   onResidence: boolean;
 }
+
+export interface UpdateProfileInput {
+  id: ObjectId;
+  firstName?: string | null;
+  lastName?: string | null;
+  dateOfBirth?: string | null;
+  gender?: Gender | null;
+  tagline?: string | null;
+  about?: string | null;
+  faculty?: Faculty | null;
+  interests?: Interest[] | null;
+  onResidence?: boolean | null;
+}

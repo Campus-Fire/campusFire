@@ -25,6 +25,7 @@ const typeDefs = gql`
 
   type Mutation {
     createProfile(input: CreateProfileInput!): Profile!
+    updateProfile(input: UpdateProfileInput!): Profile!
   }
 
   input CreateProfileInput {
@@ -37,6 +38,18 @@ const typeDefs = gql`
     faculty: Faculty!
     interests: [Interest!]!
     onResidence: Boolean!
+  }
+
+  input UpdateProfileInput {
+    firstName: String
+    lastName: String
+    dateOfBirth: String
+    gender: Gender
+    tagline: String
+    about: String
+    faculty: Faculty
+    interests: [Interest!]
+    onResidence: Boolean
   }
 `;
 

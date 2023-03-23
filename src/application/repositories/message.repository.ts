@@ -10,6 +10,8 @@ const toMessageObject = (message: MessageDocument): Message => {
     body: message.body,
     conversationId: message.conversationId,
     createdAt: message.createdAt,
+    hasReaction: message.hasReaction,
+    reaction: message.reaction,
   };
 };
 

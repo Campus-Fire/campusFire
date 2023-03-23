@@ -2,7 +2,7 @@ import { Collection, ObjectId } from 'mongodb';
 import { validateEmailInput, validateNameInput, validateStringInputs } from '../../helpers/validator';
 import { CFError } from '../../lib/errors-handler';
 import { accountProvider, instituteProvider } from '../indexes/providers.index';
-import { CreateProfileInput, Profile } from '../models/profile.model';
+import { CreateProfileInput, Profile, UpdateProfileInput } from '../models/profile.model';
 import { ProfileDocument, toProfileObject } from '../repositories/profile.repository';
 
 class ProfileProvider {
@@ -95,16 +95,14 @@ class ProfileProvider {
     }
   }
 
-  /*
   public async updateProfile(input: UpdateProfileInput): Promise<Profile> {
-    const { id, firstName, lastName, dateOfBirth, gender, tagline, about, faculty, isActive } = input;
+    const { id, firstName, lastName, dateOfBirth, gender, tagline, about, faculty, interests, onResidence } = input;
     if (!id) {
-      throw new UserInputError('Incomplete information provided to update a profile');
+      throw new Error('Incomplete information provided to update a profile');
     }
     if (firstName) validateStringInputs(firstName);
     if (lastName) validateStringInputs(lastName);
     if (dateOfBirth) validateStringInputs(dateOfBirth);
-    if (gender) validateStringInputs(gender);
     if (tagline) validateStringInputs(tagline);
     if (about) validateStringInputs(about);
     if (faculty) validateStringInputs(faculty);
@@ -125,7 +123,8 @@ class ProfileProvider {
           ...(tagline && { tagline: tagline }),
           ...(about && { about: about }),
           ...(faculty && { faculty: faculty }),
-          ...(isActive && { isActive: isActive }),
+          ...(interests && { interests: interests }),
+          ...(onResidence && { onResidence: onResidence }),
         },
       },
       { returnDocument: 'after' }
@@ -138,7 +137,6 @@ class ProfileProvider {
 
     return toProfileObject(profile);
   }
-  */
 
   public async isUserActive(id: ObjectId): Promise<boolean> {
     const profileData = await this.collection.findOne({ _id: id });

@@ -1,6 +1,11 @@
 import checkAuth from '../../helpers/check-auth';
 import { profileProvider } from '../indexes/providers.index';
-import { MutationCreateProfileArgs, Profile, QueryGetUserProfileArgs } from '../schema/types/schema';
+import {
+  MutationCreateProfileArgs,
+  MutationUpdateProfileArgs,
+  Profile,
+  QueryGetUserProfileArgs,
+} from '../schema/types/schema';
 import { Root, UserContext } from '../schema/types/types';
 
 interface UnresolvedProfile extends Omit<Profile, 'mainImage' | 'otherImages'> {}
@@ -38,6 +43,19 @@ const profileResolver = {
       };
 
       return profileProvider.createProfile(input);
+    },
+
+    updateProfile: async (
+      _: Root,
+      args: MutationUpdateProfileArgs,
+      context: UserContext
+    ): Promise<UnresolvedProfile> => {
+      const session = checkAuth(context);
+      const { id } = session.user;
+
+      const input = { id, ...args.input };
+
+      return profileProvider.updateProfile(input);
     },
   },
 };

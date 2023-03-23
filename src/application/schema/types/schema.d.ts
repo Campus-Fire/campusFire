@@ -29,6 +29,11 @@ export type Account = {
   token?: Maybe<Scalars['String']>;
 };
 
+export type AddReactionInput = {
+  messageId: Scalars['ObjectID'];
+  reaction: MessageReaction;
+};
+
 export type Conversation = {
   __typename?: 'Conversation';
   acceptingParticipant: ConversationParticipant;
@@ -145,13 +150,26 @@ export type Message = {
   body: Scalars['String'];
   conversationId: Scalars['ObjectID'];
   createdAt: Scalars['Date'];
+  hasReaction: Scalars['Boolean'];
   id: Scalars['ObjectID'];
+  reaction?: Maybe<MessageReaction>;
   senderId: Scalars['ObjectID'];
 };
+
+export enum MessageReaction {
+  Crying = 'CRYING',
+  Dead = 'DEAD',
+  Fire = 'FIRE',
+  Heart = 'HEART',
+  Plead = 'PLEAD',
+  Pray = 'PRAY',
+  Rofl = 'ROFL',
+}
 
 export type Mutation = {
   __typename?: 'Mutation';
   acceptConversationRequest: Scalars['Boolean'];
+  addReaction: Scalars['Boolean'];
   createProfile: Profile;
   forgotPasswordRequest: Scalars['String'];
   login: Account;
@@ -162,6 +180,7 @@ export type Mutation = {
   sendConversationRequest: Scalars['String'];
   sendMessage: Scalars['Boolean'];
   setPrimaryImage: Scalars['String'];
+  updateProfile: Profile;
   uploadMultipleImages: Array<Scalars['String']>;
   uploadSingleImage: Scalars['String'];
   verifyAccountPasswordReset: Scalars['Boolean'];
@@ -170,6 +189,10 @@ export type Mutation = {
 
 export type MutationAcceptConversationRequestArgs = {
   input: AcceptConversationRequestInput;
+};
+
+export type MutationAddReactionArgs = {
+  input: AddReactionInput;
 };
 
 export type MutationCreateProfileArgs = {
@@ -206,6 +229,10 @@ export type MutationSendMessageArgs = {
 
 export type MutationSetPrimaryImageArgs = {
   input: ImageInput;
+};
+
+export type MutationUpdateProfileArgs = {
+  input: UpdateProfileInput;
 };
 
 export type MutationUploadMultipleImagesArgs = {
@@ -249,6 +276,7 @@ export type Query = {
   conversationMessages?: Maybe<Array<Message>>;
   getConversationRequests?: Maybe<Array<Conversation>>;
   getUserProfile: Profile;
+  hasExistingConversation?: Maybe<Scalars['String']>;
   institutes: Array<Institute>;
   privacyPolicy: Scalars['String'];
   refreshToken: Account;
@@ -262,6 +290,10 @@ export type QueryConversationMessagesArgs = {
 
 export type QueryGetUserProfileArgs = {
   id: Scalars['String'];
+};
+
+export type QueryHasExistingConversationArgs = {
+  participantId: Scalars['String'];
 };
 
 export type QueryRefreshTokenArgs = {
@@ -304,6 +336,18 @@ export type Subscription = {
 
 export type SubscriptionMessageSentArgs = {
   conversationId: Scalars['String'];
+};
+
+export type UpdateProfileInput = {
+  about?: InputMaybe<Scalars['String']>;
+  dateOfBirth?: InputMaybe<Scalars['String']>;
+  faculty?: InputMaybe<Faculty>;
+  firstName?: InputMaybe<Scalars['String']>;
+  gender?: InputMaybe<Gender>;
+  interests?: InputMaybe<Array<Interest>>;
+  lastName?: InputMaybe<Scalars['String']>;
+  onResidence?: InputMaybe<Scalars['Boolean']>;
+  tagline?: InputMaybe<Scalars['String']>;
 };
 
 export type UploadMultpleImagesInput = {

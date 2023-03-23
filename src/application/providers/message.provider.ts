@@ -1,7 +1,7 @@
 import { Collection, ObjectId } from 'mongodb';
 import { validateStringInputs } from '../../helpers/validator';
 import { CFError } from '../../lib/errors-handler';
-import { Message, SendMessageInput } from '../models/message.model';
+import { AddReactionInput, Message, SendMessageInput } from '../models/message.model';
 import { MessageDocument, toMessageObject } from '../repositories/message.repository';
 
 class MessageProvider {
@@ -40,6 +40,7 @@ class MessageProvider {
       body,
       conversationId,
       createdAt: new Date(),
+      hasReaction: false,
     });
     if (!messageData.insertedId) {
       throw new CFError('MESSAGE_NOT_SENT');
@@ -62,6 +63,29 @@ class MessageProvider {
     }
 
     return messageData.senderId.toHexString() === userId.toHexString();
+  }
+
+  public async addReaction(input: AddReactionInput): Promise<Message> {
+    const { userId, messageId, reaction } = input;
+
+    const usrId = new ObjectId(userId);
+    const msgId = new ObjectId(messageId);
+
+    const messageData = await this.collection.findOneAndUpdate(
+      { _id: msgId },
+      {
+        $set: {
+          ...{ hasReaction: true },
+          ...{ reaction: reaction },
+        },
+      },
+      { returnDocument: 'after' }
+    );
+    if (!messageData.value) {
+      throw new CFError('MESSAGE_NOT_FOUND');
+    }
+
+    return toMessageObject(messageData.value);
   }
 }
 

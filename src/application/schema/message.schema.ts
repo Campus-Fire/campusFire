@@ -7,6 +7,8 @@ const typeDefs = gql`
     body: String!
     conversationId: ObjectID!
     createdAt: Date!
+    hasReaction: Boolean!
+    reaction: MessageReaction
   }
 
   type Query {
@@ -15,6 +17,7 @@ const typeDefs = gql`
 
   type Mutation {
     sendMessage(input: SendMessageInput!): Boolean!
+    addReaction(input: AddReactionInput!): Boolean!
   }
 
   type Subscription {
@@ -24,6 +27,11 @@ const typeDefs = gql`
   input SendMessageInput {
     conversationId: ObjectID!
     body: String!
+  }
+
+  input AddReactionInput {
+    messageId: ObjectID!
+    reaction: MessageReaction!
   }
 `;
 

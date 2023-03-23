@@ -53,6 +53,16 @@ const typeDefs = gql`
     STUDYING
     CODING
   }
+
+  enum MessageReaction {
+    CRYING
+    DEAD
+    HEART
+    ROFL
+    FIRE
+    PLEAD
+    PRAY
+  }
 `;
 
 export { typeDefs };

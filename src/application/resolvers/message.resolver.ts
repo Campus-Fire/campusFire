@@ -5,6 +5,7 @@ import checkAuth from '../../helpers/check-auth';
 import { conversationParticipantProvider, conversationProvider, messageProvider } from '../indexes/providers.index';
 import {
   Message,
+  MutationAddReactionArgs,
   MutationSendMessageArgs,
   QueryConversationMessagesArgs,
   SubscriptionMessageSentArgs,
@@ -39,6 +40,20 @@ const messageResolver = {
       pubsub.publish('CONVERSATION_UPDATED', { conversation });
 
       return message.conversationId.toHexString() === input.conversationId;
+    },
+
+    addReaction: async (_: Root, args: MutationAddReactionArgs, context: UserContext): Promise<boolean> => {
+      const { pubsub } = context;
+      const session = checkAuth(context);
+      const { id: userId } = session.user;
+
+      const input = { userId, ...args.input };
+
+      // const message = await messageProvider.sendMessage(input);
+      const message = await messageProvider.addReaction(input);
+      pubsub.publish('MESSAGE_SENT', { message });
+
+      return false;
     },
   },
 

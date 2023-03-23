@@ -20,6 +20,7 @@ const typeDefs = gql`
   type Query {
     getConversationRequests: [Conversation!]
     userConversations: [Conversation!]
+    hasExistingConversation(participantId: String!): String
   }
 
   type Mutation {

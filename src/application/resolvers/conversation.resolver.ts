@@ -7,6 +7,7 @@ import {
   Conversation,
   MutationAcceptConversationRequestArgs,
   MutationSendConversationRequestArgs,
+  QueryHasExistingConversationArgs,
 } from '../schema/types/schema';
 import {
   Root,
@@ -29,6 +30,17 @@ const conversationResolver = {
       const { id: userId } = session.user;
 
       return conversationProvider.getUserConversations(userId);
+    },
+
+    hasExistingConversation: async (
+      _: Root,
+      args: QueryHasExistingConversationArgs,
+      context: UserContext
+    ): Promise<string | null> => {
+      const session = checkAuth(context);
+      const { id: userId } = session.user;
+
+      return conversationProvider.hasExisitingConversation(userId, new ObjectId(args.participantId));
     },
   },
 
