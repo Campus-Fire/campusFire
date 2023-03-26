@@ -91,7 +91,7 @@ class ConversationParticipantProvider {
 
     const conversationParticipant = await this.collection.findOneAndUpdate(
       { userId, conversationId },
-      { $set: { ...{ hasSeenLastestMessage: true } } },
+      { $set: { ...{ hasSeenLatestMessage: true } } },
       { returnDocument: 'after' }
     );
     if (!conversationParticipant) {

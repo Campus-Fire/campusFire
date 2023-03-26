@@ -9,7 +9,10 @@ class MessageProvider {
 
   public async getConversationMessages(conversationId: ObjectId): Promise<Message[]> {
     const convoId = new ObjectId(conversationId);
-    const messages = await this.collection.find({ conversationId: convoId }).toArray();
+    const messages = await this.collection
+    .find({ conversationId: convoId })
+    .sort({createdAt: 1})
+    .toArray();
 
     return messages.map(toMessageObject);
   }
