@@ -11,7 +11,7 @@ import {
   MutationVerifyAccountRegistrationArgs,
   QueryRefreshTokenArgs,
 } from '../schema/types/schema';
-import { Root, UserContext } from '../schema/types/types';
+import { Root, SessionUser, UserContext } from '../schema/types/types';
 
 interface UntokenizedAccount extends Omit<Account, 'token'> {}
 
@@ -74,24 +74,22 @@ const accountResolver = {
       return accountProvider.sendForgotPasswordRequest(args.input.email);
     },
 
-    verifyAccountPasswordReset: async (
-      _: Root,
-      args: MutationVerifyAccountPasswordResetArgs,
-      context: UserContext
-    ): Promise<boolean> => {
-      const session = checkAuth(context);
+    verifyAccountPasswordReset: async (_: Root, args: MutationVerifyAccountPasswordResetArgs): Promise<boolean> => {
+      const sessionUser = verifyJWToken(args.input.token) as SessionUser;
+
       const input = {
-        ...session.user,
+        ...sessionUser,
         ...args.input,
       };
 
       return accountProvider.verifyAccountPasswordReset(input);
     },
 
-    resetPassword: async (_: Root, args: MutationResetPasswordArgs, context: UserContext): Promise<Account> => {
-      const session = checkAuth(context);
+    resetPassword: async (_: Root, args: MutationResetPasswordArgs): Promise<Account> => {
+      const sessionUser = verifyJWToken(args.input.token) as SessionUser;
+
       const input = {
-        ...session.user,
+        ...sessionUser,
         ...args.input,
       };
 

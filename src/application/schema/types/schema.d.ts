@@ -79,6 +79,11 @@ export enum Faculty {
   WerklundSchoolOfEducation = 'WERKLUND_SCHOOL_OF_EDUCATION',
 }
 
+export type ForgotPasswordVerificationCodeInput = {
+  code: Scalars['String'];
+  token: Scalars['String'];
+};
+
 export enum Gender {
   Female = 'FEMALE',
   Male = 'MALE',
@@ -244,7 +249,7 @@ export type MutationUploadSingleImageArgs = {
 };
 
 export type MutationVerifyAccountPasswordResetArgs = {
-  input: VerificationCodeInput;
+  input: ForgotPasswordVerificationCodeInput;
 };
 
 export type MutationVerifyAccountRegistrationArgs = {
@@ -312,6 +317,7 @@ export type RegisterAccountInput = {
 export type ResetPasswordInput = {
   confirmPassword: Scalars['String'];
   password: Scalars['String'];
+  token: Scalars['String'];
 };
 
 export type ResetPasswordRequestInput = {

@@ -24,17 +24,23 @@ const typeDefs = gql`
     verifyAccountRegistration(input: VerificationCodeInput!): Boolean!
     resendVerificationCode: Boolean!
     forgotPasswordRequest(input: ResetPasswordRequestInput!): String!
-    verifyAccountPasswordReset(input: VerificationCodeInput!): Boolean!
+    verifyAccountPasswordReset(input: ForgotPasswordVerificationCodeInput!): Boolean!
     resetPassword(input: ResetPasswordInput!): Account!
   }
 
   input ResetPasswordInput {
+    token: String!
     password: String!
     confirmPassword: String!
   }
 
   input ResetPasswordRequestInput {
     email: String!
+  }
+
+  input ForgotPasswordVerificationCodeInput {
+    code: String!
+    token: String!
   }
 
   input VerificationCodeInput {

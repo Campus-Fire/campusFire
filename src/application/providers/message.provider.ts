@@ -9,10 +9,7 @@ class MessageProvider {
 
   public async getConversationMessages(conversationId: ObjectId): Promise<Message[]> {
     const convoId = new ObjectId(conversationId);
-    const messages = await this.collection
-    .find({ conversationId: convoId })
-    .sort({createdAt: 1})
-    .toArray();
+    const messages = await this.collection.find({ conversationId: convoId }).sort({ createdAt: 1 }).toArray();
 
     return messages.map(toMessageObject);
   }
@@ -36,11 +33,12 @@ class MessageProvider {
     const messageId = new ObjectId();
 
     validateStringInputs(body);
+    const messageBody = body.trim()
 
     const messageData = await this.collection.insertOne({
       _id: messageId,
       senderId,
-      body,
+      body: messageBody,
       conversationId,
       createdAt: new Date(),
       hasReaction: false,

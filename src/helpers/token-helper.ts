@@ -33,13 +33,7 @@ const getSessionUser = (authHeaders: any): any => {
     const token = headerParts[1];
     const bearer = headerParts[0];
     if (bearer === 'Bearer') {
-      try {
-        const user = jwt.verify(token, config.SECRET_TOKEN_KEY);
-
-        return user;
-      } catch (err) {
-        throw new CFError('INVALID_TOKEN');
-      }
+      return verifyJWToken(token);
     }
 
     throw new CFError('INVALID_TOKEN');
