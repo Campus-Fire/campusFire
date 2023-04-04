@@ -1,3 +1,3 @@
 # campusFire
 
-A dating app targeted towards University students
+A community app for University of Calgary
