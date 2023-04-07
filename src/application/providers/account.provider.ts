@@ -8,7 +8,7 @@ import { generateResetPasswortToken, generateToken } from '../../helpers/token-h
 import { validateEmailInput, validatePasswordInput } from '../../helpers/validator';
 import getVerificationCode from '../../helpers/verification-code';
 import { CFError } from '../../lib/errors-handler';
-import { instituteProvider } from '../indexes/providers.index';
+import { instituteProvider, profileProvider } from '../indexes/providers.index';
 import {
   LoginInput,
   RegisterAccountInput,
@@ -34,6 +34,10 @@ class AccountProvider {
     const accountData = await this.collection.findOne({ _id: id });
     if (!accountData) {
       throw new CFError('INVALID_CREDENTIALS');
+    }
+
+    if (!!accountData.flaggedDelete) {
+      throw new Error('Account was deleted. Please contact us to reinstate it.');
     }
 
     const token = generateToken({
@@ -66,6 +70,10 @@ class AccountProvider {
 
     if (isAfter(now, account.expiresAt)) {
       throw new CFError('ACCOUNT_EXPIRED');
+    }
+
+    if (!!account.flaggedDelete) {
+      throw new Error('Account was deleted. Please contact us to reinstate it.');
     }
 
     const passwordMatch = await bcrypt.compare(password, account.password);
@@ -194,6 +202,9 @@ class AccountProvider {
     if (!account) {
       throw new Error('Unable to send new Verification code.');
     }
+    if (!!account.flaggedDelete) {
+      throw new Error('Account was deleted. Please contact us to reinstate it.');
+    }
 
     sendVerificationEmail(email, verificationCode);
 
@@ -223,6 +234,9 @@ class AccountProvider {
     const account = accountData.value;
     if (!account) {
       throw new Error('Unable to send password verification code');
+    }
+    if (!!account.flaggedDelete) {
+      throw new Error('Account was deleted. Please contact us to reinstate it.');
     }
 
     sendPasswordResetEmail(userEmail, code);
@@ -268,6 +282,9 @@ class AccountProvider {
     if (!account) {
       throw new UserInputError('Unable to update your password. Please try again!');
     }
+    if (!!account.flaggedDelete) {
+      throw new Error('Account was deleted. Please contact us to reinstate it.');
+    }
 
     const token = generateToken({
       id: account._id,
@@ -279,6 +296,23 @@ class AccountProvider {
       token,
       ...document,
     };
+  }
+
+  public async deleteAccount(userId: string): Promise<boolean> {
+    const id = new ObjectId(userId);
+
+    const accountData = await this.collection.findOneAndUpdate(
+      { _id: id },
+      { $set: { ...{ flaggedDelete: true } } },
+      { returnDocument: 'after' }
+    );
+
+    if (!accountData.value) {
+      throw new CFError('ACCOUNT_NOT_FOUND');
+    }
+    await profileProvider.setProfileInactive(accountData.value._id);
+
+    return !!accountData.value.flaggedDelete;
   }
 }
 

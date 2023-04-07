@@ -13,6 +13,7 @@ const toAccountObject = (account: AccountDocument): SecureAccount => {
     lastLogin: account.lastLogin,
     verificationCode: account.verificationCode,
     passwordResetCode: account.passwordResetCode,
+    flaggedDelete: account.flaggedDelete,
   };
 };
 

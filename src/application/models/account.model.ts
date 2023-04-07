@@ -10,6 +10,7 @@ export interface Account {
   lastLogin?: Date;
   verificationCode?: string;
   passwordResetCode?: string;
+  flaggedDelete?: boolean;
 }
 
 export interface SecureAccount extends Omit<Account, 'password'> {}

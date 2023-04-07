@@ -95,6 +95,12 @@ const accountResolver = {
 
       return accountProvider.resetPassword(input);
     },
+
+    deleteAccount: async (_: Root, _args: any, context: UserContext): Promise<boolean> => {
+      const session = checkAuth(context);
+
+      return accountProvider.deleteAccount(session.user.id);
+    },
   },
 };
 

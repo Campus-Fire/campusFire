@@ -33,7 +33,7 @@ class MessageProvider {
     const messageId = new ObjectId();
 
     validateStringInputs(body);
-    const messageBody = body.trim()
+    const messageBody = body.trim();
 
     const messageData = await this.collection.insertOne({
       _id: messageId,
@@ -67,9 +67,8 @@ class MessageProvider {
   }
 
   public async addReaction(input: AddReactionInput): Promise<Message> {
-    const { userId, messageId, reaction } = input;
+    const { messageId, reaction } = input;
 
-    const usrId = new ObjectId(userId);
     const msgId = new ObjectId(messageId);
 
     const messageData = await this.collection.findOneAndUpdate(

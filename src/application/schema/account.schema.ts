@@ -26,6 +26,7 @@ const typeDefs = gql`
     forgotPasswordRequest(input: ResetPasswordRequestInput!): String!
     verifyAccountPasswordReset(input: ForgotPasswordVerificationCodeInput!): Boolean!
     resetPassword(input: ResetPasswordInput!): Account!
+    deleteAccount: Boolean!
   }
 
   input ResetPasswordInput {

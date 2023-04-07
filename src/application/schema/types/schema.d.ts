@@ -176,6 +176,7 @@ export type Mutation = {
   acceptConversationRequest: Scalars['Boolean'];
   addReaction: Scalars['Boolean'];
   createProfile: Profile;
+  deleteAccount: Scalars['Boolean'];
   forgotPasswordRequest: Scalars['String'];
   login: Account;
   readConversation: Scalars['Boolean'];

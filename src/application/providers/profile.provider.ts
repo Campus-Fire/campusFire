@@ -135,6 +135,8 @@ class ProfileProvider {
       throw new Error(`Profile with id - ${id}, does not exist`);
     }
 
+    console.log(profile);
+
     return toProfileObject(profile);
   }
 
@@ -147,6 +149,17 @@ class ProfileProvider {
     return profileData.isActive;
   }
 
+  public async setProfileInactive(userId: ObjectId): Promise<void> {
+    const usrId = new ObjectId(userId);
+    const profileData = await this.collection.findOneAndUpdate(
+      { _id: usrId },
+      { $set: { ...{ isActive: false } } },
+      { returnDocument: 'after' }
+    );
+    if (!profileData.value) {
+      throw new CFError('PROFILE_NOT_FOUND');
+    }
+  }
   // public async setMainImage(usrId: ObjectId, imgId: ObjectId): Promise<void> {
   //   const profileData = await this.collection.findOneAndUpdate(
   //     { _id: usrId },
