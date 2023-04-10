@@ -31,7 +31,14 @@ class AccountProvider {
   public async getAccountById(userId: string): Promise<TokenizedAccount> {
     const id = new ObjectId(userId);
 
-    const accountData = await this.collection.findOne({ _id: id });
+    const now = new Date();
+    const data = await this.collection.findOneAndUpdate(
+      {_id: id  },
+      { $set: { ...{ lastLogin: now } } },
+      { returnDocument: 'after' }
+    );
+    
+    const accountData = data.value;
     if (!accountData) {
       throw new CFError('INVALID_CREDENTIALS');
     }
