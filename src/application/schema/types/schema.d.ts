@@ -64,6 +64,21 @@ export type CreateProfileInput = {
   tagline: Scalars['String'];
 };
 
+export type Event = {
+  __typename?: 'Event';
+  attendance?: Maybe<Array<Profile>>;
+  city: Scalars['String'];
+  country: Scalars['String'];
+  date: Scalars['Date'];
+  description: Scalars['String'];
+  id: Scalars['ObjectID'];
+  isUserUploaded: Scalars['Boolean'];
+  isVerified?: Maybe<Scalars['Boolean']>;
+  meetUpLocation: Scalars['String'];
+  name: Scalars['String'];
+  province: Scalars['String'];
+};
+
 export enum Faculty {
   CummingSchoolOfMedicine = 'CUMMING_SCHOOL_OF_MEDICINE',
   FacultyOfArts = 'FACULTY_OF_ARTS',
@@ -186,7 +201,10 @@ export type Mutation = {
   sendConversationRequest: Scalars['String'];
   sendMessage: Scalars['Boolean'];
   setPrimaryImage: Scalars['String'];
+  updateAttendance?: Maybe<Array<Event>>;
+  updateEventDetails: Event;
   updateProfile: Profile;
+  updateVerification: Scalars['Boolean'];
   uploadMultipleImages: Array<Scalars['String']>;
   uploadSingleImage: Scalars['String'];
   verifyAccountPasswordReset: Scalars['Boolean'];
@@ -237,8 +255,20 @@ export type MutationSetPrimaryImageArgs = {
   input: ImageInput;
 };
 
+export type MutationUpdateAttendanceArgs = {
+  eventId?: InputMaybe<Scalars['ObjectID']>;
+};
+
+export type MutationUpdateEventDetailsArgs = {
+  eventId?: InputMaybe<Scalars['ObjectID']>;
+};
+
 export type MutationUpdateProfileArgs = {
   input: UpdateProfileInput;
+};
+
+export type MutationUpdateVerificationArgs = {
+  eventId?: InputMaybe<Scalars['ObjectID']>;
 };
 
 export type MutationUploadMultipleImagesArgs = {
@@ -280,7 +310,9 @@ export type Query = {
   accounts: Array<Account>;
   availableProfiles: Array<Profile>;
   conversationMessages?: Maybe<Array<Message>>;
+  getAllEvents?: Maybe<Array<Event>>;
   getConversationRequests?: Maybe<Array<Conversation>>;
+  getEvent?: Maybe<Event>;
   getUserProfile: Profile;
   hasExistingConversation?: Maybe<Scalars['String']>;
   institutes: Array<Institute>;
@@ -292,6 +324,10 @@ export type Query = {
 
 export type QueryConversationMessagesArgs = {
   conversationId: Scalars['ObjectID'];
+};
+
+export type QueryGetEventArgs = {
+  eventId: Scalars['String'];
 };
 
 export type QueryGetUserProfileArgs = {

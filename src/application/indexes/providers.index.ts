@@ -6,6 +6,7 @@ import { ImageProvider } from '../providers/image.provider';
 import { InstituteProvider } from '../providers/institute.provider';
 import { MessageProvider } from '../providers/message.provider';
 import { ProfileProvider } from '../providers/profile.provider';
+import { EventProvider } from '../providers/event.provider';
 
 const db = setupDb();
 
@@ -16,6 +17,7 @@ const imageProvider = new ImageProvider(db.collection('images'));
 const conversationProvider = new ConversationProvider(db.collection('conversations'));
 const conversationParticipantProvider = new ConversationParticipantProvider(db.collection('conversation-participants'));
 const messageProvider = new MessageProvider(db.collection('messages'));
+const eventProvider = new EventProvider(db.collection('events'));
 
 export {
   profileProvider,
@@ -25,4 +27,5 @@ export {
   instituteProvider,
   accountProvider,
   imageProvider,
+  eventProvider,
 };

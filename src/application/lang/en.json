@@ -26,5 +26,7 @@
   "CONVERSATION_NOTIFICATION_FAILED": "Failed to notify other users.",
   "WRONG_CONVERSATION": "You are not part of this conversation and can not view its messages.",
 
-  "CONVERSATION_PARTICIPANT_NOT_FOUND": "Unable to find a conversation participant."
+  "CONVERSATION_PARTICIPANT_NOT_FOUND": "Unable to find a conversation participant.",
+
+  "EVENT_NOT_FOUND": "Can not find an event associated with that id"
 }
