@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { eventProvider } from '../indexes/providers.index';
-import { Event } from '../schema/types/schema';
+import { CreateEventInput, Event, GetAllEventsInput } from '../schema/types/schema';
 
 const eventResolver = {
   Query: {
@@ -8,8 +8,13 @@ const eventResolver = {
       return eventProvider.getEventById(eventId);
     },
 
-    getAllEvents: async (): Promise<Event[]> => {
-      return eventProvider.getAllEvents();
+    getAllEvents: async (input: GetAllEventsInput): Promise<Event[]> => {
+      return eventProvider.getAllEvents(input.profileId);
+    },
+  },
+  Mutation: {
+    createEvent: async (input: CreateEventInput): Promise<ObjectId> => {
+      return eventProvider.createEvent(input);
     },
   },
 };

@@ -52,6 +52,18 @@ export type ConversationParticipant = {
   userId: Scalars['ObjectID'];
 };
 
+export type CreateEventInput = {
+  city: Scalars['String'];
+  country: Scalars['String'];
+  date: Scalars['Date'];
+  description: Scalars['String'];
+  isUserUploaded: Scalars['Boolean'];
+  isVerified?: InputMaybe<Scalars['Boolean']>;
+  meetUpLocation: Scalars['String'];
+  name: Scalars['String'];
+  province: Scalars['String'];
+};
+
 export type CreateProfileInput = {
   about: Scalars['String'];
   dateOfBirth: Scalars['String'];
@@ -104,6 +116,10 @@ export enum Gender {
   Male = 'MALE',
   Other = 'OTHER',
 }
+
+export type GetAllEventsInput = {
+  profileId: Scalars['ObjectID'];
+};
 
 export type Image = {
   __typename?: 'Image';
@@ -190,6 +206,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   acceptConversationRequest: Scalars['Boolean'];
   addReaction: Scalars['Boolean'];
+  createEvent: Scalars['ObjectID'];
   createProfile: Profile;
   deleteAccount: Scalars['Boolean'];
   forgotPasswordRequest: Scalars['String'];
@@ -217,6 +234,10 @@ export type MutationAcceptConversationRequestArgs = {
 
 export type MutationAddReactionArgs = {
   input: AddReactionInput;
+};
+
+export type MutationCreateEventArgs = {
+  input: CreateEventInput;
 };
 
 export type MutationCreateProfileArgs = {
@@ -324,6 +345,10 @@ export type Query = {
 
 export type QueryConversationMessagesArgs = {
   conversationId: Scalars['ObjectID'];
+};
+
+export type QueryGetAllEventsArgs = {
+  input: GetAllEventsInput;
 };
 
 export type QueryGetEventArgs = {

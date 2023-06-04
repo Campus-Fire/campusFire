@@ -1,5 +1,3 @@
-// import { gql } from 'apollo-server-express';
-
 import { ObjectId } from 'mongodb';
 import { Profile } from './profile.model';
 
@@ -11,8 +9,10 @@ export interface Event {
   province: string;
   country: string;
   description: string;
-  isVerified: boolean;
+  isVerified?: boolean | null;
   isUserUploaded: boolean;
   meetUpLocation: string;
   attendance: Profile[];
 }
+
+export type CreateEventInput = Omit<Event, 'id' | 'attendance'>;
