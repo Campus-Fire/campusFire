@@ -5,6 +5,8 @@
   "INVALID_USER_INPUT": "Invalid inputs. Try again please.",
   "INVALID_VERIFICATION_CODE": "You have entered a incorrect verification code.",
   "INVALID_REQUEST": "Invalid request, please try again.",
+  "INVALID_PROVINCE": "Invalid province.",
+  "INVALID_COUNTRY": "Invalid Country.",
 
   "INVALID_EMAIL": "Invalid Email. Ensure it is valid University/College email.",
   "ACCOUNT_EXPIRED": "Your account has been expired.",
@@ -28,5 +30,7 @@
 
   "CONVERSATION_PARTICIPANT_NOT_FOUND": "Unable to find a conversation participant.",
 
-  "EVENT_NOT_FOUND": "Can not find an event associated with that id"
+  "EVENT_NOT_FOUND": "Can not find an event associated with that id",
+  "EVENT_NAME_ALREADY_EXISTS": "An event with the same name already exists.",
+  "UPDATE_EVENT_ACCESS_DENIED": "You do not have permission to update this event."
 }

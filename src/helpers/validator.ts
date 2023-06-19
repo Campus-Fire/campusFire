@@ -1,3 +1,4 @@
+import { Country, Province } from 'src/lib/enum';
 import { CFError } from '../lib/errors-handler';
 
 const validateStringInputs = (input: string | string[]): void => {
@@ -44,4 +45,27 @@ const validateNameInput = (name: string): void => {
   }
 };
 
-export { validateStringInputs, validateEmailInput, validatePasswordInput, validateNameInput };
+const validateProvinceInput = (province: string): void => {
+  const validProvince = Object.values(Province).find((elem: string) => elem === province);
+
+  if (!validProvince) {
+    throw new CFError('INVALID_PROVINCE');
+  }
+};
+
+const validateCountryInput = (country: string): void => {
+  const validCountry = Object.values(Country).find((elem: string) => elem === country);
+
+  if (!validCountry) {
+    throw new CFError('INVALID_COUNTRY');
+  }
+};
+
+export {
+  validateStringInputs,
+  validateEmailInput,
+  validatePasswordInput,
+  validateNameInput,
+  validateCountryInput,
+  validateProvinceInput,
+};

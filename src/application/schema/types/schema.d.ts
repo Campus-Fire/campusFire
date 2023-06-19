@@ -84,10 +84,12 @@ export type Event = {
   date: Scalars['Date'];
   description: Scalars['String'];
   id: Scalars['ObjectID'];
+  isDeleted?: Maybe<Scalars['Boolean']>;
   isUserUploaded: Scalars['Boolean'];
   isVerified?: Maybe<Scalars['Boolean']>;
   meetUpLocation: Scalars['String'];
   name: Scalars['String'];
+  ownerId: Scalars['ObjectID'];
   province: Scalars['String'];
 };
 
@@ -209,6 +211,7 @@ export type Mutation = {
   createEvent: Scalars['ObjectID'];
   createProfile: Profile;
   deleteAccount: Scalars['Boolean'];
+  deleteEvent: Scalars['Boolean'];
   forgotPasswordRequest: Scalars['String'];
   login: Account;
   readConversation: Scalars['Boolean'];
@@ -218,7 +221,7 @@ export type Mutation = {
   sendConversationRequest: Scalars['String'];
   sendMessage: Scalars['Boolean'];
   setPrimaryImage: Scalars['String'];
-  updateAttendance?: Maybe<Array<Event>>;
+  updateAttendance: Event;
   updateEventDetails: Event;
   updateProfile: Profile;
   updateVerification: Scalars['Boolean'];
@@ -242,6 +245,10 @@ export type MutationCreateEventArgs = {
 
 export type MutationCreateProfileArgs = {
   input: CreateProfileInput;
+};
+
+export type MutationDeleteEventArgs = {
+  eventId?: InputMaybe<Scalars['ObjectID']>;
 };
 
 export type MutationForgotPasswordRequestArgs = {
@@ -277,11 +284,11 @@ export type MutationSetPrimaryImageArgs = {
 };
 
 export type MutationUpdateAttendanceArgs = {
-  eventId?: InputMaybe<Scalars['ObjectID']>;
+  input: UpdateAttendanceInput;
 };
 
 export type MutationUpdateEventDetailsArgs = {
-  eventId?: InputMaybe<Scalars['ObjectID']>;
+  input: UpdateEventDetailsInput;
 };
 
 export type MutationUpdateProfileArgs = {
@@ -289,7 +296,7 @@ export type MutationUpdateProfileArgs = {
 };
 
 export type MutationUpdateVerificationArgs = {
-  eventId?: InputMaybe<Scalars['ObjectID']>;
+  input: UpdateVerificationInput;
 };
 
 export type MutationUploadMultipleImagesArgs = {
@@ -406,6 +413,23 @@ export type SubscriptionMessageSentArgs = {
   conversationId: Scalars['String'];
 };
 
+export type UpdateAttendanceInput = {
+  eventId: Scalars['ObjectID'];
+  isAttending: Scalars['Boolean'];
+  profileId: Scalars['ObjectID'];
+};
+
+export type UpdateEventDetailsInput = {
+  city?: InputMaybe<Scalars['String']>;
+  country?: InputMaybe<Scalars['String']>;
+  date?: InputMaybe<Scalars['Date']>;
+  description?: InputMaybe<Scalars['String']>;
+  eventId: Scalars['ObjectID'];
+  meetUpLocation?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  province?: InputMaybe<Scalars['String']>;
+};
+
 export type UpdateProfileInput = {
   about?: InputMaybe<Scalars['String']>;
   dateOfBirth?: InputMaybe<Scalars['String']>;
@@ -416,6 +440,11 @@ export type UpdateProfileInput = {
   lastName?: InputMaybe<Scalars['String']>;
   onResidence?: InputMaybe<Scalars['Boolean']>;
   tagline?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateVerificationInput = {
+  eventId: Scalars['ObjectID'];
+  isVerified: Scalars['Boolean'];
 };
 
 export type UploadMultpleImagesInput = {
