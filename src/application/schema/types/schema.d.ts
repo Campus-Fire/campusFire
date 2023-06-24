@@ -52,6 +52,18 @@ export type ConversationParticipant = {
   userId: Scalars['ObjectID'];
 };
 
+export type CreateEventInput = {
+  city: Scalars['String'];
+  country: Scalars['String'];
+  date: Scalars['Date'];
+  description: Scalars['String'];
+  isUserUploaded: Scalars['Boolean'];
+  isVerified?: InputMaybe<Scalars['Boolean']>;
+  meetUpLocation: Scalars['String'];
+  name: Scalars['String'];
+  province: Scalars['String'];
+};
+
 export type CreateProfileInput = {
   about: Scalars['String'];
   dateOfBirth: Scalars['String'];
@@ -62,6 +74,23 @@ export type CreateProfileInput = {
   lastName: Scalars['String'];
   onResidence: Scalars['Boolean'];
   tagline: Scalars['String'];
+};
+
+export type Event = {
+  __typename?: 'Event';
+  attendance?: Maybe<Array<Profile>>;
+  city: Scalars['String'];
+  country: Scalars['String'];
+  date: Scalars['Date'];
+  description: Scalars['String'];
+  id: Scalars['ObjectID'];
+  isDeleted?: Maybe<Scalars['Boolean']>;
+  isUserUploaded: Scalars['Boolean'];
+  isVerified?: Maybe<Scalars['Boolean']>;
+  meetUpLocation: Scalars['String'];
+  name: Scalars['String'];
+  ownerId: Scalars['ObjectID'];
+  province: Scalars['String'];
 };
 
 export enum Faculty {
@@ -89,6 +118,10 @@ export enum Gender {
   Male = 'MALE',
   Other = 'OTHER',
 }
+
+export type GetAllEventsInput = {
+  profileId: Scalars['ObjectID'];
+};
 
 export type Image = {
   __typename?: 'Image';
@@ -175,8 +208,10 @@ export type Mutation = {
   __typename?: 'Mutation';
   acceptConversationRequest: Scalars['Boolean'];
   addReaction: Scalars['Boolean'];
+  createEvent: Scalars['ObjectID'];
   createProfile: Profile;
   deleteAccount: Scalars['Boolean'];
+  deleteEvent: Scalars['Boolean'];
   forgotPasswordRequest: Scalars['String'];
   login: Account;
   readConversation: Scalars['Boolean'];
@@ -186,7 +221,10 @@ export type Mutation = {
   sendConversationRequest: Scalars['String'];
   sendMessage: Scalars['Boolean'];
   setPrimaryImage: Scalars['String'];
+  updateAttendance: Event;
+  updateEventDetails: Event;
   updateProfile: Profile;
+  updateVerification: Scalars['Boolean'];
   uploadMultipleImages: Array<Scalars['String']>;
   uploadSingleImage: Scalars['String'];
   verifyAccountPasswordReset: Scalars['Boolean'];
@@ -201,8 +239,16 @@ export type MutationAddReactionArgs = {
   input: AddReactionInput;
 };
 
+export type MutationCreateEventArgs = {
+  input: CreateEventInput;
+};
+
 export type MutationCreateProfileArgs = {
   input: CreateProfileInput;
+};
+
+export type MutationDeleteEventArgs = {
+  eventId?: InputMaybe<Scalars['ObjectID']>;
 };
 
 export type MutationForgotPasswordRequestArgs = {
@@ -237,8 +283,20 @@ export type MutationSetPrimaryImageArgs = {
   input: ImageInput;
 };
 
+export type MutationUpdateAttendanceArgs = {
+  input: UpdateAttendanceInput;
+};
+
+export type MutationUpdateEventDetailsArgs = {
+  input: UpdateEventDetailsInput;
+};
+
 export type MutationUpdateProfileArgs = {
   input: UpdateProfileInput;
+};
+
+export type MutationUpdateVerificationArgs = {
+  input: UpdateVerificationInput;
 };
 
 export type MutationUploadMultipleImagesArgs = {
@@ -280,7 +338,9 @@ export type Query = {
   accounts: Array<Account>;
   availableProfiles: Array<Profile>;
   conversationMessages?: Maybe<Array<Message>>;
+  getAllEvents?: Maybe<Array<Event>>;
   getConversationRequests?: Maybe<Array<Conversation>>;
+  getEvent?: Maybe<Event>;
   getUserProfile: Profile;
   hasExistingConversation?: Maybe<Scalars['String']>;
   institutes: Array<Institute>;
@@ -292,6 +352,14 @@ export type Query = {
 
 export type QueryConversationMessagesArgs = {
   conversationId: Scalars['ObjectID'];
+};
+
+export type QueryGetAllEventsArgs = {
+  input: GetAllEventsInput;
+};
+
+export type QueryGetEventArgs = {
+  eventId: Scalars['String'];
 };
 
 export type QueryGetUserProfileArgs = {
@@ -345,6 +413,23 @@ export type SubscriptionMessageSentArgs = {
   conversationId: Scalars['String'];
 };
 
+export type UpdateAttendanceInput = {
+  eventId: Scalars['ObjectID'];
+  isAttending: Scalars['Boolean'];
+  profileId: Scalars['ObjectID'];
+};
+
+export type UpdateEventDetailsInput = {
+  city?: InputMaybe<Scalars['String']>;
+  country?: InputMaybe<Scalars['String']>;
+  date?: InputMaybe<Scalars['Date']>;
+  description?: InputMaybe<Scalars['String']>;
+  eventId: Scalars['ObjectID'];
+  meetUpLocation?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  province?: InputMaybe<Scalars['String']>;
+};
+
 export type UpdateProfileInput = {
   about?: InputMaybe<Scalars['String']>;
   dateOfBirth?: InputMaybe<Scalars['String']>;
@@ -355,6 +440,11 @@ export type UpdateProfileInput = {
   lastName?: InputMaybe<Scalars['String']>;
   onResidence?: InputMaybe<Scalars['Boolean']>;
   tagline?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateVerificationInput = {
+  eventId: Scalars['ObjectID'];
+  isVerified: Scalars['Boolean'];
 };
 
 export type UploadMultpleImagesInput = {
