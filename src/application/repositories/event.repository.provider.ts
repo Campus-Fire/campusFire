@@ -6,6 +6,7 @@ interface EventDocument extends Document, Omit<Event, 'id'> {}
 const toEventObject = (event: EventDocument): Event => {
   return {
     id: event._id.toHexString(),
+    ownerId: event.ownerId,
     name: event.name,
     date: event.date,
     city: event.city,

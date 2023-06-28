@@ -7,6 +7,7 @@ import { typeDefs as enums } from './enums.schema';
 import { typeDefs as imageTypeDefs } from './image.schema';
 import { typeDefs as conversationTypeDefs } from './conversation.schema';
 import { typeDefs as messageTypeDefs } from './message.schema';
+import { typeDefs as eventTypeDefs } from './event.schema';
 
 const scalarSchema = gql`
   scalar ObjectID
@@ -22,6 +23,7 @@ const typeDefs = gql`
   ${imageTypeDefs}
   ${conversationTypeDefs}
   ${messageTypeDefs}
+  ${eventTypeDefs}
 `;
 
 export { typeDefs };

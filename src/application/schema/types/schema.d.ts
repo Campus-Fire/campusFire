@@ -119,10 +119,6 @@ export enum Gender {
   Other = 'OTHER',
 }
 
-export type GetAllEventsInput = {
-  profileId: Scalars['ObjectID'];
-};
-
 export type Image = {
   __typename?: 'Image';
   addedAt: Scalars['Date'];
@@ -352,10 +348,6 @@ export type Query = {
 
 export type QueryConversationMessagesArgs = {
   conversationId: Scalars['ObjectID'];
-};
-
-export type QueryGetAllEventsArgs = {
-  input: GetAllEventsInput;
 };
 
 export type QueryGetEventArgs = {

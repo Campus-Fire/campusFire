@@ -1,10 +1,11 @@
 import { Collection, ObjectId } from 'mongodb';
+
 import {
   validateCountryInput,
   validateNameInput,
   validateProvinceInput,
   validateStringInputs,
-} from 'src/helpers/validator';
+} from '../../helpers/validator';
 import { CFError } from '../../lib/errors-handler';
 import {
   CreateEventInput,

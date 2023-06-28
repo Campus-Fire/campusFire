@@ -1,4 +1,4 @@
-import { Country, Province } from 'src/lib/enum';
+import { Country, Province } from '../lib/enum';
 import { CFError } from '../lib/errors-handler';
 
 const validateStringInputs = (input: string | string[]): void => {
