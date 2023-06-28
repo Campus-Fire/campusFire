@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
-import checkAuth from 'src/helpers/check-auth';
+
+import checkAuth from '../../helpers/check-auth';
 import { eventProvider, profileProvider } from '../indexes/providers.index';
 import {
   MutationCreateEventArgs,
@@ -7,20 +8,16 @@ import {
   MutationUpdateEventDetailsArgs,
   MutationUpdateVerificationArgs,
   MutationUpdateAttendanceArgs,
-  QueryGetAllEventsArgs,
 } from '../schema/types/schema';
 import { Root, UserContext } from '../schema/types/types';
 
 const eventResolver = {
   Query: {
-    getEvent: async (context: UserContext): Promise<Event | null> => {
-      const session = checkAuth(context);
-      const { id } = session.user;
-
-      return eventProvider.getEventById(id);
+    getEvent: async (eventId: ObjectId): Promise<Event | null> => {
+      return eventProvider.getEventById(eventId);
     },
 
-    getAllEvents: async (_: Root, args: QueryGetAllEventsArgs, context: UserContext): Promise<Event[]> => {
+    getAllEvents: async (context: UserContext): Promise<Event[]> => {
       const session = checkAuth(context);
       const { id } = session.user;
 

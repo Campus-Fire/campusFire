@@ -19,9 +19,6 @@ const typeDefs = gql`
 
   # Todo: Add pagination, filtering, and sorting
   # by things like city, or country
-  input GetAllEventsInput {
-    profileId: ObjectID!
-  }
 
   input CreateEventInput {
     name: String!
@@ -58,7 +55,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    getAllEvents(input: GetAllEventsInput!): [Event!]
+    getAllEvents: [Event!]
     getEvent(eventId: String!): Event
   }
 

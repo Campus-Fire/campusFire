@@ -33,11 +33,11 @@ class AccountProvider {
 
     const now = new Date();
     const data = await this.collection.findOneAndUpdate(
-      {_id: id  },
+      { _id: id },
       { $set: { ...{ lastLogin: now } } },
       { returnDocument: 'after' }
     );
-    
+
     const accountData = data.value;
     if (!accountData) {
       throw new CFError('INVALID_CREDENTIALS');
