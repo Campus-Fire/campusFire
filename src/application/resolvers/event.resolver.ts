@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb';
 
 import checkAuth from '../../helpers/check-auth';
 import { eventProvider, profileProvider } from '../indexes/providers.index';
+import { Category } from '../models/event.model';
 import {
   MutationCreateEventArgs,
   Event,
@@ -22,6 +23,12 @@ const eventResolver = {
       const { id } = session.user;
 
       return eventProvider.getAllEvents(id);
+    },
+
+    getCategories: (context: UserContext): Record<string, Category> => {
+      checkAuth(context);
+
+      return eventProvider.getCategories();
     },
   },
   Mutation: {

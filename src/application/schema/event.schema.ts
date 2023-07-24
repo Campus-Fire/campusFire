@@ -1,11 +1,26 @@
 import { gql } from 'apollo-server-express';
 
 const typeDefs = gql`
+  enum Category {
+    ON_CAMPUS
+    OFF_CAMPUS
+    CASUAL
+    FORMAL
+    CLUB
+    SOCIAL_NIGHT
+    VOLUNTEERING
+    CONFERENCE
+    SPORTS
+    FESTIVAL
+    RECURRING
+  }
+
   type Event {
     id: ObjectID!
     ownerId: ObjectID!
     name: String!
-    date: Date!
+    startDate: Date!
+    endDate: Date!
     city: String!
     province: String!
     country: String!
@@ -15,6 +30,8 @@ const typeDefs = gql`
     meetUpLocation: String!
     isDeleted: Boolean
     attendance: [Profile!]
+    cost: Float!
+    category: Category!
   }
 
   # Todo: Add pagination, filtering, and sorting
@@ -22,7 +39,8 @@ const typeDefs = gql`
 
   input CreateEventInput {
     name: String!
-    date: Date!
+    startDate: Date!
+    endDate: Date!
     city: String!
     province: String!
     country: String!
@@ -30,17 +48,22 @@ const typeDefs = gql`
     isVerified: Boolean
     isUserUploaded: Boolean!
     meetUpLocation: String!
+    cost: Float!
+    category: Category!
   }
 
   input UpdateEventDetailsInput {
     eventId: ObjectID!
     name: String
-    date: Date
+    startDate: Date
+    endDate: Date
     city: String
     province: String
     country: String
     description: String
     meetUpLocation: String
+    cost: Float
+    category: Category
   }
 
   input UpdateVerificationInput {
@@ -57,6 +80,7 @@ const typeDefs = gql`
   type Query {
     getAllEvents: [Event!]
     getEvent(eventId: String!): Event
+    getCategories: [Category!]!
   }
 
   type Mutation {

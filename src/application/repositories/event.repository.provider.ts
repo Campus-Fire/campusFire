@@ -8,7 +8,8 @@ const toEventObject = (event: EventDocument): Event => {
     id: event._id.toHexString(),
     ownerId: event.ownerId,
     name: event.name,
-    date: event.date,
+    startDate: event.startDate,
+    endDate: event.endDate,
     city: event.city,
     province: event.province,
     country: event.country,
@@ -17,6 +18,8 @@ const toEventObject = (event: EventDocument): Event => {
     isUserUploaded: event.isUserUploaded,
     meetUpLocation: event.meetUpLocation,
     attendance: event.attendance,
+    cost: event.cost,
+    category: event.category,
   };
 };
 
