@@ -1,6 +1,8 @@
 import { Collection, ObjectId } from 'mongodb';
 
 import {
+  validateCategory,
+  validateCost,
   validateCountryInput,
   validateNameInput,
   validateProvinceInput,
@@ -8,6 +10,7 @@ import {
 } from '../../helpers/validator';
 import { CFError } from '../../lib/errors-handler';
 import {
+  Category,
   CreateEventInput,
   Event,
   UpdateAttendanceInput,
@@ -53,19 +56,23 @@ class EventProvider {
     }
 
     validateNameInput(input.name);
-    validateStringInputs(input.date.toString());
+    validateStringInputs(input.startDate.toString());
+    validateStringInputs(input.endDate.toString());
     validateStringInputs(input.city);
     validateStringInputs(input.city);
     validateProvinceInput(input.province);
     validateCountryInput(input.country);
     validateStringInputs(input.description);
     validateStringInputs(input.meetUpLocation);
+    validateCost(input.cost.toString());
+    validateCategory(input.category);
 
     const data = await this.collection.insertOne({
       _id: new ObjectId(),
       ownerId: input.ownerId,
       name: input.name,
-      date: input.date,
+      startDate: input.startDate,
+      endDate: input.endDate,
       city: input.city,
       province: input.province,
       country: input.country,
@@ -74,6 +81,8 @@ class EventProvider {
       isUserUploaded: input.isUserUploaded,
       meetUpLocation: input.meetUpLocation,
       attendance: input.attendance,
+      cost: input.cost,
+      category: input.category,
     });
 
     return data.insertedId;
@@ -95,12 +104,14 @@ class EventProvider {
       {
         $set: {
           ...(input.name && { name: input.name }),
-          ...(input.date && { date: input.date }),
+          ...(input.startDate && { date: input.endDate }),
           ...(input.city && { city: input.city }),
           ...(input.province && { province: input.province }),
           ...(input.country && { country: input.country }),
           ...(input.description && { description: input.description }),
           ...(input.meetUpLocation && { meetUpLocation: input.meetUpLocation }),
+          ...(input.cost && { cost: input.cost }),
+          ...(input.category && { category: input.category }),
         },
       }
     );
@@ -178,6 +189,13 @@ class EventProvider {
     );
 
     return true;
+  }
+
+  public getCategories(): Record<string, Category> {
+    return Object.keys(Category).reduce((acc, key) => {
+      acc[key] = key as Category;
+      return acc;
+    }, {} as Record<string, Category>);
   }
 }
 

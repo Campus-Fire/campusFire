@@ -1,3 +1,4 @@
+import { Category } from '../application/models/event.model';
 import { Country, Province } from '../lib/enum';
 import { CFError } from '../lib/errors-handler';
 
@@ -61,6 +62,24 @@ const validateCountryInput = (country: string): void => {
   }
 };
 
+const validateCost = (cost: string): void => {
+  const regEx = /^(\d*([.,](?=\d{3}))?\d+)+((?!\2)[.,]\d\d)?$/;
+
+  validateStringInputs(cost);
+
+  if (cost.match(regEx)) {
+    throw new CFError('INVALID_USER_INPUT');
+  }
+};
+
+const validateCategory = (category: string): void => {
+  const validCategory = Object.values(Category).find((elem: string) => elem === category) ? true : false;
+
+  if (!validCategory) {
+    throw new CFError('INVALID_COUNTRY');
+  }
+};
+
 export {
   validateStringInputs,
   validateEmailInput,
@@ -68,4 +87,6 @@ export {
   validateNameInput,
   validateCountryInput,
   validateProvinceInput,
+  validateCost,
+  validateCategory,
 };

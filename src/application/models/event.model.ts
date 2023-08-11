@@ -5,7 +5,8 @@ export interface Event {
   id: ObjectId;
   ownerId: ObjectId;
   name: string;
-  date: Date;
+  startDate: Date;
+  endDate: Date;
   city: string;
   province: string;
   country: string;
@@ -14,18 +15,37 @@ export interface Event {
   isUserUploaded: boolean;
   meetUpLocation: string;
   attendance: Profile[];
+  cost: number;
+  category: Category;
+}
+
+export enum Category {
+  Casual = 'CASUAL',
+  Club = 'CLUB',
+  Conference = 'CONFERENCE',
+  Festival = 'FESTIVAL',
+  Formal = 'FORMAL',
+  OffCampus = 'OFF_CAMPUS',
+  OnCampus = 'ON_CAMPUS',
+  Recurring = 'RECURRING',
+  SocialNight = 'SOCIAL_NIGHT',
+  Sports = 'SPORTS',
+  Volunteering = 'VOLUNTEERING',
 }
 
 export interface UpdateEventDetailsInput {
   eventId: ObjectId;
   ownerId: ObjectId;
   name?: String | null;
-  date?: Date | null;
+  startDate?: Date | null;
+  endDate?: Date | null;
   city?: String | null;
   province?: String | null;
   country?: String | null;
   description?: String | null;
   meetUpLocation?: String | null;
+  cost?: number | null;
+  category?: Category | null;
 }
 
 export interface UpdateVerificationInput {

@@ -34,6 +34,20 @@ export type AddReactionInput = {
   reaction: MessageReaction;
 };
 
+export enum Category {
+  Casual = 'CASUAL',
+  Club = 'CLUB',
+  Conference = 'CONFERENCE',
+  Festival = 'FESTIVAL',
+  Formal = 'FORMAL',
+  OffCampus = 'OFF_CAMPUS',
+  OnCampus = 'ON_CAMPUS',
+  Recurring = 'RECURRING',
+  SocialNight = 'SOCIAL_NIGHT',
+  Sports = 'SPORTS',
+  Volunteering = 'VOLUNTEERING',
+}
+
 export type Conversation = {
   __typename?: 'Conversation';
   acceptingParticipant: ConversationParticipant;
@@ -53,15 +67,18 @@ export type ConversationParticipant = {
 };
 
 export type CreateEventInput = {
+  category: Category;
   city: Scalars['String'];
+  cost: Scalars['Float'];
   country: Scalars['String'];
-  date: Scalars['Date'];
   description: Scalars['String'];
+  endDate: Scalars['Date'];
   isUserUploaded: Scalars['Boolean'];
   isVerified?: InputMaybe<Scalars['Boolean']>;
   meetUpLocation: Scalars['String'];
   name: Scalars['String'];
   province: Scalars['String'];
+  startDate: Scalars['Date'];
 };
 
 export type CreateProfileInput = {
@@ -79,10 +96,12 @@ export type CreateProfileInput = {
 export type Event = {
   __typename?: 'Event';
   attendance?: Maybe<Array<Profile>>;
+  category: Category;
   city: Scalars['String'];
+  cost: Scalars['Float'];
   country: Scalars['String'];
-  date: Scalars['Date'];
   description: Scalars['String'];
+  endDate: Scalars['Date'];
   id: Scalars['ObjectID'];
   isDeleted?: Maybe<Scalars['Boolean']>;
   isUserUploaded: Scalars['Boolean'];
@@ -91,6 +110,7 @@ export type Event = {
   name: Scalars['String'];
   ownerId: Scalars['ObjectID'];
   province: Scalars['String'];
+  startDate: Scalars['Date'];
 };
 
 export enum Faculty {
@@ -335,6 +355,7 @@ export type Query = {
   availableProfiles: Array<Profile>;
   conversationMessages?: Maybe<Array<Message>>;
   getAllEvents?: Maybe<Array<Event>>;
+  getCategories: Array<Category>;
   getConversationRequests?: Maybe<Array<Conversation>>;
   getEvent?: Maybe<Event>;
   getUserProfile: Profile;
@@ -412,14 +433,17 @@ export type UpdateAttendanceInput = {
 };
 
 export type UpdateEventDetailsInput = {
+  category?: InputMaybe<Category>;
   city?: InputMaybe<Scalars['String']>;
+  cost?: InputMaybe<Scalars['Float']>;
   country?: InputMaybe<Scalars['String']>;
-  date?: InputMaybe<Scalars['Date']>;
   description?: InputMaybe<Scalars['String']>;
+  endDate?: InputMaybe<Scalars['Date']>;
   eventId: Scalars['ObjectID'];
   meetUpLocation?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   province?: InputMaybe<Scalars['String']>;
+  startDate?: InputMaybe<Scalars['Date']>;
 };
 
 export type UpdateProfileInput = {
