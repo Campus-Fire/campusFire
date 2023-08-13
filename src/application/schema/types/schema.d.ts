@@ -358,6 +358,7 @@ export type Query = {
   getCategories: Array<Category>;
   getConversationRequests?: Maybe<Array<Conversation>>;
   getEvent?: Maybe<Event>;
+  getPersonalEvents?: Maybe<Array<Event>>;
   getUserProfile: Profile;
   hasExistingConversation?: Maybe<Scalars['String']>;
   institutes: Array<Institute>;
@@ -373,6 +374,10 @@ export type QueryConversationMessagesArgs = {
 
 export type QueryGetEventArgs = {
   eventId: Scalars['String'];
+};
+
+export type QueryGetPersonalEventsArgs = {
+  participantId: Scalars['String'];
 };
 
 export type QueryGetUserProfileArgs = {

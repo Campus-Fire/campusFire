@@ -25,7 +25,25 @@ class EventProvider {
   public async getAllEvents(profileId: ObjectId): Promise<Event[]> {
     const events = await this.collection.find().toArray();
 
-    return events.map(toEventObject).filter((event) => event.attendance.find((profile) => profile.id === profileId));
+    return events
+      .map(toEventObject)
+      .filter(
+        (event) =>
+          event.attendance.find((profile) => profile.id != profileId) || event.ownerId != profileId || !event.isDeleted
+      );
+  }
+
+  public async getAllPersonalEvents(profileId: ObjectId): Promise<Event[]> {
+    const events = await this.collection.find().toArray();
+
+    return events
+      .map(toEventObject)
+      .filter(
+        (event) =>
+          event.attendance.find((profile) => profile.id === profileId) ||
+          event.ownerId === profileId ||
+          !event.isDeleted
+      );
   }
 
   public async getEventById(eventId: ObjectId): Promise<Event | null> {
@@ -83,6 +101,7 @@ class EventProvider {
       attendance: input.attendance,
       cost: input.cost,
       category: input.category,
+      isDeleted: input.isDeleted,
     });
 
     return data.insertedId;

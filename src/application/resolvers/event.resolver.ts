@@ -30,6 +30,13 @@ const eventResolver = {
 
       return eventProvider.getCategories();
     },
+
+    getPersonalEvents: (_: Root, participantId: String, context: UserContext): Promise<Event[]> => {
+      const session = checkAuth(context);
+      const { id } = session.user;
+
+      return eventProvider.getAllPersonalEvents(id);
+    },
   },
   Mutation: {
     createEvent: async (_: Root, args: MutationCreateEventArgs, context: UserContext): Promise<ObjectId> => {
@@ -37,7 +44,7 @@ const eventResolver = {
       const { id } = session.user;
       const userProfile = await profileProvider.getProfile(id);
 
-      const input = { id, ...args.input, attendance: [userProfile], ownerId: id };
+      const input = { id, ...args.input, attendance: [userProfile], ownerId: id, isDeleted: false };
 
       return eventProvider.createEvent(input);
     },

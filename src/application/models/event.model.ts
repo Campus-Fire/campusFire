@@ -17,6 +17,7 @@ export interface Event {
   attendance: Profile[];
   cost: number;
   category: Category;
+  isDeleted: boolean;
 }
 
 export enum Category {
