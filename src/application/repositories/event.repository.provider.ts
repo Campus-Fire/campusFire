@@ -20,6 +20,7 @@ const toEventObject = (event: EventDocument): Event => {
     attendance: event.attendance,
     cost: event.cost,
     category: event.category,
+    isDeleted: event.isDeleted,
   };
 };
 
