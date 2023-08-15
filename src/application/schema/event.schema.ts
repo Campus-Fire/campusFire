@@ -88,7 +88,7 @@ const typeDefs = gql`
     createEvent(input: CreateEventInput!): ObjectID!
     updateEventDetails(input: UpdateEventDetailsInput!): Event!
     updateVerification(input: UpdateVerificationInput!): Boolean!
-    updateAttendance(input: UpdateAttendanceInput!): Event!
+    updateAttendance(input: UpdateAttendanceInput!): Boolean!
     deleteEvent(eventId: ObjectID): Boolean!
   }
 `;

@@ -237,7 +237,7 @@ export type Mutation = {
   sendConversationRequest: Scalars['String'];
   sendMessage: Scalars['Boolean'];
   setPrimaryImage: Scalars['String'];
-  updateAttendance: Event;
+  updateAttendance: Scalars['Boolean'];
   updateEventDetails: Event;
   updateProfile: Profile;
   updateVerification: Scalars['Boolean'];
