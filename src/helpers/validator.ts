@@ -61,17 +61,6 @@ const validateCountryInput = (country: string): void => {
     throw new CFError('INVALID_COUNTRY');
   }
 };
-
-const validateCost = (cost: string): void => {
-  const regEx = /^(\d*([.,](?=\d{3}))?\d+)+((?!\2)[.,]\d\d)?$/;
-
-  validateStringInputs(cost);
-
-  if (cost.match(regEx)) {
-    throw new CFError('INVALID_USER_INPUT');
-  }
-};
-
 const validateCategory = (category: string): void => {
   const validCategory = Object.values(Category).find((elem: string) => elem === category) ? true : false;
 
@@ -87,6 +76,5 @@ export {
   validateNameInput,
   validateCountryInput,
   validateProvinceInput,
-  validateCost,
   validateCategory,
 };

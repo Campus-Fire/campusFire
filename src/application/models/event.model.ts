@@ -60,4 +60,4 @@ export interface UpdateAttendanceInput {
   userProfile: Profile;
 }
 
-export type CreateEventInput = Omit<Event, 'id'>;
+export type CreateEventInput = Omit<Event, 'id' | 'ownerId' | 'attendance' | 'isDeleted'>;

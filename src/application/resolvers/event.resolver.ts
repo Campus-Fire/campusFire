@@ -9,25 +9,25 @@ import {
   MutationUpdateEventDetailsArgs,
   MutationUpdateVerificationArgs,
   MutationUpdateAttendanceArgs,
+  MutationDeleteEventArgs,
+  QueryGetEventArgs,
 } from '../schema/types/schema';
 import { Root, UserContext } from '../schema/types/types';
 
 const eventResolver = {
   Query: {
-    getEvent: async (eventId: ObjectId): Promise<Event | null> => {
-      return eventProvider.getEventById(eventId);
+    getEvent: async (_: Root, args: QueryGetEventArgs): Promise<Event | null> => {
+      return eventProvider.getEventById(new ObjectId(args.eventId));
     },
 
-    getAllEvents: async (context: UserContext): Promise<Event[]> => {
+    getAllEvents: async (_: Root, __: any, context: UserContext): Promise<Event[]> => {
       const session = checkAuth(context);
       const { id } = session.user;
 
-      return eventProvider.getAllEvents(id);
+      return eventProvider.getAllEvents(new ObjectId(id));
     },
 
-    getCategories: (context: UserContext): Record<string, Category> => {
-      checkAuth(context);
-
+    getCategories: (): string[] => {
       return eventProvider.getCategories();
     },
 
@@ -35,7 +35,7 @@ const eventResolver = {
       const session = checkAuth(context);
       const { id } = session.user;
 
-      return eventProvider.getAllPersonalEvents(id);
+      return eventProvider.getAllPersonalEvents(new ObjectId(id));
     },
   },
   Mutation: {
@@ -44,9 +44,8 @@ const eventResolver = {
       const { id } = session.user;
       const userProfile = await profileProvider.getProfile(id);
 
-      const input = { id, ...args.input, attendance: [userProfile], ownerId: id, isDeleted: false };
-
-      return eventProvider.createEvent(input);
+      const attendance = [userProfile];
+      return eventProvider.createEvent(attendance, new ObjectId(id), args.input);
     },
 
     updateEventDetails: async (
@@ -57,16 +56,16 @@ const eventResolver = {
       const session = checkAuth(context);
       const { id } = session.user;
 
-      const input = { ownerId: id, ...args.input };
+      const input = { ownerId: new ObjectId(id), ...args.input };
 
       return eventProvider.updateEventDetails(input);
     },
 
-    updateVerification: async (args: MutationUpdateVerificationArgs): Promise<Boolean> => {
+    updateVerification: async (_: Root, args: MutationUpdateVerificationArgs): Promise<Boolean> => {
       return eventProvider.updateVerification(args.input);
     },
 
-    updateAttendance: async (args: MutationUpdateAttendanceArgs): Promise<Boolean> => {
+    updateAttendance: async (_: Root, args: MutationUpdateAttendanceArgs): Promise<Boolean> => {
       const userProfile = await profileProvider.getProfile(args.input.profileId);
       const updateAttendanceInput = {
         userProfile,
@@ -76,11 +75,11 @@ const eventResolver = {
       return eventProvider.updateAttendance(updateAttendanceInput);
     },
 
-    deleteEvent: async (context: UserContext): Promise<Boolean> => {
+    deleteEvent: async (_: Root, args: MutationDeleteEventArgs, context: UserContext): Promise<Boolean> => {
       const session = checkAuth(context);
       const { id } = session.user;
 
-      return eventProvider.deleteEvent(id);
+      return eventProvider.deleteEvent(new ObjectId(id), new ObjectId(args.eventId));
     },
   },
 };
