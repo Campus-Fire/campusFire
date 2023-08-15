@@ -2,7 +2,6 @@ import { Collection, ObjectId } from 'mongodb';
 
 import {
   validateCategory,
-  validateCost,
   validateCountryInput,
   validateNameInput,
   validateProvinceInput,
@@ -17,6 +16,7 @@ import {
   UpdateEventDetailsInput,
   UpdateVerificationInput,
 } from '../models/event.model';
+import { Profile } from '../models/profile.model';
 import { EventDocument, toEventObject } from '../repositories/event.repository.provider';
 
 class EventProvider {
@@ -29,7 +29,9 @@ class EventProvider {
       .map(toEventObject)
       .filter(
         (event) =>
-          event.attendance.find((profile) => profile.id != profileId) || event.ownerId != profileId || !event.isDeleted
+          event.attendance.find((profile) => profile.id.toString() != profileId.toString()) &&
+          event.ownerId.toString() != profileId.toString() &&
+          !event.isDeleted
       );
   }
 
@@ -40,15 +42,15 @@ class EventProvider {
       .map(toEventObject)
       .filter(
         (event) =>
-          event.attendance.find((profile) => profile.id === profileId) ||
-          event.ownerId === profileId ||
+          (event.attendance.find((profile) => profile.id.toString() === profileId.toString()) ||
+            event.ownerId.toString() === profileId.toString()) &&
           !event.isDeleted
       );
   }
 
   public async getEventById(eventId: ObjectId): Promise<Event | null> {
     const data = await this.collection.findOne({
-      id: eventId,
+      _id: eventId,
     });
 
     if (data) {
@@ -58,13 +60,13 @@ class EventProvider {
     return data ? toEventObject(data) : null;
   }
 
-  public async createEvent(input: CreateEventInput): Promise<ObjectId> {
+  public async createEvent(attendance: Profile[], ownerId: ObjectId, input: CreateEventInput): Promise<ObjectId> {
     const eventCount = await this.collection.countDocuments({
       name: input.name,
     });
 
     Object.keys(input).forEach((key) => {
-      if (!input[key as keyof CreateEventInput]) {
+      if (input[key as keyof CreateEventInput] === undefined) {
         throw new CFError('INVALID_USER_INPUT');
       }
     });
@@ -82,12 +84,11 @@ class EventProvider {
     validateCountryInput(input.country);
     validateStringInputs(input.description);
     validateStringInputs(input.meetUpLocation);
-    validateCost(input.cost.toString());
     validateCategory(input.category);
 
     const data = await this.collection.insertOne({
       _id: new ObjectId(),
-      ownerId: input.ownerId,
+      ownerId,
       name: input.name,
       startDate: input.startDate,
       endDate: input.endDate,
@@ -98,10 +99,10 @@ class EventProvider {
       isVerified: input.isVerified ?? undefined,
       isUserUploaded: input.isUserUploaded,
       meetUpLocation: input.meetUpLocation,
-      attendance: input.attendance,
+      attendance,
       cost: input.cost,
       category: input.category,
-      isDeleted: input.isDeleted,
+      isDeleted: false,
     });
 
     return data.insertedId;
@@ -109,21 +110,22 @@ class EventProvider {
 
   public async updateEventDetails(input: UpdateEventDetailsInput): Promise<Boolean> {
     const checkEventOwner = await this.collection.findOne({
-      id: input.eventId,
+      _id: new ObjectId(input.eventId),
     });
 
-    if (checkEventOwner && checkEventOwner.ownerId !== input.ownerId) {
+    if (checkEventOwner && checkEventOwner.ownerId.toString() !== input.ownerId.toString()) {
       throw new CFError('UPDATE_EVENT_ACCESS_DENIED');
     }
 
     const data = await this.collection.updateOne(
       {
-        id: input.eventId,
+        _id: new ObjectId(input.eventId),
       },
       {
         $set: {
           ...(input.name && { name: input.name }),
-          ...(input.startDate && { date: input.endDate }),
+          ...(input.startDate && { startDate: input.startDate }),
+          ...(input.endDate && { endDate: input.endDate }),
           ...(input.city && { city: input.city }),
           ...(input.province && { province: input.province }),
           ...(input.country && { country: input.country }),
@@ -143,9 +145,10 @@ class EventProvider {
   }
 
   public async updateVerification(input: UpdateVerificationInput): Promise<Boolean> {
+    const eventId = new ObjectId(input.eventId);
     const data = await this.collection.updateOne(
       {
-        id: input.eventId,
+        _id: eventId,
       },
       {
         $set: {
@@ -163,11 +166,12 @@ class EventProvider {
 
   public async updateAttendance(input: UpdateAttendanceInput): Promise<Boolean> {
     let data;
+    const eventId = new ObjectId(input.eventId);
 
     if (input.isAttending) {
       data = await this.collection.updateOne(
         {
-          id: input.eventId,
+          _id: eventId,
         },
         {
           $push: {
@@ -178,7 +182,7 @@ class EventProvider {
     } else {
       data = await this.collection.updateOne(
         {
-          id: input.eventId,
+          _id: eventId,
         },
         {
           $pull: {
@@ -195,10 +199,18 @@ class EventProvider {
     return true;
   }
 
-  public async deleteEvent(eventId: ObjectId): Promise<Boolean> {
-    await this.collection.updateOne(
+  public async deleteEvent(ownerId: ObjectId, eventId: ObjectId): Promise<Boolean> {
+    const checkEventOwner = await this.collection.findOne({
+      _id: eventId,
+    });
+
+    if (checkEventOwner && checkEventOwner.ownerId.toString() !== ownerId.toString()) {
+      throw new CFError('UPDATE_EVENT_ACCESS_DENIED');
+    }
+
+    const data = await this.collection.updateOne(
       {
-        id: eventId,
+        _id: eventId,
       },
       {
         $set: {
@@ -207,14 +219,15 @@ class EventProvider {
       }
     );
 
+    if (!data.modifiedCount) {
+      throw new CFError('EVENT_NOT_FOUND');
+    }
+
     return true;
   }
 
-  public getCategories(): Record<string, Category> {
-    return Object.keys(Category).reduce((acc, key) => {
-      acc[key] = key as Category;
-      return acc;
-    }, {} as Record<string, Category>);
+  public getCategories(): string[] {
+    return Object.values(Category);
   }
 }
 

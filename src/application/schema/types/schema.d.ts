@@ -238,7 +238,7 @@ export type Mutation = {
   sendMessage: Scalars['Boolean'];
   setPrimaryImage: Scalars['String'];
   updateAttendance: Scalars['Boolean'];
-  updateEventDetails: Event;
+  updateEventDetails: Scalars['Boolean'];
   updateProfile: Profile;
   updateVerification: Scalars['Boolean'];
   uploadMultipleImages: Array<Scalars['String']>;
@@ -264,7 +264,7 @@ export type MutationCreateProfileArgs = {
 };
 
 export type MutationDeleteEventArgs = {
-  eventId?: InputMaybe<Scalars['ObjectID']>;
+  eventId: Scalars['ObjectID'];
 };
 
 export type MutationForgotPasswordRequestArgs = {
@@ -373,7 +373,7 @@ export type QueryConversationMessagesArgs = {
 };
 
 export type QueryGetEventArgs = {
-  eventId: Scalars['String'];
+  eventId: Scalars['ObjectID'];
 };
 
 export type QueryGetPersonalEventsArgs = {

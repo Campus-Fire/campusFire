@@ -79,17 +79,17 @@ const typeDefs = gql`
 
   type Query {
     getAllEvents: [Event!]
-    getEvent(eventId: String!): Event
+    getEvent(eventId: ObjectID!): Event
     getCategories: [Category!]!
     getPersonalEvents(participantId: String!): [Event!]
   }
 
   type Mutation {
     createEvent(input: CreateEventInput!): ObjectID!
-    updateEventDetails(input: UpdateEventDetailsInput!): Event!
+    updateEventDetails(input: UpdateEventDetailsInput!): Boolean!
     updateVerification(input: UpdateVerificationInput!): Boolean!
     updateAttendance(input: UpdateAttendanceInput!): Boolean!
-    deleteEvent(eventId: ObjectID): Boolean!
+    deleteEvent(eventId: ObjectID!): Boolean!
   }
 `;
 
