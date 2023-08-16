@@ -25,14 +25,16 @@ class EventProvider {
   public async getAllEvents(profileId: ObjectId): Promise<Event[]> {
     const events = await this.collection.find().toArray();
 
-    return events
-      .map(toEventObject)
-      .filter(
-        (event) =>
-          event.attendance.find((profile) => profile.id.toString() != profileId.toString()) &&
-          event.ownerId.toString() != profileId.toString() &&
-          !event.isDeleted
-      );
+    return events.map(toEventObject).filter((event) => {
+      if (
+        event.attendance.length > 0 &&
+        event.attendance.find((profile) => profile.id.toString() === profileId.toString())
+      ) {
+        return false;
+      }
+
+      return event.ownerId.toString() != profileId.toString() && !event.isDeleted;
+    });
   }
 
   public async getAllPersonalEvents(profileId: ObjectId): Promise<Event[]> {
@@ -53,7 +55,7 @@ class EventProvider {
       _id: eventId,
     });
 
-    if (data) {
+    if (!data) {
       throw new CFError('EVENT_NOT_FOUND');
     }
 
