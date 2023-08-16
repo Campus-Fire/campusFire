@@ -4,8 +4,6 @@ const config = {
   MONGO_CONNECTION_STRING:
     'mongodb+srv://campusfire-staging-rw:52lpwAZOtn34eNwY@cluster0.tfweizu.mongodb.net/?retryWrites=true&w=majority',
 
-  // MONGO_CONNECTION_STRING:
-  //   'mongodb+srv://campusfire-dev:jHNX5j8MaGe1JMmj@cluster0.qf7iopf.mongodb.net/?retryWrites=true&w=majority',
   DB_NAME: 'campusFire',
 
   SECRET_TOKEN_KEY: 'C@mpu$_F1r3_$3cr3t_k3y_f0r_J$0N_w3b_t0k3n$',
