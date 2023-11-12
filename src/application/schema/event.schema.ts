@@ -82,6 +82,7 @@ const typeDefs = gql`
     getEvent(eventId: ObjectID!): Event
     getCategories: [Category!]!
     getPersonalEvents(participantId: String!): [Event!]
+    getProfilesAttendingEvent(eventId: ObjectID!): [ObjectID!]
   }
 
   type Mutation {

@@ -50,6 +50,21 @@ class EventProvider {
       );
   }
 
+
+  public async getProfilesAttendingEvent(eventId: ObjectId): Promise<Profile[]> {
+
+    const event = await this.collection.findOne({
+      _id: eventId,
+    });
+
+    if (!event) {
+      throw new CFError('EVENT_NOT_FOUND');
+    }
+
+    return event.attendance;
+
+  }
+
   public async getEventById(eventId: ObjectId): Promise<Event | null> {
     const data = await this.collection.findOne({
       _id: eventId,
