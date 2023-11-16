@@ -37,6 +37,10 @@ const eventResolver = {
 
       return eventProvider.getAllPersonalEvents(new ObjectId(id));
     },
+
+    getProfilesAttendingEvent: async (_: Root, args: QueryGetEventArgs): Promise<ObjectId[]> => {
+      return eventProvider.getProfilesAttendingEvent(new ObjectId(args.eventId));
+    },
   },
   Mutation: {
     createEvent: async (_: Root, args: MutationCreateEventArgs, context: UserContext): Promise<ObjectId> => {
