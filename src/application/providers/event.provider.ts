@@ -51,7 +51,7 @@ class EventProvider {
   }
 
 
-  public async getProfilesAttendingEvent(eventId: ObjectId): Promise<Profile[]> {
+  public async getProfilesAttendingEvent(eventId: ObjectId): Promise<ObjectId[]> {
 
     const event = await this.collection.findOne({
       _id: eventId,
@@ -61,8 +61,7 @@ class EventProvider {
       throw new CFError('EVENT_NOT_FOUND');
     }
 
-    return event.attendance;
-
+    return event.attendance.map((profile) => (profile.id));
   }
 
   public async getEventById(eventId: ObjectId): Promise<Event | null> {
