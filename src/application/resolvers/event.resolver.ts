@@ -1,8 +1,7 @@
 import { ObjectId } from 'mongodb';
 
 import checkAuth from '../../helpers/check-auth';
-import { eventProvider, profileProvider } from '../indexes/providers.index';
-import { Category } from '../models/event.model';
+import { eventProvider, profileProvider, accountProvider } from '../indexes/providers.index';
 import {
   MutationCreateEventArgs,
   Event,
@@ -31,11 +30,25 @@ const eventResolver = {
       return eventProvider.getCategories();
     },
 
-    getPersonalEvents: (_: Root, participantId: String, context: UserContext): Promise<Event[]> => {
+    getPersonalEvents: async (_: Root, participantId: String, context: UserContext): Promise<Event[]> => {
       const session = checkAuth(context);
       const { id } = session.user;
 
-      return eventProvider.getAllPersonalEvents(new ObjectId(id));
+      const events = await eventProvider.getAllPersonalEvents(new ObjectId(id));
+
+      // add email to each event
+      // TODO: Separate logic into another query; this is messy
+      const eventsWithOwnerEmail = await Promise.all(
+        events.map(async (event) => {
+          const email = (await accountProvider.getAccountById(event.ownerId.toString())).email;
+          return {
+            ...event,
+            ownerEmail: email,
+          };
+        })
+      );
+
+      return eventsWithOwnerEmail;
     },
 
     getProfilesAttendingEvent: async (_: Root, args: QueryGetEventArgs): Promise<ObjectId[]> => {

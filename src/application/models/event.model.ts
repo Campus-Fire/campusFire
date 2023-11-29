@@ -4,6 +4,7 @@ import { Profile } from './profile.model';
 export interface Event {
   id: ObjectId;
   ownerId: ObjectId;
+  ownerEmail?: string | null;
   name: string;
   startDate: Date;
   endDate: Date;

@@ -18,6 +18,7 @@ const typeDefs = gql`
   type Event {
     id: ObjectID!
     ownerId: ObjectID!
+    ownerEmail: String
     name: String!
     startDate: Date!
     endDate: Date!
